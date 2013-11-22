@@ -12,6 +12,22 @@ Page {
     property int stationID
     property int transportID
 
+    property string ligne
+    property string direction
+
+    property int sens       //Aller = 0 | Retour = 1;
+    tools: ToolBarLayout {
+        ToolItem { iconId: "icon-m-toolbar-back"; onClicked: pageStack.pop(); }
+        ToolButton { id: addBtn; text: "Ajouter"; anchors.horizontalCenter: parent.horizontalCenter; enabled: false
+            onClicked: {
+                if(sens === 0)
+                    mainPage.addItinAller(ligne, direction, jsonModelSchedule.source);
+                else
+                    mainPage.addItinRetour(ligne, direction, jsonModelSchedule.source);
+            }
+        }
+    }
+
     function initUI(){
         choixTransport.addType();
     }
@@ -103,6 +119,8 @@ Page {
                 initUI();
             else
                 worker.sendMessage(initDB());
+
+            addBtn.enabled = false;
         }
 
     }
@@ -111,6 +129,7 @@ Page {
         query: "directions[*]"
         onLoadingFinished: {
             choixDirection.addDirection(jsonModelDirection.model)
+            addBtn.enabled = false;
             console.debug("------------ FINISHED -------------")
 //            http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=1151&direction=80649
         }
@@ -120,6 +139,7 @@ Page {
         query: "stations[*]"
         onLoadingFinished: {
             choixStation.addStation(jsonModelStation.model)
+            addBtn.enabled = false;
             console.debug("------------ FINISHED -------------")
         }
     }
@@ -129,6 +149,7 @@ Page {
         schedule: true
         onLoadingFinished: {
             afficheData.addSchedule(jsonModelSchedule.model)
+            addBtn.enabled = true;
             console.debug("------------ FINISHED -------------")
         }
     }
@@ -200,6 +221,7 @@ Page {
         }
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
+            ligne = _line;
             lineID = _idJSON;
             jsonModelDirection.source = "http://metro.breizh.im/dev/ratp_api.php?action=getDirectionList&line=" + _idJSON
         }
@@ -226,6 +248,7 @@ Page {
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             directionID = _idJSON;
+            direction = _line;
             jsonModelStation.source = "http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=" + lineID + "&direction=" + directionID;
         }
     }

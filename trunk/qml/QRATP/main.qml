@@ -4,14 +4,14 @@ import com.nokia.meego 1.0
 PageStackWindow {
     id: appWindow
 
-//    initialPage: mainPage
-    initialPage: home
+    initialPage: mainPage
+//    initialPage: home
 
-//    MainPage {
-//        id: mainPage
-//    }
-    Home{
-        id:home
+    MainPage {
+        id: mainPage
+    }
+    AddItineraire{
+
     }
 
     QueryDialog {
@@ -19,5 +19,4 @@ PageStackWindow {
         titleText: "Application Title"
         message: "(C) [year] [your name]\n[version]"
     }
-
 }

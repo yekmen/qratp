@@ -9,6 +9,7 @@ Item{
     height: 400
     state: "show"
     property string typeName
+
     signal typeSelected(variant _idJSON, variant _line, variant _typeID)
     signal sectionClicked;
 

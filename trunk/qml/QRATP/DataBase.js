@@ -170,11 +170,12 @@ function getMetro(){
 }
 function getTram(){
     openDB();
-    var r_sens = ""
+    var r_sens = [];
+
     _db.transaction( function(tx) {
         var rs_sens = tx.executeSql('SELECT * FROM Bus WHERE typeID = ' + 6);
         for(var i = 0; i < rs_sens.rows.length; i++) {
-            r_sens += rs_sens.rows.item(i).sens
+            r_sens.push(rs_sens.rows.item(i));
             }
         }
     )
@@ -182,11 +183,12 @@ function getTram(){
 }
 function getRER(){
     openDB();
-    var r_sens = ""
+    var r_sens = [];
+
     _db.transaction( function(tx) {
         var rs_sens = tx.executeSql('SELECT * FROM Bus WHERE typeID = ' + 4);
         for(var i = 0; i < rs_sens.rows.length; i++) {
-            r_sens += rs_sens.rows.item(i).sens
+            r_sens.push(rs_sens.rows.item(i));
             }
         }
     )

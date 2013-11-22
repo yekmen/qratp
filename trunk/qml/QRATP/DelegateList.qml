@@ -9,6 +9,7 @@ Item {
     height: 50
 
     signal clickedElement(variant _idJSON, int _index, variant _line, int _typeID);
+
     //idJSON = ID Du transport dans le JSON
     //_index = index dans la Liste
     //_line = Nom de la ligne
@@ -18,14 +19,33 @@ Item {
     Image {
         id: image
         width: 50
+        anchors.left: parent.left
+        anchors.leftMargin: 0
         fillMode: Image.PreserveAspectFit
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.top: parent.top
         anchors.topMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
         source: picURL
+        state: "show"
+        states: [
+            State {
+                name: "show"
+                PropertyChanges {
+                    target: image
+                    anchors.leftMargin: 0
+
+                }
+            },
+            State {
+                name: "hide"
+                when: picURL === ""
+                PropertyChanges {
+                    target: image
+                    anchors.leftMargin: -50
+                }
+            }
+        ]
     }
     Label{
         id: labelType

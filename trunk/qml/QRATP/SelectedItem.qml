@@ -30,6 +30,25 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 0
         source: url
+        state: "show"
+        states: [
+            State {
+                name: "show"
+                PropertyChanges {
+                    target: image
+                    anchors.leftMargin: 0
+
+                }
+            },
+            State {
+                name: "hide"
+                when: url === ""
+                PropertyChanges {
+                    target: image
+                    anchors.leftMargin: -50
+                }
+            }
+        ]
     }
     Label{
         id: type
