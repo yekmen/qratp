@@ -16,21 +16,9 @@ Page {
         choixTransport.addType();
     }
     WorkerScript {
-          id: worker
-          source: "DataLoader.js"
-      }
-
-      Timer {
-          id: timer
-          interval: 2000; repeat: true
-          running: true
-          triggeredOnStart: true
-
-          onTriggered: {
-              var msg = {'action': 'appendCurrentTime', 'model': listModel};
-              worker.sendMessage(msg);
-          }
-      }
+        id: worker
+        source: "DataLoader.js"
+    }
    function initDB(){
         DB.clearTable();
         console.debug("How much found : " + jsonModel.count)
@@ -156,8 +144,12 @@ Page {
         typeName: "Choisissez votre mode de transport :"
         z:0
         onSectionClicked: {
-            if(choixNumTransport.state === "show")
+            if(choixNumTransport.state === "show" || choixNumTransport.state === "selected"){
                 choixNumTransport.state = "hide"
+                choixDirection.state = "hide";
+                choixStation.state = "hide";
+                afficheData.state = "hide";
+            }
         }
         onTypeSelected: {
             console.debug("Type ID = " +_typeID)
@@ -169,13 +161,15 @@ Page {
             case 2:     //Metro
                 choixNumTransport.addtoList(DB.getMetro());
                 break;
-            case 3:
+            case 3:                
                 break;
             case 4:     //RER
+                choixNumTransport.addtoList(DB.getRER());
                 break;
             case 5:
                 break;
             case 6:     //Tram
+                choixNumTransport.addtoList(DB.getTram());
                 break;
             default:
                 console.debug("Inconnu ... : " + _typeID)
@@ -197,6 +191,13 @@ Page {
         typeName: "Choisissez votre line: "
         z:-1
         state: "hide"
+        onSectionClicked: {
+            if(choixDirection.state === "show" || choixDirection.state === "selected"){
+                choixDirection.state = "hide";
+                choixStation.state = "hide";
+                afficheData.state = "hide";
+            }
+        }
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             lineID = _idJSON;
@@ -216,6 +217,12 @@ Page {
         typeName: "Choisissez votre direction :"
         z:-1
         state: "hide"
+        onSectionClicked: {
+            if(choixStation.state === "show" || choixStation.state === "selected"){
+                choixStation.state = "hide"
+                afficheData.state = "hide";
+            }
+        }
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             directionID = _idJSON;
@@ -235,6 +242,10 @@ Page {
         typeName: "Choisissez votre station :"
         z:-1
         state: "hide"
+        onSectionClicked: {
+            if(afficheData.state === "show" || afficheData.state === "selected")
+                afficheData.state = "hide"
+        }
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             stationID = _idJSON;
@@ -258,4 +269,5 @@ Page {
         z:-1
         state: "hide"
     }
+
 }
