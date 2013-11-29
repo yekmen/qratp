@@ -1,6 +1,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.nokia.meego 1.1
 import "JSON"
 
 Item{
@@ -9,8 +9,16 @@ Item{
     height: 400
     state: "show"
     property string typeName
+    function startBusy(){
+        busy.running = true;
+        busy.visible = true;
+    }
+    function stopBusy(){
+        busy.running = false;
+        busy.visible = false;
+    }
 
-    signal typeSelected(variant _idJSON, variant _line, variant _typeID)
+    signal typeSelected(variant _idJSON, variant _line, variant _typeID, variant _urlImage)
     signal sectionClicked;
 
     function addtoList(array) {
@@ -26,6 +34,7 @@ Item{
         modelList.append({"index": 1, "type": 2,"jsonID": "", "jsonLINE": "Métro", "picURL": "http://www.ratp.fr/horaires/images/networks/metro.png"});
         modelList.append({"index": 2, "type": 4,"jsonID": "", "jsonLINE": "RER", "picURL": "http://www.ratp.fr/horaires/images/networks/rer.png"});
         modelList.append({"index": 3, "type": 6,"jsonID": "", "jsonLINE": "Tram", "picURL": "http://www.ratp.fr/horaires/images/networks/tramway.png"});
+        stopBusy();
     }
     function addDirection(direction){
         modelList.clear();
@@ -33,6 +42,7 @@ Item{
             modelList.append({"index": i, "type": "", "jsonID": direction.get(i).id, "jsonLINE": direction.get(i).direction, "picURL": ""});
         }
         item1.state = "show"
+        stopBusy();
     }
     function addStation(stations){
         modelList.clear();
@@ -40,6 +50,7 @@ Item{
             modelList.append({"index": i, "type": "", "jsonID": stations.get(i).id, "jsonLINE": stations.get(i).station, "picURL": ""});
         }
         item1.state = "show"
+        stopBusy();
     }
     function addSchedule(schedule){
         modelList.clear();
@@ -47,6 +58,7 @@ Item{
             modelList.append({"index": i, "type": "", "jsonID": schedule.get(i).id, "jsonLINE": schedule.get(i).direction + ":"+schedule.get(i).time , "picURL": ""});
         }
         item1.state = "show"
+        stopBusy();
     }
 
     Rectangle {
@@ -69,6 +81,16 @@ Item{
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
+
+        BusyIndicator{
+            id: busy
+            platformFocusable: false
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.verticalCenter: parent.verticalCenter
+            visible: false
+        }
+
         SelectedItem{
             id: selectedItem
             height: 50
@@ -97,11 +119,20 @@ Item{
                 }
             ]
         }
-
         Label{
             id: type
             color: "#ffffff"
             text: typeName
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            anchors.right: busy.left
+            anchors.rightMargin: 10
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
             smooth: true
             platformStyle: LabelStyle {
                 fontFamily: "Nokia Pure Text Light"
@@ -141,7 +172,7 @@ Item{
             onClickedElement: {
                 console.debug("Clicked : "+ _idJSON)
                 item1.state = "selected"
-                typeSelected(_idJSON, _line, _typeID);
+                typeSelected(_idJSON, _line, _typeID, modelList.get(_index).picURL);
                 selectedItem.url = modelList.get(_index).picURL
                 selectedItem.line = modelList.get(_index).jsonLINE
                 selectedItem.state = "show"

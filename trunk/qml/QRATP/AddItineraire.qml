@@ -14,16 +14,16 @@ Page {
 
     property string ligne
     property string direction
-
+    property string urlImageLigne
     property int sens       //Aller = 0 | Retour = 1;
     tools: ToolBarLayout {
-        ToolItem { iconId: "icon-m-toolbar-back"; onClicked: pageStack.pop(); }
+        ToolIcon { iconId: "icon-m-toolbar-back"; onClicked: pageStack.pop(); }
         ToolButton { id: addBtn; text: "Ajouter"; anchors.horizontalCenter: parent.horizontalCenter; enabled: false
             onClicked: {
                 if(sens === 0)
-                    mainPage.addItinAller(ligne, direction, jsonModelSchedule.source);
+                    mainPage.addItinAller(ligne, direction, jsonModelSchedule.source, urlImageLigne);
                 else
-                    mainPage.addItinRetour(ligne, direction, jsonModelSchedule.source);
+                    mainPage.addItinRetour(ligne, direction, jsonModelSchedule.source, urlImageLigne);
             }
         }
     }
@@ -131,7 +131,6 @@ Page {
             choixDirection.addDirection(jsonModelDirection.model)
             addBtn.enabled = false;
             console.debug("------------ FINISHED -------------")
-//            http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=1151&direction=80649
         }
     }
     JSONListModel{
@@ -163,6 +162,7 @@ Page {
         anchors.top: parent.top
         anchors.topMargin: 0
         typeName: "Choisissez votre mode de transport :"
+        Component.onCompleted: choixTransport.startBusy();
         z:0
         onSectionClicked: {
             if(choixNumTransport.state === "show" || choixNumTransport.state === "selected"){
@@ -209,7 +209,7 @@ Page {
         anchors.leftMargin: 0
         anchors.top: choixTransport.bottom
         anchors.topMargin: 0
-        typeName: "Choisissez votre line: "
+        typeName: "Choisissez votre ligne: "
         z:-1
         state: "hide"
         onSectionClicked: {
@@ -223,7 +223,9 @@ Page {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             ligne = _line;
             lineID = _idJSON;
+            urlImageLigne = _urlImage;
             jsonModelDirection.source = "http://metro.breizh.im/dev/ratp_api.php?action=getDirectionList&line=" + _idJSON
+            choixDirection.startBusy();
         }
     }
 
@@ -250,6 +252,7 @@ Page {
             directionID = _idJSON;
             direction = _line;
             jsonModelStation.source = "http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=" + lineID + "&direction=" + directionID;
+            choixStation.startBusy();
         }
     }
 
@@ -273,7 +276,7 @@ Page {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             stationID = _idJSON;
             jsonModelSchedule.source = "http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=" + lineID + "&direction=" + directionID + "&station=" + stationID;
-
+            afficheData.startBusy();
 //            http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=1151&direction=80649
 //            http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=1151&direction=80649&station=30783
         }

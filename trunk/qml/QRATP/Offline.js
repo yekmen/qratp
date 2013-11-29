@@ -14,14 +14,14 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT)');
            }
     )
 }
-function addItinaire(colName, ligneName, direction, sens, url){
+function addItinaire(colName, ligneName, direction, sens, url, urlImage){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?)', [colName, ligneName, direction,sens, url]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage]);
         }
     )
 }
@@ -53,6 +53,30 @@ function getAllRetourItem(){
     )
     return r_sens;
 }
+function getItemByTabName(tabName){
+    openDB();
+    var r_sens = [];
+    _db.transaction( function(tx) {
+        var rs_sens = tx.executeSql('SELECT * FROM QRatp WHERE columnName = ' + tabName);
+        for(var i = 0; i < rs_sens.rows.length; i++) {
+            r_sens.push(rs_sens.rows.item(i));
+            }
+        }
+    )
+    return r_sens;
+}
+function getAllItems(){
+    openDB();
+    var r_sens = [];
+    _db.transaction( function(tx) {
+        var rs_sens = tx.executeSql('SELECT * FROM QRatp');
+        for(var i = 0; i < rs_sens.rows.length; i++) {
+            r_sens.push(rs_sens.rows.item(i));
+            }
+        }
+    )
+    return r_sens;
+}
 
 function getTableLength(){
     openDB();
@@ -63,4 +87,14 @@ function getTableLength(){
         }
     )
     return r;
+}
+function removeItems(tabName, sens){
+    console.debug("Delete : " + tabName + " sens : "+ sens)
+    openDB();
+    _db.transaction( function(tx) {
+    // Create the database if it doesn't already exist
+                        tx.executeSql('DELETE FROM QRatp WHERE "columnName" = "'+ tabName+'" AND "sens" = "' + sens + '"');
+//                        DELETE FROM QRatp WHERE "columnName" = "toto" AND "sens" = "0"
+           }
+    )
 }

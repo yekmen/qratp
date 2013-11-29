@@ -8,33 +8,73 @@ Page {
     id: page
     tools: ToolBarLayout {
         id: toolBarLayout
-        ToolIcon { iconId: "toolbar-back"; onClicked: pageStack.pop(); }
-               ButtonRow {
-                   style: TabButtonStyle { }
-                   TabButton { tab: tab_aller; text:"Aller" }
-                   TabButton { tab: tab_retour; text:"Retour" }
-               }
-
-        ToolIcon {
-            platformIconId: "toolbar-refresh"
-            onClicked: {
-//                list.insert(0,{"direction":m_downData.getdirection(),"bus":m_downData.getimagelink(),"arret":m_downData.getarret(),"heur":m_downData.getstr_heur(), "prochaine1":m_downData.getstr_temps1(),"prochaine2":m_downData.getstr_temps2()})
-                list.append({"bus":m_downData.getimagelink(),"arret":m_downData.getarret(),"heur":m_downData.getstr_heur(), "prochaine1":m_downData.getstr_temps1(),"prochaine2":m_downData.getstr_temps2()})
-
+        ButtonRow {
+            style: TabButtonStyle { }
+            TabButton {
+                tab: tab_aller; text:"Aller"
+                onClicked: {
+                    currentSens = 0
+                    //                           currentTabName = ""
+                    //                           listRetourIteneraire.clearItem();
+                    //                           listAllerIteneraire.clearItem();
+                }
+            }
+            TabButton {
+                tab: tab_retour;
+                text:"Retour";
+                onClicked: {
+                    currentSens = 1
+                    //                           currentTabName = ""
+                    //                           listAllerIteneraire.clearItem();
+                    //                           listRetourIteneraire.clearItem();
+                }
             }
         }
-
     }
     property string title : "QRATP"
-    function addItinAller(ligne, direction, url){
-//        OfflineDB.addItinaire(listRowButtonAller.currentItem)
-//        console.debug("ALLER = " + ligne + " DIrection = " + direction)
-        console.debug("Prt : " + modelRowButtonAller.get(listRowButtonAller.currentIndex).btnText)
+    property string currentTabNameAller
+    property string currentTabNameRetour
+    property int currentSens: 0
+    Component.onCompleted: {
+        //Load tab
+        autoLoadTab(OfflineDB.getAllItems());
+    }
+    function autoLoadTab(array) {
+        modelRowButtonRetour.clear();
+        modelRowButtonAller.clear();
+        for(var i = 0; i < array.length; i++){
+            if(array[i].sens === '0'){ //Aller
+                modelRowButtonAller.append({"btnText": array[i].columnName})
+            }
+            else if(array[i].sens === '1'){
+                modelRowButtonRetour.append({"btnText": array[i].columnName})
+            }
+        }
+    }
+    function addItinAller(ligne, direction, url, urlImage){
+        listAllerIteneraire.addItem(direction, urlImage, url)
+        OfflineDB.addItinaire(currentTabNameAller, ligne, direction, 0, url, urlImage)
+    }
+    function addItinRetour(ligne, direction, url, urlImage){
+        listRetourIteneraire.addItem(direction, urlImage, url)
+        OfflineDB.addItinaire(currentTabNameRetour, ligne, direction, 1, url, urlImage)
+    }
+    function loadItineraire(tabName, array){
+        for(var i = 0; i < array.length; i++){
+            if(array[i].columnName === tabName)
+            {
+                if(array[i].sens === '0'){ //Aller
+                    listAllerIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url)
+                }
+                else if(array[i].sens === '1'){
+                    listRetourIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url)
+                }
+                else
+                    console.debug("Sens inconnu")
+            }
+        }
+    }
 
-    }
-    function addItinRetour(ligne, direction, url){
-        console.debug("Retour = " + url)
-    }
     Timer {
         id: timer
         interval: 6000; running: true; repeat: true
@@ -124,14 +164,22 @@ Page {
                 anchors.leftMargin: 0
                 anchors.top: pageHeader.bottom
                 anchors.topMargin: 0
+                z:10
                 model:modelRowButtonAller
-                delegate:TabButton{
-        //            anchors.fill: parent
-                    text: btnText
+                delegate:MyTabButton{
+                    textBtn: btnText
                     width: 100
-                }
-                onCurrentIndexChanged: {
-                    console.debug(modelRowButtonAller.get(listRowButtonAller.currentIndex).btnText)
+                    onTabClicked: {
+                        listAllerIteneraire.clearItem();
+//                        currentTabName = btnText;
+                        currentTabNameAller = btnText;
+                        buttonAddAller.text = "Ajouter un itinéraire dans : \n" + currentTabNameAller
+                        loadItineraire(btnText, OfflineDB.getAllItems());
+                    }
+                    onHoldClicked: {
+                        currentTabNameAller = btnText;
+                        queryDialog.open()
+                    }
                 }
             }
             ListModel{
@@ -139,7 +187,8 @@ Page {
             }
             TabButton {
                 id: tabAddAller;
-                text:"+"; anchors.top: pageHeader.bottom; anchors.topMargin: 0; anchors.right: parent.right; anchors.rightMargin: 0; width: 100
+                text:"+";
+                anchors.top: pageHeader.bottom; anchors.topMargin: 0; anchors.right: parent.right; anchors.rightMargin: 0; width: 100
                 onClicked: {
                     myDialog.sens = 0;
                     myDialog.open();
@@ -147,7 +196,7 @@ Page {
             }
             Button{
                 id: buttonAddAller
-                height: 50
+                height: 70
                 anchors.right: parent.right
                 anchors.rightMargin: 50
                 anchors.left: parent.left
@@ -155,10 +204,45 @@ Page {
                 anchors.top: listRowButtonAller.bottom
                 anchors.topMargin: 0
                 text: "Ajouter un itinéraire"
+                state: "hide"
+                z:10
                 onClicked: {
-                    pageStack.push(Qt.resolvedUrl("AddItineraire.qml"));
+                    pageStack.push(Qt.resolvedUrl("AddItineraire.qml"), {
+                        sens: 0
+                    });
                 }
+                states: [
+                    State {
+                        name: "show"
+                        when: modelRowButtonAller.count > 0 && currentTabNameAller !== ""
+                        PropertyChanges {
+                            target: buttonAddAller
+                            visible: true
+                        }
+                    },
+                    State {
+                        name: "hide"
+                        when: currentTabNameAller === ""
+                        PropertyChanges {
+                            target: buttonAddAller
+                            visible: false
+                        }
+                    }
+                ]
             }
+            ListItineraire{
+                id: listAllerIteneraire
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: buttonAddAller.bottom
+                anchors.topMargin: 0
+                z:0
+            }
+
         }
 
         Page{
@@ -177,10 +261,20 @@ Page {
                 anchors.top: pageHeader.bottom
                 anchors.topMargin: 0
                 model:modelRowButtonRetour
-                delegate:TabButton{
-        //            anchors.fill: parent
-                    text: btnText
+                delegate:MyTabButton{
+                    textBtn: btnText
                     width: 100
+                    onTabClicked: {
+                        listRetourIteneraire.clearItem();
+//                        currentTabName = btnText;
+                        currentTabNameRetour = btnText;
+                        buttonAddRetour.text = "Ajouter un itinéraire dans : \n" + currentTabNameRetour
+                        loadItineraire(btnText, OfflineDB.getAllItems());
+                    }
+                    onHoldClicked: {
+                        currentTabNameRetour = btnText;
+                        queryDialog.open()
+                    }
                 }
 
             }
@@ -196,7 +290,7 @@ Page {
             }
             Button{
                 id: buttonAddRetour
-                height: 50
+                height: 70
                 anchors.right: parent.right
                 anchors.rightMargin: 50
                 anchors.left: parent.left
@@ -204,9 +298,41 @@ Page {
                 anchors.top: listRowButtonRetour.bottom
                 anchors.topMargin: 0
                 text: "Ajouter un itinéraire"
+                state: "hide"
                 onClicked: {
-                    pageStack.push(Qt.resolvedUrl("AddItineraire.qml"));
+                    pageStack.push(Qt.resolvedUrl("AddItineraire.qml"), {
+                        sens: 1
+                    });
                 }
+                states: [
+                    State {
+                        name: "show"
+                        when: modelRowButtonRetour.count > 0 && currentTabNameRetour !== ""
+                        PropertyChanges {
+                            target: buttonAddRetour
+                            visible: true
+                        }
+                    },
+                    State {
+                        name: "hide"
+                        when: currentTabNameRetour === ""
+                        PropertyChanges {
+                            target: buttonAddRetour
+                            visible: false
+                        }
+                    }
+                ]
+            }
+            ListItineraire{
+                id: listRetourIteneraire
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: buttonAddRetour.bottom
+                anchors.topMargin: 0
             }
         }
     }
@@ -242,12 +368,44 @@ Page {
         }
         onAccepted: {
             if(sens === 0){
+                listAllerIteneraire.clearItem();
                 modelRowButtonAller.append({"btnText": textArea.text})
+                currentTabNameAller = textArea.text;
+                buttonAddAller.text = "Ajouter un itinéraire dans : \n" + currentTabNameAller
             }
-            else{
+            else if(sens === 1){
+                listRetourIteneraire.clearItem();
                 modelRowButtonRetour.append({"btnText": textArea.text})
+                currentTabNameRetour = textArea.text;
+                buttonAddRetour.text = "Ajouter un itinéraire dans : \n" + currentTabNameRetour
             }
             textArea.text = ""
+
         }
+    }
+    QueryDialog{
+        id: queryDialog
+        titleText: "Supprimer"
+        message: "Supprimer la colonne ?"
+        acceptButtonText: "Oui"
+        rejectButtonText: "Non"
+        onAccepted: {
+            if(currentSens === 0)
+            {
+                modelRowButtonAller.remove(listRowButtonAller.currentIndex)
+                listAllerIteneraire.clearItem();
+                buttonAddAller.state = "hide"
+                OfflineDB.removeItems(currentTabNameAller, currentSens);
+            }
+            else if(currentSens === 1)
+            {
+                modelRowButtonRetour.remove(listRowButtonRetour.currentIndex)
+                listRetourIteneraire.clearItem();
+                buttonAddRetour.state = "hide"
+                OfflineDB.removeItems(currentTabNameRetour, currentSens);
+            }
+
+        }
+        onRejected: close()
     }
 }
