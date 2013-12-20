@@ -14,14 +14,14 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT)');
            }
     )
 }
-function addItinaire(colName, ligneName, direction, sens, url, urlImage){     //Aller = 0 | Retour = 1
+function addItinaire(colName, ligneName, direction, sens, url, urlImage, station){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station]);
         }
     )
 }

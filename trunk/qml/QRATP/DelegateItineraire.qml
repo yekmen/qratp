@@ -15,6 +15,20 @@ Item {
             modelList.append({"index": i, "type": "", "jsonID": schedule.get(i).id, "jsonLINE": schedule.get(i).direction + ":"+schedule.get(i).time , "picURL": ""});
         }
     }
+    function loading(){
+        busy.running = true;
+        busy.visible = true;
+        directionLable.opacity = 0.5;
+        imageLigne.opacity = 0.5;
+    }
+    function finish(){
+        busy.running = false;
+        busy.visible = false;
+
+        directionLable.opacity = 1;
+        imageLigne.opacity = 1;
+    }
+
     JSONListModel{
         id: jsonModelSchedule
         source: dbURL
@@ -23,6 +37,7 @@ Item {
         onLoadingFinished: {
             addSchedule(jsonModelSchedule.model)
             console.debug("------------ FINISHED -------------")
+            finish();
         }
     }
     Rectangle{
@@ -38,6 +53,7 @@ Item {
         Image{
             id: imageLigne
             width: parent.height + 15
+            fillMode: Image.PreserveAspectFit
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
@@ -45,6 +61,14 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 0
             source: imageURL
+            BusyIndicator{
+                id: busy
+                Component.onCompleted: {
+                    loading();
+                }
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
         Label{
             id: directionLable
@@ -56,8 +80,14 @@ Item {
             anchors.bottomMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
-            text: directionText
+            text: station
             verticalAlignment: Text.AlignVCenter
+            font.bold: true
+            platformStyle: LabelStyle {
+                fontFamily: "Nokia Pure Text Light"
+                fontPixelSize: 22
+
+            }
         }
     }
     ListView{
@@ -73,12 +103,13 @@ Item {
         anchors.topMargin: 0
         z:-1
         model: modelList
-
         delegate:  DelegateList{
             id: myDelegate
+            resize: true
         }
     }
     ListModel{
         id: modelList
     }
 }
+

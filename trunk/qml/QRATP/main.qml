@@ -10,13 +10,13 @@ PageStackWindow {
     MainPage {
         id: mainPage
     }
-    AddItineraire{
+//    AddItineraire{
 
-    }
+//    }
 
     QueryDialog {
         id: aboutDialog
-        titleText: "Application Title"
+        titleText: "QRatp"
         message: "(C) [year] [your name]\n[version]"
     }
 }

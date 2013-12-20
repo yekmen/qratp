@@ -15,15 +15,16 @@ Page {
     property string ligne
     property string direction
     property string urlImageLigne
+    property string stationName
     property int sens       //Aller = 0 | Retour = 1;
     tools: ToolBarLayout {
         ToolIcon { iconId: "icon-m-toolbar-back"; onClicked: pageStack.pop(); }
         ToolButton { id: addBtn; text: "Ajouter"; anchors.horizontalCenter: parent.horizontalCenter; enabled: false
             onClicked: {
                 if(sens === 0)
-                    mainPage.addItinAller(ligne, direction, jsonModelSchedule.source, urlImageLigne);
+                    mainPage.addItinAller(ligne, direction, jsonModelSchedule.source, urlImageLigne, stationName);
                 else
-                    mainPage.addItinRetour(ligne, direction, jsonModelSchedule.source, urlImageLigne);
+                    mainPage.addItinRetour(ligne, direction, jsonModelSchedule.source, urlImageLigne, stationName);
             }
         }
     }
@@ -33,7 +34,7 @@ Page {
     }
     WorkerScript {
         id: worker
-        source: "DataLoader.js"
+//        source: "DataLoader.js"
     }
    function initDB(){
         DB.clearTable();
@@ -64,23 +65,52 @@ Page {
                     }
                     URLPic = "http://wap.ratp.fr/wsiv/static/line/m" + line +".gif"
                     break;
-                case "3":       //RER
+                case 3:
+                    console.debug("RER: " + line)
                     if(patt.test(line)){
                         line = line.slice(1);
                         line = line.toLowerCase();
                     }
-                    if(line === "a")
-                        URLPic = "http://www.ratp.fr/horaires/images/lines/rer/RA.png"
-                    else if(line === "b")
-                        URLPic = "http://www.ratp.fr/horaires/images/lines/rer/RA.png"
+                    console.debug("RER: " + line)
+                    if(line === "A")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-a.png"
+                    else if(line === "B")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-b.png"
+                    break;
+                case 4:       //RER
+                    if(patt.test(line)){
+                        line = line.slice(1);
+                        line = line.toLowerCase();
+                    }
+//                    console.debug("RER: " + line)
+                    if(line === "A")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-a.png"
+                    else if(line === "B")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-b.png"
+                    else if(line === "C")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-c.png"
+                    else if(line === "D")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-d.png"
+                    else if(line === "E")
+                        URLPic = "http://static.transilien.com/styles/images/pictos/rer-e.png"
+
 //                    http://www.transilien.com/contents/fr/_Pictos---Logos/Modes-de-transport/RER/C_20x20.gif
 
                     break;
-                case "4":       //RER
+                case "5":       //Optile
                     break;
-                case "5":
-                    break;
-                case "6":
+                case "6":       //Tram
+//                    http://www.ratp.fr/horaires/images/lines/tramway/T1.png
+                    if(line === "T1")
+                        URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T1.png"
+                    else if(line === "T2")
+                        URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T2.png"
+                    else if(line === "T3A")
+                        URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T3a.png"
+                    else if(line === "T3B")
+                        URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T3b.png"
+                    else if(line === "T5")
+                        URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T5.png"
                     break;
                 case "7":       //Noctilien
                     break;
@@ -118,7 +148,8 @@ Page {
             if(DB.getTableLength() > 0)
                 initUI();
             else
-                worker.sendMessage(initDB());
+                initDB()
+//                worker.sendMessage(initDB());
 
             addBtn.enabled = false;
         }
@@ -275,6 +306,7 @@ Page {
         onTypeSelected: {
             console.debug("ID : " + _idJSON + " Line : " + _line)
             stationID = _idJSON;
+            stationName = _line;
             jsonModelSchedule.source = "http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=" + lineID + "&direction=" + directionID + "&station=" + stationID;
             afficheData.startBusy();
 //            http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line=1151&direction=80649

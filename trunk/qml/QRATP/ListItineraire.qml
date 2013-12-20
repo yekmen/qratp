@@ -9,16 +9,21 @@ Item {
         modelList.clear();
     }
 
-    function addItem(direction, image, urlJSON){
-        modelList.append({"imageURL": image, "directionText": direction, "dbURL": urlJSON})
-
-//        modelList.append({"index": i, "type": array[i].type_id, "jsonID": array[i].idJSON, "jsonLINE": array[i].line, "picURL": array[i].picURL});
+    function addItem(direction, image, urlJSON, station){
+        console.debug("Add item " + station)
+        modelList.append({"imageURL": image, "station": station, "dbURL": urlJSON})
     }
 
-
+    ScrollDecorator {
+        id: scrolldecorator
+        flickableItem: listView
+    }
     ListView{
+        id: listView
         anchors.fill: parent
         model: modelList
+        focus: true
+        clip: true
         delegate: DelegateItineraire{
 
         }
@@ -26,4 +31,5 @@ Item {
     ListModel{
         id: modelList
     }
+
 }

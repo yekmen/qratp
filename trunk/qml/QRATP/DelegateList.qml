@@ -6,8 +6,8 @@ import com.nokia.meego 1.0
 Item {
     id: item1
     width: 400
-    height: 50
-
+    height: resize ? 30 : 50
+    property bool resize: false
     signal clickedElement(variant _idJSON, int _index, variant _line, int _typeID);
 
     //idJSON = ID Du transport dans le JSON
@@ -50,12 +50,14 @@ Item {
     Label{
         id: labelType
         text: jsonLINE
+        horizontalAlignment: Text.AlignLeft
+        wrapMode: Text.WrapAnywhere
         anchors.left: image.right
-        anchors.leftMargin: 20
+        anchors.leftMargin: 0
         anchors.verticalCenter: parent.verticalCenter
         platformStyle: LabelStyle {
             fontFamily: "Nokia Pure Text Light"
-            fontPixelSize: 32
+            fontPixelSize: resize ? 25 : 30
         }
     }
     MouseArea{

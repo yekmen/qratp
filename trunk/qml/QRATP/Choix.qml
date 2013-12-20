@@ -89,6 +89,9 @@ Item{
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
             visible: false
+            BusyIndicatorStyle{
+                spinnerFrames: "image://theme/spinner"+__invertedString
+            }
         }
 
         SelectedItem{

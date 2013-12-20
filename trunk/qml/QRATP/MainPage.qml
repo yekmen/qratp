@@ -14,20 +14,21 @@ Page {
                 tab: tab_aller; text:"Aller"
                 onClicked: {
                     currentSens = 0
-                    //                           currentTabName = ""
-                    //                           listRetourIteneraire.clearItem();
-                    //                           listAllerIteneraire.clearItem();
                 }
             }
+
             TabButton {
                 tab: tab_retour;
                 text:"Retour";
                 onClicked: {
                     currentSens = 1
-                    //                           currentTabName = ""
-                    //                           listAllerIteneraire.clearItem();
-                    //                           listRetourIteneraire.clearItem();
                 }
+            }
+        }
+        ToolIcon {
+            iconId: "toolbar-settings"
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("Settings.qml"));
             }
         }
     }
@@ -51,23 +52,23 @@ Page {
             }
         }
     }
-    function addItinAller(ligne, direction, url, urlImage){
-        listAllerIteneraire.addItem(direction, urlImage, url)
-        OfflineDB.addItinaire(currentTabNameAller, ligne, direction, 0, url, urlImage)
+    function addItinAller(ligne, direction, url, urlImage, station){
+        listAllerIteneraire.addItem(direction, urlImage, url, station)
+        OfflineDB.addItinaire(currentTabNameAller, ligne, direction, 0, url, urlImage, station)
     }
-    function addItinRetour(ligne, direction, url, urlImage){
-        listRetourIteneraire.addItem(direction, urlImage, url)
-        OfflineDB.addItinaire(currentTabNameRetour, ligne, direction, 1, url, urlImage)
+    function addItinRetour(ligne, direction, url, urlImage, station){
+        listRetourIteneraire.addItem(direction, urlImage, url, station)
+        OfflineDB.addItinaire(currentTabNameRetour, ligne, direction, 1, url, urlImage, station)
     }
-    function loadItineraire(tabName, array){
+    function loadItineraire(tabName, array, sens){
         for(var i = 0; i < array.length; i++){
             if(array[i].columnName === tabName)
             {
-                if(array[i].sens === '0'){ //Aller
-                    listAllerIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url)
+                if(sens === 0 && array[i].sens === '0'){              //Aller
+                    listAllerIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url, array[i].station)
                 }
-                else if(array[i].sens === '1'){
-                    listRetourIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url)
+                else if(sens === 1 && array[i].sens === '1'){
+                    listRetourIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url,array[i].station)
                 }
                 else
                     console.debug("Sens inconnu")
@@ -82,7 +83,20 @@ Page {
 //            loadURL();
         }
     }
-
+    Component {
+        id: highlight
+        Rectangle {
+            width: 70; height: 5
+            color: "black"
+            z: 10
+            Behavior on y {
+                SpringAnimation {
+                    spring: 3
+                    damping: 0.2
+                }
+            }
+        }
+    }
     Image {
         id: pageHeader
         anchors {
@@ -166,34 +180,46 @@ Page {
                 anchors.topMargin: 0
                 z:10
                 model:modelRowButtonAller
+                highlight: highlight
+                highlightFollowsCurrentItem: true
+                focus: true
+                Component.onCompleted: listRowButtonAller.currentIndex = -1
                 delegate:MyTabButton{
                     textBtn: btnText
                     width: 100
                     onTabClicked: {
                         listAllerIteneraire.clearItem();
+                        listRowButtonAller.currentIndex = index //HighLight
 //                        currentTabName = btnText;
                         currentTabNameAller = btnText;
                         buttonAddAller.text = "Ajouter un itinéraire dans : \n" + currentTabNameAller
-                        loadItineraire(btnText, OfflineDB.getAllItems());
+                        loadItineraire(btnText, OfflineDB.getAllItems(), 0);
                     }
                     onHoldClicked: {
                         currentTabNameAller = btnText;
                         queryDialog.open()
                     }
+
                 }
             }
             ListModel{
                 id: modelRowButtonAller
             }
-            TabButton {
+            ShadowButton{
                 id: tabAddAller;
                 text:"+";
-                anchors.top: pageHeader.bottom; anchors.topMargin: 0; anchors.right: parent.right; anchors.rightMargin: 0; width: 100
-                onClicked: {
+                anchors.top: pageHeader.bottom;
+                anchors.right: parent.right;
+                width: 100
+                height: 70
+                z:10
+                color: "gray"
+                onBtnClicked: {
                     myDialog.sens = 0;
                     myDialog.open();
                 }
             }
+
             Button{
                 id: buttonAddAller
                 height: 70
@@ -261,29 +287,39 @@ Page {
                 anchors.top: pageHeader.bottom
                 anchors.topMargin: 0
                 model:modelRowButtonRetour
+                z:10
+                Component.onCompleted: listRowButtonRetour.currentIndex = -1
+                highlight: highlight
+                highlightFollowsCurrentItem: true
                 delegate:MyTabButton{
                     textBtn: btnText
                     width: 100
                     onTabClicked: {
                         listRetourIteneraire.clearItem();
+                        listRowButtonRetour.currentIndex = index //HighLight
 //                        currentTabName = btnText;
                         currentTabNameRetour = btnText;
                         buttonAddRetour.text = "Ajouter un itinéraire dans : \n" + currentTabNameRetour
-                        loadItineraire(btnText, OfflineDB.getAllItems());
+                        loadItineraire(btnText, OfflineDB.getAllItems(), 1);
                     }
                     onHoldClicked: {
                         currentTabNameRetour = btnText;
                         queryDialog.open()
                     }
                 }
-
             }
             ListModel{
                 id: modelRowButtonRetour
             }
-            TabButton { id: tabAddRetour;
-                text:"+"; anchors.top: pageHeader.bottom; anchors.topMargin: 0; anchors.right: parent.right; anchors.rightMargin: 0; width: 100
-                onClicked: {
+            ShadowButton { id: tabAddRetour;
+                text:"+";
+                anchors.top: pageHeader.bottom
+                anchors.right: parent.right;
+                width: 100
+                height: 70
+                z:10
+                color: "gray"
+                onBtnClicked: {
                     myDialog.sens = 1;
                     myDialog.open();
                 }
