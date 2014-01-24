@@ -21,7 +21,7 @@ Item{
     signal typeSelected(variant _idJSON, variant _line, variant _typeID, variant _urlImage)
     signal sectionClicked;
 
-    function addtoList(array) {
+    function addTransportType(array) {
         modelList.clear();
         for(var i = 0; i < array.length; i++){
             modelList.append({"index": i, "type": array[i].type_id, "jsonID": array[i].idJSON, "jsonLINE": array[i].line, "picURL": array[i].picURL});
@@ -89,8 +89,10 @@ Item{
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
             visible: false
+
             BusyIndicatorStyle{
-                spinnerFrames: "image://theme/spinner"+__invertedString
+                inverted: true
+//                spinnerFrames: "image://theme/spinner"+__invertedString
             }
         }
 

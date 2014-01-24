@@ -68,12 +68,14 @@ function getItemByTabName(tabName){
 function getAllItems(){
     openDB();
     var r_sens = [];
+    var retArray = []
     _db.transaction( function(tx) {
         var rs_sens = tx.executeSql('SELECT * FROM QRatp');
         for(var i = 0; i < rs_sens.rows.length; i++) {
+            var currentItem = rs_sens.rows.item(i);
             r_sens.push(rs_sens.rows.item(i));
-            }
         }
+        }   //Function END
     )
     return r_sens;
 }

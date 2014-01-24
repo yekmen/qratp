@@ -61,14 +61,6 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 0
             source: imageURL
-            BusyIndicator{
-                id: busy
-                Component.onCompleted: {
-                    loading();
-                }
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
         }
         Label{
             id: directionLable
@@ -107,9 +99,25 @@ Item {
             id: myDelegate
             resize: true
         }
+
     }
     ListModel{
         id: modelList
+    }
+
+    BusyIndicator{
+        id: busy
+        Component.onCompleted: {
+            loading();
+        }
+        BusyIndicatorStyle{
+            size: "medium"
+            inverted: true
+            period: 800
+            numberOfFrames: 5
+        }
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
     }
 }
 

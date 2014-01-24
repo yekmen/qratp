@@ -32,12 +32,11 @@ Page {
             }
         }
     }
-    property string title : "QRATP"
+    property string title : "RaTDeParis"
     property string currentTabNameAller
     property string currentTabNameRetour
     property int currentSens: 0
     Component.onCompleted: {
-        //Load tab
         autoLoadTab(OfflineDB.getAllItems());
     }
     function autoLoadTab(array) {
@@ -47,8 +46,16 @@ Page {
             if(array[i].sens === '0'){ //Aller
                 modelRowButtonAller.append({"btnText": array[i].columnName})
             }
-            else if(array[i].sens === '1'){
+            else if(array[i].sens === '1'){ //Retour
                 modelRowButtonRetour.append({"btnText": array[i].columnName})
+            }
+        }
+        //On efface les doublons !
+        for(var j = 0; j < array.length; j++){
+            for(var k = 0 ; k < modelRowButtonAller.count -1; k ++){
+                if(modelRowButtonAller.get(k).btnText === array[j].columnName){
+                    modelRowButtonAller.remove(k);
+                }
             }
         }
     }
@@ -122,6 +129,18 @@ Page {
                 fontPixelSize: 32
             }
             text: page.title
+        }
+        Button{
+            id: oneShootBtn
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            width: 200
+            text: "Juste un trajet"
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("AddItineraire.qml"), {
+                    oneShoot:true
+                });
+            }
         }
     }
     Component{
@@ -234,7 +253,8 @@ Page {
                 z:10
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("AddItineraire.qml"), {
-                        sens: 0
+                        sens: 0,
+                        oneShoot:false
                     });
                 }
                 states: [
@@ -337,7 +357,8 @@ Page {
                 state: "hide"
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("AddItineraire.qml"), {
-                        sens: 1
+                        sens: 1,
+                        oneShoot:false
                     });
                 }
                 states: [

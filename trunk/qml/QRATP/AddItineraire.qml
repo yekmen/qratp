@@ -17,9 +17,10 @@ Page {
     property string urlImageLigne
     property string stationName
     property int sens       //Aller = 0 | Retour = 1;
+    property bool oneShoot: false
     tools: ToolBarLayout {
         ToolIcon { iconId: "icon-m-toolbar-back"; onClicked: pageStack.pop(); }
-        ToolButton { id: addBtn; text: "Ajouter"; anchors.horizontalCenter: parent.horizontalCenter; enabled: false
+        ToolButton { id: addBtn; text: "Ajouter"; anchors.horizontalCenter: parent.horizontalCenter; enabled: false; visible: !oneShoot
             onClicked: {
                 if(sens === 0)
                     mainPage.addItinAller(ligne, direction, jsonModelSchedule.source, urlImageLigne, stationName);
@@ -63,7 +64,10 @@ Page {
                         line = line.slice(1);
                         line = line.toLowerCase();
                     }
-                    URLPic = "http://wap.ratp.fr/wsiv/static/line/m" + line +".gif"
+                    if(line === "ORV")
+                        URLPic = "http://wap.ratp.fr/wsiv/static/line/m" + line +".gif"
+                    else
+                        URLPic = "http://wap.ratp.fr/wsiv/static/line/m" + line +".gif"
                     break;
                 case 3:
                     console.debug("RER: " + line)
@@ -97,9 +101,9 @@ Page {
 //                    http://www.transilien.com/contents/fr/_Pictos---Logos/Modes-de-transport/RER/C_20x20.gif
 
                     break;
-                case "5":       //Optile
+                case 5:       //Optile
                     break;
-                case "6":       //Tram
+                case 6:       //Tram
 //                    http://www.ratp.fr/horaires/images/lines/tramway/T1.png
                     if(line === "T1")
                         URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T1.png"
@@ -112,10 +116,10 @@ Page {
                     else if(line === "T5")
                         URLPic = "http://www.ratp.fr/horaires/images/lines/tramway/T5.png"
                     break;
-                case "7":       //Noctilien
+                case 7:       //Noctilien
                     break;
                 }
-
+//                console.debug("Adding Tram : " + line + " url : "+ URLPic)
                 DB.initTable(jsonModel.model.get(i).type_id,
                              jsonModel.model.get(i).type_name,
                              line,
@@ -208,20 +212,20 @@ Page {
             transportID = _typeID;
             switch(_typeID){
             case 1:     //Bus
-                choixNumTransport.addtoList(DB.getBus());
+                choixNumTransport.addTransportType(DB.getBus());
                 break;
             case 2:     //Metro
-                choixNumTransport.addtoList(DB.getMetro());
+                choixNumTransport.addTransportType(DB.getMetro());
                 break;
             case 3:                
                 break;
             case 4:     //RER
-                choixNumTransport.addtoList(DB.getRER());
+                choixNumTransport.addTransportType(DB.getRER());
                 break;
             case 5:
                 break;
             case 6:     //Tram
-                choixNumTransport.addtoList(DB.getTram());
+                choixNumTransport.addTransportType(DB.getTram());
                 break;
             default:
                 console.debug("Inconnu ... : " + _typeID)

@@ -188,9 +188,18 @@ function getRER(){
     _db.transaction( function(tx) {
         var rs_sens = tx.executeSql('SELECT * FROM Bus WHERE typeID = ' + 4);
         for(var i = 0; i < rs_sens.rows.length; i++) {
-            r_sens.push(rs_sens.rows.item(i));
-            }
+
+            if(rs_sens.rows.item(i).idJSON === "356")
+                continue;
+            else if(rs_sens.rows.item(i).idJSON ==="357")
+                continue;
+            else if(rs_sens.rows.item(i).idJSON ==="374")
+                continue;
+            else
+                r_sens.push(rs_sens.rows.item(i));
+
         }
+                    }
     )
     return r_sens;
 }
