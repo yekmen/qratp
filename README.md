@@ -1,4 +1,4 @@
-qratp
-=====
+QRatp ( Le Rat De Paris ) is a multi-plateforme RATP Client.
 
-qratp
+Developed for MeeGo Harmatthan, Sailfish OS and now for Windows Phone 8.
+
