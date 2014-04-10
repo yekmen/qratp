@@ -44,3 +44,5 @@ C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTD
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.pdb
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\XapCacheFile.xml
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.csprojResolveAssemblyReference.cache
+C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Microsoft.Phone.Controls.dll
+C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\AddItinerary.g.cs

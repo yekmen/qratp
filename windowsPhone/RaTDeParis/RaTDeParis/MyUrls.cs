@@ -8,19 +8,19 @@ namespace RaTDeParis
 {
     class MyUrls
     {
-        public string getLine()
+        public static string getLine()
         {
             return "http://metro.breizh.im/dev/ratp_api.php?action=getLineList";
         }
-        public string getDirections(int line)
+        public static string getDirections(int line)
         {
             return "http://metro.breizh.im/dev/ratp_api.php?action=getDirectionList&line="+line;
         }
-        public string getStations(int line, int direction)
+        public static string getStations(int line, int direction)
         {
             return "http://metro.breizh.im/dev/ratp_api.php?action=getDirectionList&line="+line+"&direction="+direction;
         }
-        public string getSchedule(int line, int direction, int station)
+        public static string getSchedule(int line, int direction, int station)
         {
             return "http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line="+line+"&direction="+direction+"&station="+station;
         }

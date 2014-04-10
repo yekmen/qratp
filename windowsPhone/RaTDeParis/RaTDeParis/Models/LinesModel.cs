@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RaTDeParis.Models
 {
-    class LinesModel
+    class LinesModel 
     {
         public List<LineModel> lines
         {
