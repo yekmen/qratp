@@ -20,6 +20,7 @@ namespace RaTDeParis
         {
             InitializeComponent();
             Debug.WriteLine("CHARGEMENT !!!");
+            OfflineData of = new OfflineData();
             // Exemple de code pour la localisation d'ApplicationBar
             //BuildLocalizedApplicationBar();
           //  private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)

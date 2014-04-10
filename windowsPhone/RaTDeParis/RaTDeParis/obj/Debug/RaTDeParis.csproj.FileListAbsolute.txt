@@ -44,3 +44,26 @@ C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTD
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.pdb
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\XapCacheFile.xml
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.csprojResolveAssemblyReference.cache
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\ApplicationIcon.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\FlipCycleTileLarge.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\FlipCycleTileMedium.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\FlipCycleTileSmall.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\IconicTileMediumLarge.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\IconicTileSmall.png
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\RaTDeParis.dll
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\RaTDeParis.pdb
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\AppManifest.xaml
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Properties\WMAppManifest.xml
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\RaTDeParis_Debug_AnyCPU.xap
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Newtonsoft.Json.dll
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Newtonsoft.Json.xml
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.csprojResolveAssemblyReference.cache
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\App.g.cs
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\MainPage.g.cs
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\AddItineraire.g.cs
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.g.resources
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.Resources.AppResources.resources
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.csproj.GenerateResource.Cache
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.dll
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.pdb
+C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\XapCacheFile.xml
