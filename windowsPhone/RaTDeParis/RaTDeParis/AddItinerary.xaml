@@ -1,0 +1,83 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="RaTDeParis.AddItinerary"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <!--LayoutRoot contient la grille racine où tout le contenu des autres pages est placé-->
+    <Grid x:Name="LayoutRoot">
+        <phone:Panorama Title="add itinerary">
+            <!---->
+            <phone:PanoramaItem Header="type">
+                <Grid >
+                    <ListBox  x:Name="TypeList" SelectionChanged="Type_selection">
+                        <ListBox.ItemTemplate >
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding typeName}" FontSize="36" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </phone:PanoramaItem>
+            <!--Élément un de panorama-->
+            <phone:PanoramaItem Header="line">
+                <Grid >
+                    <ListBox  x:Name="LinesList" SelectionChanged="Line_selection">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding id}" />
+                                    <TextBlock Text="{Binding station}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Élément deux de panorama-->
+            <phone:PanoramaItem Header="direction">
+                <Grid >
+                    <ListBox  x:Name="DirectionList" SelectionChanged="Direction_selection">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding id}" />
+                                    <TextBlock Text="{Binding station}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </phone:PanoramaItem>
+          <!---->
+            <phone:PanoramaItem Header="station">
+               <Grid >
+                    <ListBox  x:Name="StationList" SelectionChanged="Station_selection">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding id}" />
+                                    <TextBlock Text="{Binding station}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </phone:PanoramaItem>
+            <!---->
+        </phone:Panorama>
+    </Grid>
+
+</phone:PhoneApplicationPage>

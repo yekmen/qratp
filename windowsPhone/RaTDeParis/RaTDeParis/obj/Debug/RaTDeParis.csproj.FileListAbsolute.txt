@@ -44,6 +44,7 @@ C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTD
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.pdb
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\XapCacheFile.xml
 C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.csprojResolveAssemblyReference.cache
+<<<<<<< HEAD
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\ApplicationIcon.png
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\FlipCycleTileLarge.png
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Assets\Tiles\FlipCycleTileMedium.png
@@ -67,3 +68,7 @@ C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\De
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.dll
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\RaTDeParis.pdb
 C:\Users\yekmen\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\XapCacheFile.xml
+=======
+C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\Bin\Debug\Microsoft.Phone.Controls.dll
+C:\Users\Pierre-Marie Galite\Documents\GitHub\qratp\windowsPhone\RaTDeParis\RaTDeParis\obj\Debug\AddItinerary.g.cs
+>>>>>>> 25e09cb7c0c0d3e2f465a9752ad058dbb107f7ff

@@ -20,7 +20,13 @@ namespace RaTDeParis
         {
             InitializeComponent();
             Debug.WriteLine("CHARGEMENT !!!");
+<<<<<<< HEAD
             OfflineData of = new OfflineData();
+=======
+            List<Models.StationModel> lines = new List<Models.StationModel>();
+            DataRequest<Models.StationModel> g = new DataRequest<Models.StationModel>(lines, Request_type.Station);
+
+>>>>>>> 25e09cb7c0c0d3e2f465a9752ad058dbb107f7ff
             // Exemple de code pour la localisation d'ApplicationBar
             //BuildLocalizedApplicationBar();
           //  private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
@@ -29,7 +35,7 @@ namespace RaTDeParis
         }
         private void AddClicked_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/AddItineraire.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/AddItinerary.xaml", UriKind.Relative));
         }
         private void toto(object sender, EventArgs e)
         {
