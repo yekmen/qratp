@@ -105,13 +105,10 @@
     <Compile Include="AddItineraire.xaml.cs">
       <DependentUpon>AddItineraire.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\DirectionModel.cs" />
     <Compile Include="Models\DirectionsModel.cs" />
     <Compile Include="Models\LineModel.cs" />
-    <Compile Include="Models\LinesModel.cs" />
     <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Models\SchedulesModel.cs" />
-    <Compile Include="Models\StationModel.cs" />
     <Compile Include="Models\StationsModel.cs" />
     <Compile Include="MyUrls.cs" />
     <Compile Include="OfflineData.cs" />

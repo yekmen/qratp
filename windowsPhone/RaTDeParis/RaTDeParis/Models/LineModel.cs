@@ -4,21 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaTDeParis
+namespace RaTDeParis.Models
 {
-    class LineModel
+    public class LineModel
     {
-        public long id
+        public int id
         {
             get;
             set;
         }
-        public long type_id
+        public int type_id
         {
             get;
             set;
         }
-        public string type_name { 
+        public string type_name
+        {
+            get;
+            set;
+        }
+        public string line
+        {
+            get;
+            set;
+        }
+    }
+    class LinesModel 
+    {
+        public List<LineModel> lines
+        {
             get;
             set;
         }

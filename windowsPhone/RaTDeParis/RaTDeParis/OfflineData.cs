@@ -29,32 +29,94 @@ namespace RaTDeParis
             Type_ID = _TypeID;
         }
     }
-    class OfflineData
+    class OfflineData<T>
     {
         public IsolatedStorageSettings isolatedStore = IsolatedStorageSettings.ApplicationSettings;
-        
-        public OfflineData()
-        {
-            isolatedStore.Remove("userData");
-            Data _data = new Data(1, "test", 2, "test2");
-            isolatedStore.Add("userData", _data);
-            isolatedStore.Save();
-
-            List<Data> ret = getBus();
-            Debug.WriteLine("Size : " + ret.Count());
+        private enum LineType{
+            Bus = 1,
+            Metro = 2,
+            Tram = 6,
+            RER = 4
         }
-        public List<Data> getBus()
+        public OfflineData(List<T> list, Request_type type)
         {
-            List<Data> ret = new List<Data>(); //returned value
             
-            for(int i = 0; i < isolatedStore.Count(); i++)
+            if (isolatedStore.Contains("lineData"))  
             {
-                Object temp;
-                if (loadObject("userData", out temp))
+                isolatedStore["lineData"] = list;       // lineData is existe
+            }
+            else
+            {
+                Debug.WriteLine("Data base not exists");
+                isolatedStore.Add("lineData", list);
+            }
+            isolatedStore.Save();
+            /*
+            Debug.WriteLine("Size : " + isolatedStore.Count());
+            isolatedStore.Clear();
+            Debug.WriteLine("Size : " + isolatedStore.Count());
+            
+            foreach(var element in list)
+            {
+                if (element is Models.LineModel)
                 {
-                    Data _data = (Data)temp;
-                    ret.Add(_data);
+                    Data _data = new Data((element as Models.LineModel).id,
+                                          (element as Models.LineModel).line,
+                                          (element as Models.LineModel).type_id,
+                                          (element as Models.LineModel).type_name);
+                    if(_data.Line == "")
+                        Debug.WriteLine("Line is empty" + _data.Line);
+                    else if(isolatedStore.Contains(_data.Line))
+                        Debug.WriteLine("Line is already exists" + _data.Line);
+                    else
+                    {
+                        Debug.WriteLine("Try to save : " + _data.Line);
+                        Debug.WriteLine("Size : " + isolatedStore.Count());
+                        isolatedStore.Add(_data.Line, _data);
+                    }
                 }
+            }
+
+            isolatedStore.Save();
+            */
+            List<Models.LineModel> ret = getLine();
+            Debug.WriteLine("Size : " + ret.Count());
+            Debug.WriteLine("Bus size : " + getBus().Count());
+            Debug.WriteLine("Metro size : " + getMetro().Count());
+            Debug.WriteLine("RER size : " + getRER().Count());
+            Debug.WriteLine("Tram size : " + getTRAM().Count());
+        }
+        public List<Models.LineModel> getLine()
+        {
+            Object temp;
+            if (!loadObject("lineData", out temp))
+                Debug.WriteLine("LineData not exists !!!");
+            return temp as List<Models.LineModel>;
+        }
+        public List<Models.LineModel> getBus()      //type_id = 1 for BUS 
+        {
+            return getData(LineType.Bus);
+        }
+        public List<Models.LineModel> getMetro()
+        {
+            return getData(LineType.Metro);
+        }
+        public List<Models.LineModel> getRER()
+        {
+            return getData(LineType.RER);
+        }
+        public List<Models.LineModel> getTRAM()
+        {
+            return getData(LineType.Tram);
+        }
+        private List<Models.LineModel> getData(LineType type)
+        {
+            List<Models.LineModel> lines = getLine();       //Get all line before parsing
+            List<Models.LineModel> ret = new List<Models.LineModel>();      // returned list
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                if (lines[i].type_id == (int)type)
+                    ret.Add(lines[i]);
             }
             return ret;
         }

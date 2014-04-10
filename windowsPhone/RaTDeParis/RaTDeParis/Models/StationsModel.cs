@@ -6,6 +6,19 @@ using System.Threading.Tasks;
 
 namespace RaTDeParis.Models
 {
+    class StationModel
+    {
+        public long id
+        {
+            get;
+            set;
+        }
+        public string station
+        {
+            get;
+            set;
+        }
+    }
     class StationsModel
     {
         public List<StationModel> stations

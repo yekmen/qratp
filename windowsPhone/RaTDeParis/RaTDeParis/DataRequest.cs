@@ -32,12 +32,13 @@ namespace RaTDeParis
         private Request_type currentType;
         private WebClient webClient;
         private List<T> list;
+        
         public DataRequest(List<T> list, Request_type type)
         {
            this.list = list;
-           download(type);
+           Download(type);
         }
-        private void download(Request_type type) {
+        private void Download(Request_type type) {
             currentType = type;
             switch (type) { 
                 case Request_type.Direction:
@@ -73,13 +74,10 @@ namespace RaTDeParis
                     list = model3.stations as List<T>;
                     break;
             }
-           
-
-            // Now parse with JSON.
-            // JsonConvert.DeserializeObject<Movie>(json)
-           // stations = Newtonsoft.Json.JsonConvert.DeserializeObject<StationsModel>(textData);
-
+            if (FinTraitement != null)
+                FinTraitement(list);
         }
-        
+
+        public event Action<object> FinTraitement;
     }
 }

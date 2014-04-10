@@ -15,16 +15,24 @@ namespace RaTDeParis
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        private List<Models.LineModel> lines;
         // Constructeur
         public MainPage()
         {
             InitializeComponent();
-            Debug.WriteLine("CHARGEMENT !!!");
+            
+            lines = new List<Models.LineModel>();
+            DataRequest<Models.LineModel> g = new DataRequest<Models.LineModel>(lines, Request_type.Line);
+            g.FinTraitement += g_FinTraitement;
 
-            OfflineData of = new OfflineData();
-            List<Models.StationModel> lines = new List<Models.StationModel>();
-            DataRequest<Models.StationModel> g = new DataRequest<Models.StationModel>(lines, Request_type.Station);
         }
+
+        void g_FinTraitement(object obj)
+        {
+            lines = obj as List<Models.LineModel>;
+            OfflineData<Models.LineModel> of = new OfflineData<Models.LineModel>(lines, Request_type.Line);
+        }
+
         private void AddClicked_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/AddItinerary.xaml", UriKind.Relative));

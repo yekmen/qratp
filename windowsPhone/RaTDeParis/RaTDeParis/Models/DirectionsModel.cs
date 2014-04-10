@@ -6,6 +6,19 @@ using System.Threading.Tasks;
 
 namespace RaTDeParis.Models
 {
+    class DirectionModel
+    {
+        public long id
+        {
+            get;
+            set;
+        }
+        public string direction
+        {
+            get;
+            set;
+        }
+    }
     class DirectionsModel
     {
         public List<DirectionModel> directions
