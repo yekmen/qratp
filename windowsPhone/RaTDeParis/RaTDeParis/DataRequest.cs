@@ -59,6 +59,7 @@ namespace RaTDeParis
         }
         public void loadHTMLCallback(Object sender, DownloadStringCompletedEventArgs e)
         {
+            
             string textData = e.Result;
             switch (currentType)
             {

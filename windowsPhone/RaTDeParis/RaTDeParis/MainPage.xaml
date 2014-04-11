@@ -40,14 +40,17 @@
         <!--ContentPanel - placez tout contenu supplémentaire ici-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <ListBox x:FieldModifier="list" >
-                    <ListBoxItem Name="test" Height="100" Content="Test">
-                    </ListBoxItem>
+                <ListBox x:Name="ItinerariesList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding id}" />
+                                <TextBlock Text="{Binding station}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
-                <TextBlock x:Name="txtOut" TextWrapping="Wrap"></TextBlock>
-                
             </StackPanel>
-            
         </Grid>
 
         <!--Supprimez les commentaires pour voir une grille d'alignement qui vous aidera à vous assurer que vos contrôles sont

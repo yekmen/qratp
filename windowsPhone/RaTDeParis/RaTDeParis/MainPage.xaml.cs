@@ -16,6 +16,7 @@ namespace RaTDeParis
     public partial class MainPage : PhoneApplicationPage
     {
         private List<Models.LineModel> lines;
+        private OfflineData<Models.LineModel> offlinesData;
         // Constructeur
         public MainPage()
         {
@@ -30,9 +31,15 @@ namespace RaTDeParis
         void g_FinTraitement(object obj)
         {
             lines = obj as List<Models.LineModel>;
-            OfflineData<Models.LineModel> of = new OfflineData<Models.LineModel>(lines, Request_type.Line);
+            offlinesData = new OfflineData<Models.LineModel>(lines, Request_type.Line);
         }
-
+        private void showItineraries()
+        {
+            if (offlinesData != null)
+            {
+                ItinerariesList.ItemsSource = offlinesData.getItineraries();
+            }
+        }
         private void AddClicked_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/AddItinerary.xaml", UriKind.Relative));
@@ -40,6 +47,8 @@ namespace RaTDeParis
         private void toto(object sender, EventArgs e)
         {
             Debug.WriteLine("Clickeddddd TOTO");
+            SaveData tmp = new SaveData("http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=1151&direction=80649&station=30783","76", SaveData.Sens.Aller);
+            offlinesData.saveItinerary("prrt", tmp);
         }
         // Exemple de code pour la conception d'une ApplicationBar localisée
         //private void BuildLocalizedApplicationBar()

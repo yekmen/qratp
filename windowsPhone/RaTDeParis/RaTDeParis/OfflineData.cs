@@ -32,8 +32,7 @@ namespace RaTDeParis
     [DataContract]
     public class SaveData
     {
-        [DataMember]
-        enum Sens
+        public enum Sens
         {
             Aller,
             Retour
@@ -63,7 +62,6 @@ namespace RaTDeParis
         }
         public OfflineData(List<T> list, Request_type type)
         {
-            
             if (isolatedStore.Contains("lineData"))  
             {
                 isolatedStore["lineData"] = list;       // lineData is existe
@@ -73,42 +71,7 @@ namespace RaTDeParis
                 Debug.WriteLine("Data base not exists");
                 isolatedStore.Add("lineData", list);
             }
-            isolatedStore.Save();
-            /*
-            Debug.WriteLine("Size : " + isolatedStore.Count());
-            isolatedStore.Clear();
-            Debug.WriteLine("Size : " + isolatedStore.Count());
-            
-            foreach(var element in list)
-            {
-                if (element is Models.LineModel)
-                {
-                    Data _data = new Data((element as Models.LineModel).id,
-                                          (element as Models.LineModel).line,
-                                          (element as Models.LineModel).type_id,
-                                          (element as Models.LineModel).type_name);
-                    if(_data.Line == "")
-                        Debug.WriteLine("Line is empty" + _data.Line);
-                    else if(isolatedStore.Contains(_data.Line))
-                        Debug.WriteLine("Line is already exists" + _data.Line);
-                    else
-                    {
-                        Debug.WriteLine("Try to save : " + _data.Line);
-                        Debug.WriteLine("Size : " + isolatedStore.Count());
-                        isolatedStore.Add(_data.Line, _data);
-                    }
-                }
-            }
-
-            isolatedStore.Save();
-            
-            List<Models.LineModel> ret = getLine();
-            Debug.WriteLine("Size : " + ret.Count());
-            Debug.WriteLine("Bus size : " + getBus().Count());
-            Debug.WriteLine("Metro size : " + getMetro().Count());
-            Debug.WriteLine("RER size : " + getRER().Count());
-            Debug.WriteLine("Tram size : " + getTRAM().Count());
-             */
+            isolatedStore.Save(); 
         }
         public List<Models.LineModel> getLine()
         {
@@ -166,6 +129,8 @@ namespace RaTDeParis
                 Debug.WriteLine("Itinerary not exists");
                 isolatedStore.Add(itineraryName, _saveData);
             }
+
+            isolatedStore.Add("__itiner@ry", itineraryName);
             isolatedStore.Save();
         }
         public List<SaveData> getItineraries(string itineraryName)
@@ -175,6 +140,14 @@ namespace RaTDeParis
                 Debug.WriteLine("Itineraries not exists !!!");
             return temp as List<SaveData>;
         }
+        public List<SaveData> getItineraries()  //List of itineraries name
+        {
+            Object temp;
+            if (!loadObject("__itiner@ry", out temp))
+                Debug.WriteLine("Itineraries not exists !!!");
+            return temp as List<SaveData>;
+        }
+
         private List<Models.LineModel> getData(LineType type)
         {
             List<Models.LineModel> lines = getLine();       //Get all line before parsing
