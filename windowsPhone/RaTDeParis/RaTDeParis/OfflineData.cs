@@ -126,8 +126,10 @@ namespace RaTDeParis
             }
             else
             {
+                List<SaveData> currentItineraries = new List<SaveData>();
+                currentItineraries.Add(_saveData);
+                isolatedStore.Add(itineraryName, currentItineraries);
                 Debug.WriteLine("Itinerary not exists");
-                isolatedStore.Add(itineraryName, _saveData);
             }
 
             isolatedStore.Add("__itiner@ry", itineraryName);
