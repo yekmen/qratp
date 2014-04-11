@@ -29,6 +29,29 @@ namespace RaTDeParis
             Type_ID = _TypeID;
         }
     }
+    [DataContract]
+    public class SaveData
+    {
+        [DataMember]
+        enum Sens
+        {
+            Aller,
+            Retour
+        }
+        [DataMember]
+        private string Url { get; set; }
+        [DataMember]
+        private string LineName { get; set; }
+        [DataMember]
+        private Sens Way { get; set; }    //Aller ou Retour
+
+        public SaveData(string _URL, string _LineName, Sens _Way)
+        {
+            Url = _URL;
+            LineName = _LineName;
+            Way = _Way;
+        }
+    }
     class OfflineData<T>
     {
         public IsolatedStorageSettings isolatedStore = IsolatedStorageSettings.ApplicationSettings;
@@ -78,13 +101,14 @@ namespace RaTDeParis
             }
 
             isolatedStore.Save();
-            */
+            
             List<Models.LineModel> ret = getLine();
             Debug.WriteLine("Size : " + ret.Count());
             Debug.WriteLine("Bus size : " + getBus().Count());
             Debug.WriteLine("Metro size : " + getMetro().Count());
             Debug.WriteLine("RER size : " + getRER().Count());
             Debug.WriteLine("Tram size : " + getTRAM().Count());
+             */
         }
         public List<Models.LineModel> getLine()
         {
@@ -108,6 +132,48 @@ namespace RaTDeParis
         public List<Models.LineModel> getTRAM()
         {
             return getData(LineType.Tram);
+        }
+        public Models.LineModel getLineNameByID(int _id)        //return null if line id not found
+        {
+            Models.LineModel ret = null;
+            List<Models.LineModel> lines = getLine();       //Get all line before parsing
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                if (lines[i].type_id == _id)
+                {
+                    ret = lines[i];
+                    Debug.WriteLine("ID : " + _id + " = " + ret.line);
+                }
+                else
+                {
+                    Debug.WriteLine("This " + _id + " not found !, return NULL !");
+                    ret = null;
+                }
+            }
+
+            return ret; 
+        }
+        public void saveItinerary(string itineraryName, SaveData _saveData)
+        {
+            if (isolatedStore.Contains(itineraryName))    //Is exists
+            {
+                List<SaveData> currentItineraries = getItineraries(itineraryName);
+                currentItineraries.Add(_saveData);
+                isolatedStore.Add(itineraryName, currentItineraries);
+            }
+            else
+            {
+                Debug.WriteLine("Itinerary not exists");
+                isolatedStore.Add(itineraryName, _saveData);
+            }
+            isolatedStore.Save();
+        }
+        public List<SaveData> getItineraries(string itineraryName)
+        {
+            Object temp;
+            if (!loadObject(itineraryName, out temp))
+                Debug.WriteLine("Itineraries not exists !!!");
+            return temp as List<SaveData>;
         }
         private List<Models.LineModel> getData(LineType type)
         {
