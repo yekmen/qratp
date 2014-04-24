@@ -8,6 +8,10 @@ namespace RaTDeParis.Models
 {
     class ScheduleModel
     {
-
+        public List<string> schedule
+        {
+            get;
+            set;
+        }
     }
 }
