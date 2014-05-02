@@ -37,7 +37,7 @@ namespace RaTDeParis
         {
             if (offlinesData != null)
             {
-                ItinerariesList.ItemsSource = offlinesData.getItineraries();
+                //ItinerariesList.ItemsSource = offlinesData.getItineraries();
             }
         }
         private void AddClicked_Click(object sender, EventArgs e)
@@ -49,6 +49,12 @@ namespace RaTDeParis
             Debug.WriteLine("Clickeddddd TOTO");
             SaveData tmp = new SaveData("http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=1151&direction=80649&station=30783","76", SaveData.Sens.Aller);
             offlinesData.saveItinerary("prrt", tmp);
+            fillItineraryList();
+        }
+        private void fillItineraryList()
+        {
+            List<string> itineraries = offlinesData.getItineraries(); //Get all itineraries
+
         }
         // Exemple de code pour la conception d'une ApplicationBar localisée
         //private void BuildLocalizedApplicationBar()

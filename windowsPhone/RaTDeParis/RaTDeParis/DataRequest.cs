@@ -96,7 +96,7 @@ namespace RaTDeParis
             }
             catch
             {
-                Debug.WriteLine("No internet connection or server not response !");
+                Debug.WriteLine("No internet connection or server not response !" + e.Error);
                 MessageBoxResult result = MessageBox.Show("Warning", "No internet connection ... ", MessageBoxButton.OK);
             }
            

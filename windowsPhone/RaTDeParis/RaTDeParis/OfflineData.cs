@@ -38,11 +38,11 @@ namespace RaTDeParis
             Retour
         }
         [DataMember]
-        private string Url { get; set; }
+        public string Url { get; set; }
         [DataMember]
-        private string LineName { get; set; }
+        public string LineName { get; set; }
         [DataMember]
-        private Sens Way { get; set; }    //Aller ou Retour
+        public Sens Way { get; set; }    //Aller ou Retour
 
         public SaveData(string _URL, string _LineName, Sens _Way)
         {
@@ -54,6 +54,7 @@ namespace RaTDeParis
     class OfflineData<T>
     {
         public IsolatedStorageSettings isolatedStore = IsolatedStorageSettings.ApplicationSettings;
+        private List<string> currentItinerariesNames;
         private enum LineType{
             Bus = 1,
             Metro = 2,
@@ -62,6 +63,9 @@ namespace RaTDeParis
         }
         public OfflineData(List<T> list, Request_type type)
         {
+            //isolatedStore.Clear();
+            currentItinerariesNames = new List<string>();
+            
             if (isolatedStore.Contains("lineData"))  
             {
                 isolatedStore["lineData"] = list;       // lineData is existe
@@ -71,7 +75,7 @@ namespace RaTDeParis
                 Debug.WriteLine("Data base not exists");
                 isolatedStore.Add("lineData", list);
             }
-            isolatedStore.Save(); 
+            isolatedStore.Save();
         }
         public List<Models.LineModel> getLine()
         {
@@ -118,21 +122,29 @@ namespace RaTDeParis
         }
         public void saveItinerary(string itineraryName, SaveData _saveData)
         {
+            currentItinerariesNames = getItineraries();
             if (isolatedStore.Contains(itineraryName))    //Is exists
             {
                 List<SaveData> currentItineraries = getItineraries(itineraryName);
                 currentItineraries.Add(_saveData);
+                //Remplace if itinerary is exist
+                isolatedStore.Remove(itineraryName);
                 isolatedStore.Add(itineraryName, currentItineraries);
             }
             else
             {
                 List<SaveData> currentItineraries = new List<SaveData>();
                 currentItineraries.Add(_saveData);
+                currentItinerariesNames.Add(itineraryName);
                 isolatedStore.Add(itineraryName, currentItineraries);
                 Debug.WriteLine("Itinerary not exists");
             }
 
-            isolatedStore.Add("__itiner@ry", itineraryName);
+            
+
+            //isolatedStore.Remove("__itiner@ry");
+            //isolatedStore.Add("__itiner@ry", currentItinerariesNames);
+            isolatedStore["__itiner@ry"] = currentItinerariesNames;
             isolatedStore.Save();
         }
         public List<SaveData> getItineraries(string itineraryName)
@@ -142,12 +154,22 @@ namespace RaTDeParis
                 Debug.WriteLine("Itineraries not exists !!!");
             return temp as List<SaveData>;
         }
-        public List<SaveData> getItineraries()  //List of itineraries name
+        public List<string> getItineraries()  //List of itineraries name
         {
             Object temp;
+            List<string> a = new List<string>();
             if (!loadObject("__itiner@ry", out temp))
                 Debug.WriteLine("Itineraries not exists !!!");
-            return temp as List<SaveData>;
+            else
+            {
+                foreach (string i in (List<string>)temp)
+                {
+                    a.Add(i);
+                    //Debug.WriteLine(i);
+                }
+            }
+            return a;
+            //return temp as List<string>;
         }
 
         private List<Models.LineModel> getData(LineType type)
