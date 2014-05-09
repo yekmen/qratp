@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO.IsolatedStorage;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.ComponentModel;
 
 namespace RaTDeParis
 {
@@ -51,10 +52,19 @@ namespace RaTDeParis
             Way = _Way;
         }
     }
-    class OfflineData<T>
+    class OfflineData<T> : INotifyPropertyChanged
     {
         public IsolatedStorageSettings isolatedStore = IsolatedStorageSettings.ApplicationSettings;
         private List<string> currentItinerariesNames;
+        public List<string> CurrentItinerariesNames
+        {
+            get { return currentItinerariesNames; }
+            set
+            {
+                currentItinerariesNames = value;
+                NotifyPropertyChanged("CurrentItinerariesNames");
+            }
+        }
         private enum LineType{
             Bus = 1,
             Metro = 2,
@@ -139,9 +149,6 @@ namespace RaTDeParis
                 isolatedStore.Add(itineraryName, currentItineraries);
                 Debug.WriteLine("Itinerary not exists");
             }
-
-            
-
             //isolatedStore.Remove("__itiner@ry");
             //isolatedStore.Add("__itiner@ry", currentItinerariesNames);
             isolatedStore["__itiner@ry"] = currentItinerariesNames;
@@ -195,6 +202,14 @@ namespace RaTDeParis
                 return false;
             }
             return true;
+        }
+    
+        public event PropertyChangedEventHandler PropertyChanged;
+    
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if(PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

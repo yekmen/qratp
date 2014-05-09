@@ -9,8 +9,6 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using RaTDeParis.Resources;
 using System.Diagnostics;
-
-
 namespace RaTDeParis
 {
     public partial class MainPage : PhoneApplicationPage
@@ -20,24 +18,25 @@ namespace RaTDeParis
         // Constructeur
         public MainPage()
         {
+            
             InitializeComponent();
             
             lines = new List<Models.LineModel>();
             DataRequest<Models.LineModel> g = new DataRequest<Models.LineModel>(lines, Request_type.Line);
             g.FinTraitement += g_FinTraitement;
-
         }
 
         void g_FinTraitement(object obj)
         {
             lines = obj as List<Models.LineModel>;
             offlinesData = new OfflineData<Models.LineModel>(lines, Request_type.Line);
+            fillItineraryList();
         }
         private void showItineraries()
         {
             if (offlinesData != null)
             {
-                //ItinerariesList.ItemsSource = offlinesData.getItineraries();
+                ItinerariesList.ItemsSource = offlinesData.getItineraries();
             }
         }
         private void AddClicked_Click(object sender, EventArgs e)
@@ -48,13 +47,25 @@ namespace RaTDeParis
         {
             Debug.WriteLine("Clickeddddd TOTO");
             SaveData tmp = new SaveData("http://metro.breizh.im/dev/ratp_api.php?action=getSchedule&line=1151&direction=80649&station=30783","76", SaveData.Sens.Aller);
-            offlinesData.saveItinerary("prrt", tmp);
+            offlinesData.saveItinerary("prrt2", tmp);
             fillItineraryList();
+            
         }
         private void fillItineraryList()
         {
-            List<string> itineraries = offlinesData.getItineraries(); //Get all itineraries
+            //List<string> itineraries = offlinesData.getItineraries(); //Get all itineraries
+            //combobo.ItemsSource = offlinesData.getItineraries(); //Get all itineraries
+            lpkItineraries.ItemsSource = offlinesData.getItineraries();
+        }
 
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
         // Exemple de code pour la conception d'une ApplicationBar localisée
         //private void BuildLocalizedApplicationBar()

@@ -6,13 +6,27 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    
+    xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Layout;assembly=Microsoft.Expression.Interactions"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:abu="clr-namespace:AppBarUtils;assembly=AppBarUtils"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
-
+    
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Name="lpkItemTemplate">
+            <TextBlock Text="{Binding CurrentItinerariesNames}" />
+        </DataTemplate>
+        <DataTemplate x:Name="lpkFullItemTemplate">
+            <TextBlock Text="{Binding CurrentItinerariesNames}" />
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    
     <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -28,18 +42,19 @@
             <!--Pivot item one-->
             <phone:PivotItem Header="Aller">
                 <Grid/>
-                </phone:PivotItem>
+            </phone:PivotItem>
 
             <!--Pivot item two-->
             <phone:PivotItem Header="Retour">
                 <Grid/>
-                </phone:PivotItem>
-            </phone:Pivot>
-        
-        
+            </phone:PivotItem>
+        </phone:Pivot>
         <!--ContentPanel - placez tout contenu supplémentaire ici-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,10,12,0">
             <StackPanel>
+                <toolkit:ListPicker FullModeItemTemplate="{Binding lpkFullItemTemplate}"
+                Grid.Row="5" ItemTemplate="{Binding lpkItemTemplate}"
+                x:Name="lpkCountry"/>
                 <ListBox x:Name="ItinerariesList">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -63,6 +78,21 @@
     </Grid>
     <!-- Item de chaques itineraires devront être ici ! -->
     <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/search.png" Text="search" Click="toto"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/selectCity.png" Text="location"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="settings" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    <i:Interaction.Behaviors>
+        <abu:AppBarItemCommand Id="search" Text="aa" Command="{Binding ShowSearch}" />
+        <abu:AppBarItemCommand Id="location" Text="bb" Command="{Binding ShowCitySelection}" />
+        <abu:AppBarItemCommand x:Name="appBarMenu" Id="settings" Text="{Binding appBarMenu}" Type="MenuItem" Command="{Binding ShowSettings}" />
+    </i:Interaction.Behaviors>
+    <!--
+    <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="AddBtn" Click="AddClicked_Click" IconUri="/Images/appbar_button1.png" Text="Ajouter"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Supprimer"/>
@@ -70,6 +100,9 @@
                 <shell:ApplicationBarMenuItem Text="Taf bus" Click="toto"/>
                 <shell:ApplicationBarMenuItem Text="Taf bus"/>
             </shell:ApplicationBar.MenuItems>
+
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
+    ! -->
 </phone:PhoneApplicationPage>
+    
