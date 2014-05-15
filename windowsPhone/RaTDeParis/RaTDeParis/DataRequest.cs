@@ -18,6 +18,7 @@ using Newtonsoft.Json.Utilities;
 using Windows.Storage;
 using System.Threading.Tasks;
 using System.IO.IsolatedStorage; 
+
 namespace RaTDeParis
 {
     public enum Request_type
@@ -87,8 +88,26 @@ namespace RaTDeParis
                         list = model3.stations as List<T>;
                         break;
                     case Request_type.Schedule:
-                        Models.ScheduleModel model4 = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.ScheduleModel>(textData);
-                        list = model4.schedule as List<T>;
+                        //Models.ScheduleModel model4 = new Models.ScheduleModel();
+                        JObject o = JObject.Parse(textData);
+          
+                        JArray categories = (JArray)o["schedule"];
+                        List<object> categoriesText = categories.Select(c => (object)c).ToList();
+                        //List<string> categoriesText = categories.Select(c => (object)c).OfType<string>().ToList();
+                        List<string> listStr = new List<string>();
+                        foreach(object obj in categoriesText)
+                        {
+                            string str = obj.ToString();
+                            char[] charsToTrim = { '*', ' ', '\'', '{', '}', '\n', '\r', '"'};
+                            //line.Replace(@"\", "")
+                            listStr.Add(str.Trim(charsToTrim));
+                        }
+                        //var stringList = categoriesText.OfType<string>();
+                        //list = stringList as List<T>;
+                        //model4.schedule = listStr as List<string>;
+                        //list = model4.schedule as List<T>;
+
+                        list = listStr as List<T>;
                         break;
                 }
                 if (FinTraitement != null)
@@ -97,7 +116,7 @@ namespace RaTDeParis
             catch
             {
                 Debug.WriteLine("No internet connection or server not response !" + e.Error);
-                MessageBoxResult result = MessageBox.Show("Warning", "No internet connection ... ", MessageBoxButton.OK);
+                //MessageBoxResult result = MessageBox.Show("Warning", "No internet connection ... ", MessageBoxButton.OK);
             }
            
         }

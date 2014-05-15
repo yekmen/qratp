@@ -52,18 +52,10 @@
         <!--ContentPanel - placez tout contenu supplémentaire ici-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,10,12,0">
             <StackPanel>
-                <toolkit:ListPicker FullModeItemTemplate="{Binding lpkFullItemTemplate}"
+                <toolkit:ListPicker SelectionChanged="lpkItineraries_SelectionChanged" FullModeItemTemplate="{Binding lpkFullItemTemplate}"
                 Grid.Row="5" ItemTemplate="{Binding lpkItemTemplate}"
-                x:Name="lpkCountry"/>
+                x:Name="lpkItineraries"/>
                 <ListBox x:Name="ItinerariesList">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding id}" />
-                                <TextBlock Text="{Binding station}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
         </Grid>

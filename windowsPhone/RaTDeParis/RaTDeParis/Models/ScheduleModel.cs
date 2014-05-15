@@ -13,5 +13,15 @@ namespace RaTDeParis.Models
             get;
             set;
         }
+        public string stationName
+        {
+            get;
+            set;
+        }
+        public string lineName
+        {
+            get;
+            set;
+        }
     }
 }

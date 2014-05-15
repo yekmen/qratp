@@ -32,6 +32,16 @@ namespace RaTDeParis
             offlinesData = new OfflineData<Models.LineModel>(lines, Request_type.Line);
             fillItineraryList();
         }
+        void scheduleDownloaded(object obj)
+        {
+            //ItinerariesList.ItemsSource = obj as List<string>;
+            //ItinerariesList.DataContext = obj as List<string>;
+            ItinerariesList.Items.Add("----------------------------");
+            foreach(string str in obj as List<string>)
+            {
+                ItinerariesList.Items.Add(str);
+            }
+        }
         private void showItineraries()
         {
             if (offlinesData != null)
@@ -57,7 +67,25 @@ namespace RaTDeParis
             //combobo.ItemsSource = offlinesData.getItineraries(); //Get all itineraries
             lpkItineraries.ItemsSource = offlinesData.getItineraries();
         }
+        private void lpkItineraries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //ListPickerItem lpi = (sender as ListPicker).SelectedItem as ListPickerItem;
+            //MessageBox.Show("selected item is : " + lpi.Content);
+            
+            if (lpkItineraries.SelectedIndex == -1) //otherwise (listPicker1.SelectedItem == null) also works
+                return;
+            MessageBox.Show(lpkItineraries.SelectedItem.ToString());
 
+            List<SaveData> list = offlinesData.getItineraries(lpkItineraries.SelectedItem.ToString());
+            List<string> schedules = new List<string>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                //DataRequest<Models.ScheduleModel> g = new DataRequest<Models.ScheduleModel>(schedules, list[i].Url, Request_type.Schedule);
+                DataRequest<string> g = new DataRequest<string>(schedules, list[i].Url, Request_type.Schedule);
+                g.FinTraitement += scheduleDownloaded;
+                Debug.WriteLine(list[i].Url);
+            }
+        }
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
