@@ -14,6 +14,9 @@ namespace RaTDeParis
     {
         public List<Types> types;
         private OfflineData<Models.LineModel> offlinesData;
+        private List<Models.DirectionModel> directionsData;
+        private List<Models.StationModel> stationsData;
+
         public class Types {
 
             public string typeName
@@ -27,9 +30,20 @@ namespace RaTDeParis
             InitializeComponent();
 
             offlinesData = PhoneApplicationService.Current.State["param"] as OfflineData<Models.LineModel>;
-
             types = new List<Types>();
             binds();
+        }
+        void DirectionDataIsReady(object obj)
+        {
+            directionsData = obj as List<Models.DirectionModel>;
+            DirectionList.ItemsSource = directionsData;
+            panoramaControl.DefaultItem = panoramaControl.Items[2];
+        }
+        void SelectionDataIsReady(object obj)
+        {
+            stationsData = obj as List<Models.StationModel>;
+            StationList.ItemsSource = stationsData;
+            panoramaControl.DefaultItem = panoramaControl.Items[3];
         }
         public void binds() {
             bindTypes();
@@ -39,12 +53,6 @@ namespace RaTDeParis
             types.Add(new Types { typeName = "Metro" });
             types.Add(new Types { typeName = "Bus" });
             TypeList.ItemsSource = types;
-        }
-        public void bindDirections() { 
-        
-        }
-        public void bindStations() { 
-        
         }
         public void Type_selection(object sender, SelectionChangedEventArgs e)
         {
@@ -62,12 +70,31 @@ namespace RaTDeParis
             {
                 LinesList.ItemsSource = offlinesData.getBus();
             }
+
+            panoramaControl.DefaultItem = panoramaControl.Items[1];
         }
-        public void Line_selection(object sender, SelectionChangedEventArgs e) { 
-        
+        public void Line_selection(object sender, SelectionChangedEventArgs e) 
+        {
+            Models.LineModel selection = LinesList.SelectedItem as Models.LineModel;
+            int id = selection.id;
+            directionsData = new List<Models.DirectionModel>();
+            DataRequest<Models.DirectionModel> g = new DataRequest<Models.DirectionModel>(directionsData, Request_type.Direction, id);
+            g.FinTraitement += DirectionDataIsReady;    
         }
 
-        public void Direction_selection(object sender, SelectionChangedEventArgs e) { }
+        public void Direction_selection(object sender, SelectionChangedEventArgs e)
+        {
+            Models.DirectionModel directionSelection = DirectionList.SelectedItem as Models.DirectionModel;
+
+            Models.LineModel lineSelection = LinesList.SelectedItem as Models.LineModel;
+            int lineID = lineSelection.id;
+
+            int directionID = directionSelection.id;
+            
+            stationsData = new List<Models.StationModel>();
+            DataRequest<Models.StationModel> g = new DataRequest<Models.StationModel>(stationsData, Request_type.Station, lineID, directionID);
+            g.FinTraitement += SelectionDataIsReady;
+        }
         public void Station_selection(object sender, SelectionChangedEventArgs e) { }
         public void add() {
             MessageBoxResult result = MessageBox.Show("title", "caption", MessageBoxButton.OKCancel);

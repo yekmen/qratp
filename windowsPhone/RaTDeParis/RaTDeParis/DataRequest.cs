@@ -34,11 +34,17 @@ namespace RaTDeParis
         private Request_type currentType;
         private WebClient webClient;
         private List<T> list;
-        private string mUrl;    
-
-        public DataRequest(List<T> list, Request_type type)
+        private string mUrl;
+        private int lineID;
+        private int directionID;
+        private int stationID;
+        public DataRequest(List<T> list, Request_type type, int lineID = 0, int directionID = 0, int stationID = 0)
         {
            this.list = list;
+           this.lineID = lineID;
+           this.directionID = directionID;
+           this.stationID = stationID;
+
            Download(type);
         }
         public DataRequest(List<T> list, string _URL, Request_type type)
@@ -51,12 +57,13 @@ namespace RaTDeParis
             currentType = type;
             switch (type) { 
                 case Request_type.Direction:
+                    DownloadJSON_Data(MyUrls.getDirections(lineID));
                     break;
                 case Request_type.Line:
                     DownloadJSON_Data(MyUrls.getLine());
                     break;
                 case Request_type.Station:
-                    DownloadJSON_Data(MyUrls.getStations(1151, 80649));
+                    DownloadJSON_Data(MyUrls.getStations(lineID, directionID));
                     break;
                 case Request_type.Schedule:
                     DownloadJSON_Data(mUrl);
@@ -78,6 +85,7 @@ namespace RaTDeParis
                 {
                     case Request_type.Direction:
                         Models.DirectionsModel model = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.DirectionsModel>(textData);
+                        list = model.directions as List<T>;
                         break;
                     case Request_type.Line:
                         Models.LinesModel model2 = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.LinesModel>(textData);

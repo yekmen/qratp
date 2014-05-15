@@ -15,7 +15,7 @@
 
     <!--LayoutRoot contient la grille racine où tout le contenu des autres pages est placé-->
     <Grid x:Name="LayoutRoot">
-        <phone:Panorama Title="add itinerary">
+        <phone:Panorama Title="add itinerary" x:Name="panoramaControl">
             <!---->
             <phone:PanoramaItem Header="type">
                 <Grid >
@@ -40,6 +40,7 @@
                                     <TextBlock Text="{Binding type_name}" FontSize="36"/>
                                     <TextBlock Text=" " FontSize="36"/>
                                     <TextBlock Text="{Binding line}" FontSize="36"/>
+                                    <TextBlock Text="{Binding id}" Visibility="Collapsed"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -53,9 +54,9 @@
                     <ListBox  x:Name="DirectionList" SelectionChanged="Direction_selection">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding id}" />
-                                    <TextBlock Text="{Binding station}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding id}" Visibility="Collapsed"/>
+                                    <TextBlock Text="{Binding direction}" FontSize="36"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -69,8 +70,8 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding id}" />
-                                    <TextBlock Text="{Binding station}" />
+                                    <TextBlock Text="{Binding id}" Visibility="Collapsed"/>
+                                    <TextBlock Text="{Binding station}" FontSize="36" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

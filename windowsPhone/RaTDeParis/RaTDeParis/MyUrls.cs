@@ -18,7 +18,7 @@ namespace RaTDeParis
         }
         public static string getStations(int line, int direction)
         {
-            return "http://metro.breizh.im/dev/ratp_api.php?action=getDirectionList&line="+line+"&direction="+direction;
+            return "http://metro.breizh.im/dev/ratp_api.php?action=getStationList&line="+line+"&direction="+direction;
         }
         public static string getSchedule(int line, int direction, int station)
         {
