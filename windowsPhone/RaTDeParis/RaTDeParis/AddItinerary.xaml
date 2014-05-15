@@ -36,9 +36,10 @@
                     <ListBox  x:Name="LinesList" SelectionChanged="Line_selection">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding id}" />
-                                    <TextBlock Text="{Binding station}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding type_name}" FontSize="36"/>
+                                    <TextBlock Text=" " FontSize="36"/>
+                                    <TextBlock Text="{Binding line}" FontSize="36"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

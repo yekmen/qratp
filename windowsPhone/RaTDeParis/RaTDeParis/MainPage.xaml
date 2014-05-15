@@ -71,8 +71,8 @@
     <!-- Item de chaques itineraires devront être ici ! -->
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/search.png" Text="search" Click="toto"/>
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/selectCity.png" Text="location"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/search.png" Text="Addtest" Click="toto"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/selectCity.png" Text="Add" Click="AddClicked_Click"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="settings" />
             </shell:ApplicationBar.MenuItems>

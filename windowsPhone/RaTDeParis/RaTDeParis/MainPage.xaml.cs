@@ -51,6 +51,7 @@ namespace RaTDeParis
         }
         private void AddClicked_Click(object sender, EventArgs e)
         {
+            PhoneApplicationService.Current.State["param"] = offlinesData;
             NavigationService.Navigate(new Uri("/AddItinerary.xaml", UriKind.Relative));
         }
         private void toto(object sender, EventArgs e)
