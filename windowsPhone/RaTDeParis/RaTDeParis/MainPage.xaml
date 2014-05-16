@@ -56,8 +56,8 @@
                 <toolkit:ListPicker SelectionChanged="lpkItineraries_SelectionChanged" FullModeItemTemplate="{Binding lpkFullItemTemplate}"
             		Grid.Row="1" ItemTemplate="{Binding lpkItemTemplate}"
             		x:Name="lpkItineraries" Width="270"/>
-                    <Button Content="+" Click="AddClicked" Width="86" FontSize="36"/>
-                    <Button Content="-" Click="RemoveClicked" Width="84" FontSize="36"/>
+                    <Button x:Name="Add" Content="+" Click="AddClicked" Width="86" FontSize="36"/>
+                    <Button x:Name="Del" Content="-" Click="RemoveClicked" Width="84" FontSize="36"/>
                 </StackPanel>
                 <ListBox x:Name="ItinerariesList"/>
             </StackPanel>

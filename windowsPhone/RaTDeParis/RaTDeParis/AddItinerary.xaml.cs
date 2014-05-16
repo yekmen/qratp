@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-
+using System.Diagnostics;
 namespace RaTDeParis
 {
     public partial class AddItinerary : PhoneApplicationPage
@@ -85,8 +85,11 @@ namespace RaTDeParis
         public void Line_selection(object sender, SelectionChangedEventArgs e) 
         {
             Models.LineModel selection = LinesList.SelectedItem as Models.LineModel;
-            mLineID = selection.id;
-            mLineName = selection.line;
+            if (selection != null)
+            {
+                mLineID = selection.id;
+                mLineName = selection.line;
+            }
             directionsData = new List<Models.DirectionModel>();
             DataRequest<Models.DirectionModel> g = new DataRequest<Models.DirectionModel>(directionsData, Request_type.Direction, mLineID);
             g.FinTraitement += DirectionDataIsReady;    
@@ -121,6 +124,11 @@ namespace RaTDeParis
             {
                 MessageBox.Show("Non");
             }
+        }
+
+        private void panoramaControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Debug.WriteLine("changing");
         }
     }
 }

@@ -71,6 +71,11 @@ namespace RaTDeParis
         private void fillItineraryList()
         {
             lpkItineraries.ItemsSource = offlinesData.getItineraries();
+            if (lpkItineraries.Items.Count == 0)
+                Del.IsEnabled = false;
+            else
+                Del.IsEnabled = true;
+
         }
         private void lpkItineraries_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -117,7 +122,8 @@ namespace RaTDeParis
                 if(input.Value != "")
                 {
                     MessageBox.Show("Itinéraire " + input.Value + " ajouté avec succès !", "Information", MessageBoxButton.OK);
-                    fillItineraryList(); 
+                    fillItineraryList();
+                    ItinerariesList.Items.Clear();
                 }
                 
             }

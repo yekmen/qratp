@@ -15,7 +15,7 @@
 
     <!--LayoutRoot contient la grille racine où tout le contenu des autres pages est placé-->
     <Grid x:Name="LayoutRoot">
-        <phone:Panorama Title="add itinerary" x:Name="panoramaControl">
+        <phone:Panorama Title="add itinerary" x:Name="panoramaControl" SelectionChanged="panoramaControl_SelectionChanged">
             <!---->
             <phone:PanoramaItem Header="type">
                 <Grid >
