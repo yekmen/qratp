@@ -114,8 +114,12 @@ namespace RaTDeParis
                 MessageBox.Show("Itinéraire " + input.Value + " déjà existant ...", "Erreur", MessageBoxButton.OK);
             else
             {
-                MessageBox.Show("Itinéraire " + input.Value + " ajouté avec succès !", "Information", MessageBoxButton.OK);
-                fillItineraryList();
+                if(input.Value != "")
+                {
+                    MessageBox.Show("Itinéraire " + input.Value + " ajouté avec succès !", "Information", MessageBoxButton.OK);
+                    fillItineraryList(); 
+                }
+                
             }
             
         }
