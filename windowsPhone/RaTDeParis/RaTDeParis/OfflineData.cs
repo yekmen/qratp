@@ -75,7 +75,7 @@ namespace RaTDeParis
         {
             //isolatedStore.Clear();
             currentItinerariesNames = new List<string>();
-            
+            currentItinerariesNames = getItineraries();
             if (isolatedStore.Contains("lineData"))  
             {
                 isolatedStore["lineData"] = list;       // lineData is existe
@@ -178,7 +178,42 @@ namespace RaTDeParis
             return a;
             //return temp as List<string>;
         }
-
+        public bool addNewItinerary(string itineraryName)
+        {
+            bool ret = false;
+            if (isolatedStore.Contains(itineraryName))    //Is exists
+            {
+                ret = false;
+            }
+            else
+            {
+                List<SaveData> currentItineraries = new List<SaveData>();
+                currentItinerariesNames.Add(itineraryName);
+                isolatedStore.Add(itineraryName, currentItineraries);
+                isolatedStore["__itiner@ry"] = currentItinerariesNames;
+                isolatedStore.Save();
+                ret = true;
+            }
+            return ret;
+        }
+        public bool delItinerary(string itineraryName)
+        {
+            bool ret = false;
+            if (!isolatedStore.Contains(itineraryName))    //Not exist
+            {
+                ret = false;
+            }
+            else
+            {
+                currentItinerariesNames.Remove(itineraryName);
+                //isolatedStore.Add(itineraryName, currentItineraries);
+                isolatedStore.Remove(itineraryName);
+                isolatedStore["__itiner@ry"] = currentItinerariesNames;
+                isolatedStore.Save();
+                ret = true;
+            }
+            return ret;
+        }
         private List<Models.LineModel> getData(LineType type)
         {
             List<Models.LineModel> lines = getLine();       //Get all line before parsing

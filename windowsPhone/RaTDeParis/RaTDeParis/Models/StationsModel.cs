@@ -8,7 +8,7 @@ namespace RaTDeParis.Models
 {
     class StationModel
     {
-        public long id
+        public int id
         {
             get;
             set;

@@ -17,7 +17,7 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
-    
+
     <phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Name="lpkItemTemplate">
             <TextBlock Text="{Binding CurrentItinerariesNames}" />
@@ -26,7 +26,7 @@
             <TextBlock Text="{Binding CurrentItinerariesNames}" />
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
-    
+
     <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -38,7 +38,7 @@
             <TextBlock Text="Le RaT de Paris" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
             <TextBlock Text="Aller" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel> -->
-        <phone:Pivot Title="Le RaT De Paris">
+        <phone:Pivot Title="Le RaT De Paris" SelectionChanged="Pivot_SelectionChanged" x:Name="pivot">
             <!--Pivot item one-->
             <phone:PivotItem Header="Aller">
                 <Grid/>
@@ -51,12 +51,15 @@
         </phone:Pivot>
         <!--ContentPanel - placez tout contenu supplémentaire ici-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,10,12,0">
-            <StackPanel>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
                 <toolkit:ListPicker SelectionChanged="lpkItineraries_SelectionChanged" FullModeItemTemplate="{Binding lpkFullItemTemplate}"
-                Grid.Row="5" ItemTemplate="{Binding lpkItemTemplate}"
-                x:Name="lpkItineraries"/>
-                <ListBox x:Name="ItinerariesList">
-                </ListBox>
+            		Grid.Row="1" ItemTemplate="{Binding lpkItemTemplate}"
+            		x:Name="lpkItineraries" Width="270"/>
+                    <Button Content="+" Click="AddClicked" Width="86" FontSize="36"/>
+                    <Button Content="-" Click="RemoveClicked" Width="84" FontSize="36"/>
+                </StackPanel>
+                <ListBox x:Name="ItinerariesList"/>
             </StackPanel>
         </Grid>
 

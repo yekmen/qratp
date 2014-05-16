@@ -16,7 +16,13 @@ namespace RaTDeParis
         private OfflineData<Models.LineModel> offlinesData;
         private List<Models.DirectionModel> directionsData;
         private List<Models.StationModel> stationsData;
-
+        private string currentItinineraryName;
+        private int mLineID;
+        private int mDirectionID;
+        private int mStationID;
+        private string mLineName;
+        private SaveData.Sens currentWay;
+        
         public class Types {
 
             public string typeName
@@ -28,8 +34,11 @@ namespace RaTDeParis
         public AddItinerary()
         {
             InitializeComponent();
+            currentItinineraryName = PhoneApplicationService.Current.State["ItName"] as string;
 
             offlinesData = PhoneApplicationService.Current.State["param"] as OfflineData<Models.LineModel>;
+            currentWay = (SaveData.Sens)PhoneApplicationService.Current.State["Way"];
+
             types = new List<Types>();
             binds();
         }
@@ -76,34 +85,41 @@ namespace RaTDeParis
         public void Line_selection(object sender, SelectionChangedEventArgs e) 
         {
             Models.LineModel selection = LinesList.SelectedItem as Models.LineModel;
-            int id = selection.id;
+            mLineID = selection.id;
+            mLineName = selection.line;
             directionsData = new List<Models.DirectionModel>();
-            DataRequest<Models.DirectionModel> g = new DataRequest<Models.DirectionModel>(directionsData, Request_type.Direction, id);
+            DataRequest<Models.DirectionModel> g = new DataRequest<Models.DirectionModel>(directionsData, Request_type.Direction, mLineID);
             g.FinTraitement += DirectionDataIsReady;    
         }
 
         public void Direction_selection(object sender, SelectionChangedEventArgs e)
         {
             Models.DirectionModel directionSelection = DirectionList.SelectedItem as Models.DirectionModel;
-
-            Models.LineModel lineSelection = LinesList.SelectedItem as Models.LineModel;
-            int lineID = lineSelection.id;
-
-            int directionID = directionSelection.id;
+            mDirectionID = directionSelection.id;
             
             stationsData = new List<Models.StationModel>();
-            DataRequest<Models.StationModel> g = new DataRequest<Models.StationModel>(stationsData, Request_type.Station, lineID, directionID);
+            DataRequest<Models.StationModel> g = new DataRequest<Models.StationModel>(stationsData, Request_type.Station, mLineID, mDirectionID);
             g.FinTraitement += SelectionDataIsReady;
         }
-        public void Station_selection(object sender, SelectionChangedEventArgs e) { }
-        public void add() {
-            MessageBoxResult result = MessageBox.Show("title", "caption", MessageBoxButton.OKCancel);
+        public void Station_selection(object sender, SelectionChangedEventArgs e) 
+        {
+            Models.StationModel stationSelection = StationList.SelectedItem as Models.StationModel;
+            mStationID = stationSelection.id;
+            add();
+        }
+        public void add() 
+        {
+            MessageBoxResult result = MessageBox.Show("Rajoutez cet itinéraire dans " + currentItinineraryName + " ?", "Ajouter", MessageBoxButton.OKCancel);
+            SaveData save = new SaveData(MyUrls.getSchedule(mLineID, mDirectionID, mStationID),mLineName, currentWay);
+            offlinesData.saveItinerary(currentItinineraryName, save);
+
             if (result == MessageBoxResult.OK)
             {
-                MessageBox.Show("yes");
+                MessageBox.Show("Oui");
             }
-            else {
-                MessageBox.Show("no");
+            else 
+            {
+                MessageBox.Show("Non");
             }
         }
     }
