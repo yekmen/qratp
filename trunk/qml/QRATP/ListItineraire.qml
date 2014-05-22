@@ -17,6 +17,7 @@ Item {
     ScrollDecorator {
         id: scrolldecorator
         flickableItem: listView
+        z:50
     }
     ListView{
         id: listView

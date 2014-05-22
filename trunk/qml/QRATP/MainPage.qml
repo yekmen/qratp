@@ -2,7 +2,7 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 import QtWebKit 1.0
 import "Offline.js" as OfflineDB
-
+import "TabDatabase.js" as TabDB
 
 Page {
     id: page
@@ -34,44 +34,66 @@ Page {
     }
     property string title : "RaTDeParis"
     property string currentTabNameAller
+    property int currentTabAllerID: -1
+
     property string currentTabNameRetour
+    property int currentTabRetourID: -1
+
     property int currentSens: 0
     Component.onCompleted: {
-        autoLoadTab(OfflineDB.getAllItems());
+        autoLoadTab();
+        loadItineraries();
     }
-    function autoLoadTab(array) {
+    function autoLoadTab() {
         modelRowButtonRetour.clear();
         modelRowButtonAller.clear();
-        for(var i = 0; i < array.length; i++){
-            if(array[i].sens === '0'){ //Aller
+        var array = TabDB.getAllItems();
+        for(var i = 0; i < array.length; i++)
+        {
+            if(array[i].sens === '0')
+            {
                 modelRowButtonAller.append({"btnText": array[i].columnName})
             }
-            else if(array[i].sens === '1'){ //Retour
+            else
+            {
                 modelRowButtonRetour.append({"btnText": array[i].columnName})
-            }
-        }
-        //On efface les doublons !
-        for(var j = 0; j < array.length; j++){
-            for(var k = 0 ; k < modelRowButtonAller.count -1; k ++){
-                if(modelRowButtonAller.get(k).btnText === array[j].columnName){
-                    modelRowButtonAller.remove(k);
-                }
+
             }
         }
     }
+    function addItinerary(){
+        var tabName;
+        if(currentSens == 0)    //Aller
+        {
+            tabName = currentTabNameAller;
+        }
+        else
+        {
+            tabName = currentTabNameRetour;
+        }
+        TabDB.addItinerary(tabName,currentSens);
+    }
+
     function addItinAller(ligne, direction, url, urlImage, station){
         listAllerIteneraire.addItem(direction, urlImage, url, station)
-        OfflineDB.addItinaire(currentTabNameAller, ligne, direction, 0, url, urlImage, station)
+        OfflineDB.addItinaire(currentTabNameAller, ligne, direction, 0, url, urlImage, station, currentTabAllerID)
+
+        currentTabAllerID = OfflineDB.getItemsByName(currentTabNameAller, 0)[0].id
+
+//        if(OfflineDB.getItemsByName(currentTabNameAller, 0) > 1)
+//            currentTabAllerID =
     }
     function addItinRetour(ligne, direction, url, urlImage, station){
         listRetourIteneraire.addItem(direction, urlImage, url, station)
         OfflineDB.addItinaire(currentTabNameRetour, ligne, direction, 1, url, urlImage, station)
+//        currentTabNameRetour = OfflineDB.getItemsByName(currentTabNameAller, 0)[1].id
     }
     function loadItineraire(tabName, array, sens){
         for(var i = 0; i < array.length; i++){
             if(array[i].columnName === tabName)
             {
-                if(sens === 0 && array[i].sens === '0'){              //Aller
+                if(sens === 0 && array[i].sens === '0')
+                {              //Aller
                     listAllerIteneraire.addItem(array[i].direction, array[i].urlImage, array[i].url, array[i].station)
                 }
                 else if(sens === 1 && array[i].sens === '1'){
@@ -79,6 +101,23 @@ Page {
                 }
                 else
                     console.debug("Sens inconnu")
+            }
+        }
+    }
+    function loadItineraries(){
+        var array = TabDB.getAllItems();
+        console.debug("Leng " + array.length);
+        for(var i = 0; i < array.length; i++)
+        {
+            var item = new Array();
+            item = OfflineDB.getItemByTabName(array[i].columnName);
+            console.debug("Leng " + item.length);
+            for(var j = 0; j < item; j++)
+            {
+                if(item[j].sens === 0)
+                    listAllerIteneraire.addItem(item[i].direction, item[i].urlImage, item[i].url, item[i].station)
+                else
+                    listRetourIteneraire.addItem(item[i].direction, item[i].urlImage, item[i].url, item[i].station)
             }
         }
     }
@@ -424,20 +463,22 @@ Page {
             Button {text: "Annuler"; onClicked: myDialog.reject()}
         }
         onAccepted: {
-            if(sens === 0){
+            if(sens === 0)
+            {
                 listAllerIteneraire.clearItem();
                 modelRowButtonAller.append({"btnText": textArea.text})
                 currentTabNameAller = textArea.text;
                 buttonAddAller.text = "Ajouter un itinéraire dans : \n" + currentTabNameAller
             }
-            else if(sens === 1){
+            else if(sens === 1)
+            {
                 listRetourIteneraire.clearItem();
                 modelRowButtonRetour.append({"btnText": textArea.text})
                 currentTabNameRetour = textArea.text;
                 buttonAddRetour.text = "Ajouter un itinéraire dans : \n" + currentTabNameRetour
             }
             textArea.text = ""
-
+            addItinerary();
         }
     }
     QueryDialog{
@@ -453,6 +494,7 @@ Page {
                 listAllerIteneraire.clearItem();
                 buttonAddAller.state = "hide"
                 OfflineDB.removeItems(currentTabNameAller, currentSens);
+                TabDB.removeItems(currentTabNameAller, currentSens);
             }
             else if(currentSens === 1)
             {
@@ -460,6 +502,7 @@ Page {
                 listRetourIteneraire.clearItem();
                 buttonAddRetour.state = "hide"
                 OfflineDB.removeItems(currentTabNameRetour, currentSens);
+                TabDB.removeItems(currentTabNameRetour, currentSens);
             }
 
         }

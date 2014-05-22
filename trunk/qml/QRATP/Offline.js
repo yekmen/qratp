@@ -14,14 +14,14 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT, parent INTEGER)');
            }
     )
 }
-function addItinaire(colName, ligneName, direction, sens, url, urlImage, station){     //Aller = 0 | Retour = 1
+function addItinaire(colName, ligneName, direction, sens, url, urlImage, station, parent){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station, parent]);
         }
     )
 }
@@ -75,21 +75,24 @@ function getAllItems(){
             var currentItem = rs_sens.rows.item(i);
             r_sens.push(rs_sens.rows.item(i));
         }
-        }   //Function END
+        }
     )
     return r_sens;
 }
 
-function getTableLength(){
+function getItemsByName(columnName, sens){
     openDB();
-    var r = ""
+    var r = []
     _db.transaction( function(tx) {
-            var rs = tx.executeSql('SELECT id FROM QRatp');
-            r = rs.rows.length;
+            var rs = tx.executeSql('SELECT * FROM QRatp WHERE columnName = "' +columnName+'" AND sens = "'+sens + '"');
+                    for(var i = 0; i < rs.rows.length; i++) {
+                            r.push(rs.rows.item(i));
+                        }
         }
     )
     return r;
 }
+
 function removeItems(tabName, sens){
     console.debug("Delete : " + tabName + " sens : "+ sens)
     openDB();
