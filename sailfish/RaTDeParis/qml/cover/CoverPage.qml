@@ -32,10 +32,11 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
+    property string prt
     Label {
         id: label
         anchors.centerIn: parent
-        text: "My Cover"
+        text: prt
     }
 
     CoverActionList {

@@ -30,36 +30,167 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
+import "tools"
 Page {
     id: page
+    property variant typeID
+    property variant lineID
+    property variant directionID
+    property variant stationID
 
-    SilicaListView {
-        id: listView
-//        model: 20
-        model: toto.filesData
-        anchors.fill: parent
-        header: PageHeader {
-            title: "Nested Page"
-        }
-        delegate: BackgroundItem {
-            id: delegate
-            Label {
-                x: Theme.paddingLarge
-                text: album
-                anchors.verticalCenter: parent.verticalCenter
-                color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
-            }
-            Image{
-                width: 50
-                height: 50
-                source: cover
-            }
-
-            onClicked: console.log("Clicked " + author)
-        }
-        VerticalScrollDecorator {}
+    function _defaultState()
+    {
+        if(typeChoose.state === "show")
+            typeChoose.state = "hide"
+        if(lineChoose.state === "show")
+            lineChoose.state = "hide"
+        if(directionChoose.state === "show")
+            directionChoose.state = "hide"
+        if(stationChoose.state === "show")
+            stationChoose.state = "hide"
+        if(result.state === "show")
+            result.state = "hide"
     }
+    Connections{
+        target: dataRequest
+        ignoreUnknownSignals: true
+        onLinesListChanged:{
+//            lineChoose.modelList.clear();
+            _defaultState();
+            lineChoose.state = "show";
+        }
+        onDirectionsListChanged: {
+            directionChoose.state = "show";
+        }
+        onStationsListChanged: {
+            stationChoose.state = "show";
+        }
+        onSchedulesChanged:{
+            result.state = "show";
+        }
+    }
+
+//    SilicaFlickable{
+////        anchors.top: header.bottom
+//        anchors.top: parent.top
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.bottom: parent.bottom
+        PageHeader {
+            id: header
+            title: "Nested Page"
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
+        PullDownMenu {
+            id: pullDownMenu
+            MenuItem {
+                text: "Reset"
+                onClicked: {
+                    _defaultState();
+                    typeChoose.state = "show";
+                }
+            }
+//            MenuItem {
+//                text: "Toggle busy menu"
+//                onClicked: pullDownMenu.busy = !pullDownMenu.busy
+//            }
+            MenuLabel {
+                text: "Menu label"
+            }
+        }
+        Column{
+            anchors.top: header.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            Choose{
+                id: typeChoose
+                typeName: qsTr("Selectionner le type de transport :")
+                Component.onCompleted: addType();
+                height: 200
+                anchors.left: parent.left
+                anchors.right: parent.right
+                state:"show"
+                onUserClicked: {
+                    _defaultState();
+                    typeID = _idJson;
+                    console.debug("Type: " + typeID)
+                    dataRequest.getLines(typeID);
+                }
+                onSectionClicked: {
+                    _defaultState();
+                }
+
+            }
+            Choose{
+                id: lineChoose
+                height: 300
+                anchors.left: parent.left
+                anchors.right: parent.right
+                typeName: qsTr("Selectionner votre ligne :")
+                modelList: dataRequest.linesList
+                state: "hide"
+                onUserClicked: {
+                    _defaultState();
+                    lineID = _idJson;
+                    dataRequest.getDirections(_idJson)
+                }
+                onSectionClicked: {
+                    _defaultState();
+                }
+            }
+            Choose{
+                id: directionChoose
+                typeName: qsTr("Selectionner votre direction :")
+                anchors.left: parent.left
+                anchors.right: parent.right
+                modelList: dataRequest.directionsList
+                state: "hide"
+                height: 300
+                onUserClicked: {
+                    _defaultState();
+                    console.debug("user select direction ")
+                    directionID = _idJson;
+                    dataRequest.getStations(lineID, directionID);
+                }
+                onSectionClicked: {
+                    _defaultState();
+                }
+            }
+            Choose{
+                id: stationChoose
+                typeName: qsTr("Selectionner votre station :")
+                anchors.left: parent.left
+                anchors.right: parent.right
+                state: "hide"
+                height: 300
+                modelList: dataRequest.stationsList
+                onUserClicked: {
+                    _defaultState();
+                    stationID = _idJson;
+                    dataRequest.getSchedule(lineID, directionID, stationID);
+                }
+                onSectionClicked: {
+                    _defaultState()
+                }
+            }
+            Choose{
+                id: result
+                typeName: qsTr("Résultat :")
+                anchors.left: parent.left
+                anchors.right: parent.right
+                state: "hide"
+                height: 300
+                modelList: dataRequest.scheduleList
+                onSectionClicked: {
+//                    _defaultState()
+                }
+            }
+
+        }
+//    }
 }
 
 

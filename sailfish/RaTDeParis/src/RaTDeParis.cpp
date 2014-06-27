@@ -33,7 +33,11 @@
 #endif
 
 #include <sailfishapp.h>
+#include "datarequest.h"
+//#include <QQmlEngine>
+//#include <QtQml/QQmlEngine>
 
+#include <qqml.h>   //qmlRegisterType !
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +49,18 @@ int main(int argc, char *argv[])
     //   - SailfishApp::pathTo(QString) to get a QUrl to a resource file
     //
     // To display the view, call "show()" (will show fullscreen on device).
+    qmlRegisterType<DataRequest>("harbour.DataRequest",1,0,"DataRequest");
+    qmlRegisterType<Line>("harbour.DataRequest",1,0,"Line");
+    qmlRegisterType<Lines>("harbour.DataRequest",1,0,"Lines");
+
+    qmlRegisterType<Directions>("harbour.DataRequest",1,0,"Directions");
+    qmlRegisterType<Direction>("harbour.DataRequest",1,0,"Direction");
+
+    qmlRegisterType<Stations>("harbour.DataRequest",1,0,"Stations");
+    qmlRegisterType<Station>("harbour.DataRequest",1,0,"Station");
+
+    qmlRegisterType<Schedule2>("harbour.DataRequest",1,0,"Schedules");
+    qmlRegisterType<Schedule>("harbour.DataRequest",1,0,"Schedule");
 
     return SailfishApp::main(argc, argv);
 }

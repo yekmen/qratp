@@ -10,7 +10,12 @@ TARGET = RaTDeParis
 
 CONFIG += sailfishapp
 
-SOURCES += src/RaTDeParis.cpp
+SOURCES += src/RaTDeParis.cpp \
+    src/stations.cpp \
+    src/lines.cpp \
+    src/directions.cpp \
+    src/datarequest.cpp \
+    src/schedule2.cpp
 
 OTHER_FILES += qml/RaTDeParis.qml \
     qml/cover/CoverPage.qml \
@@ -18,5 +23,20 @@ OTHER_FILES += qml/RaTDeParis.qml \
     qml/pages/SecondPage.qml \
     rpm/RaTDeParis.spec \
     rpm/RaTDeParis.yaml \
-    RaTDeParis.desktop
+    RaTDeParis.desktop \
+    qml/pages/tools/Choix.qml \
+    qml/pages/tools/SelectedItem.qml \
+    qml/pages/tools/Choose.qml
+
+HEADERS += \
+    src/UrlCreator.h \
+    src/stations.h \
+    src/lines.h \
+    src/jsonderializer.h \
+    src/directions.h \
+    src/datarequest.h \
+    src/schedule2.h
+
+RESOURCES += \
+    resource.qrc
 

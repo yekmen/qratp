@@ -1,0 +1,163 @@
+#include "datarequest.h"
+#include "UrlCreator.h"
+
+#include <QDebug>
+
+DataRequest::DataRequest(QObject *parent) :
+    QObject(parent),
+    mgr(NULL),
+    mLines(NULL)
+{
+    mgr = new QNetworkAccessManager(this);
+    QObject::connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(DownloadFinished(QNetworkReply*)));
+    // ------- INIT LINES ----//
+    mLines = new Lines(this);
+    connect(mLines, SIGNAL(linesListChanged()), this, SLOT(linesList()));
+    // ------- INIT DIRECTION ----//
+    mDirections = new Directions(this);
+    connect(mDirections, SIGNAL(directionsListChanged()), this, SLOT(directionsList()));
+    // ------- INIT STATION -----//
+    mStations = new Stations(this);
+    connect(mStations, SIGNAL(stationListChanged()), this, SLOT(stationsList()));
+    // -------- INIT SCHEDULE ---------//
+    mSchedule = new Schedule2(this);
+    connect(mSchedule, SIGNAL(scheduleListChanged()), this, SLOT(scheduleList()));
+}
+
+DataRequest::~DataRequest()
+{
+
+}
+
+void DataRequest::getLines(int lineTypeToInt)
+{
+    qDebug() << "Get lines " << lineTypeToInt;
+    setCurrentType(TypeLines);
+
+    LineType castedLineType = static_cast<LineType>(lineTypeToInt);
+    mLines->setCurrentGettingLineType(castedLineType);
+    mLines->clear();
+    if(!mLines->offlineDataIsExist())
+    {
+        qDebug() << "Offline not file exist, download progress ! ";
+        QNetworkRequest req(url::getLines());
+        mgr->get(req);
+    }
+    else
+    {
+        qDebug() << "Offline file existed ! ";
+        QString strReply = mLines->getOfflineData();
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
+        QJsonObject jObject = jsonResponse.object();
+
+        mLines->read(jObject);
+
+    }
+}
+
+void DataRequest::getDirections(const int &line)
+{
+    qDebug() << "Get direciton : " << line << url::getDirections(line);
+    mDirections->clear();
+    setCurrentType(TypeDirections);
+    QNetworkRequest req(url::getDirections(line));
+    mgr->get(req);
+}
+
+void DataRequest::getStations(const int &line, const int &direction)
+{
+    qDebug() << "Get Stations : " << line << url::getStations(line, direction);
+    mStations->clear();
+    setCurrentType(TypeStations);
+    QNetworkRequest req(url::getStations(line, direction));
+    mgr->get(req);
+}
+
+void DataRequest::getSchedule(const int &line, const int &direction, const int &station)
+{
+    qDebug() << "Get Schedule : " << line << url::getSchedules(line, direction, station);
+    mSchedule->clear();
+    setCurrentType(TypeSchedule);
+    QNetworkRequest req(url::getSchedules(line, direction, station));
+    mgr->get(req);
+}
+
+DataRequest::TypeData DataRequest::getCurrentType() const
+{
+    return currentType;
+}
+
+void DataRequest::setCurrentType(const TypeData &value)
+{
+    currentType = value;
+}
+
+QQmlListProperty<Line> DataRequest::linesList()
+{
+    emit linesListChanged();
+    return mLines->linesList();
+}
+
+QQmlListProperty<Direction> DataRequest::directionsList()
+{
+    emit directionsListChanged();
+    return mDirections->directionsList();
+}
+
+QQmlListProperty<Station> DataRequest::stationsList()
+{
+    emit stationsListChanged();
+    return mStations->stationList();
+}
+
+QQmlListProperty<Schedule> DataRequest::scheduleList()
+{
+    emit schedulesChanged();
+    return mSchedule->scheduleList();
+}
+
+void DataRequest::DownloadFinished(QNetworkReply *aReply)
+{
+    if(aReply->error()  == QNetworkReply::NoError )
+    {
+        QVariant strReply = aReply->readAll();
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toString().toUtf8());
+        QJsonObject jObject = jsonResponse.object();
+        qDebug() << "JObject size : " << jObject.size();
+
+        if(getCurrentType() == TypeLines)
+        {
+            if(!jsonResponse.isNull())
+            {
+                if(!mLines->offlineDataIsExist())
+                    mLines->saveFile(strReply.toString());
+
+                mLines->read(jObject);
+            }
+        }
+        if(getCurrentType() == TypeDirections)
+        {
+            if(!jsonResponse.isNull())
+            {
+                mDirections->read(jObject);
+            }
+        }
+        if(getCurrentType() == TypeStations)
+        {
+            if(!jsonResponse.isNull())
+            {
+                mStations->read(jObject);
+            }
+        }
+        if(getCurrentType() == TypeSchedule)
+        {
+            if(!jsonResponse.isNull())
+            {
+                mSchedule->read(jObject);
+            }
+        }
+    }
+    else
+        emit errorDownload(aReply->errorString());
+
+}

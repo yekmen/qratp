@@ -30,13 +30,51 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.DataRequest 1.0
+
 import "pages"
-import QtMultimedia 5.0
+import "cover"
+//ApplicationWindow
+//{
+////    initialPage: Component { FirstPage { } }
+//    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+//    FirstPage{
+//        id: firstPage
+//    }
+
+//}
 
 ApplicationWindow
 {
-    initialPage: Component { FirstPage { } }
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    id: app
+    property string sharedValue: "whatever you want to share to cover"
+    initialPage: Component {
+//        FirstPage {
+        SecondPage{
+//            prt: app.sharedValue
+            //              torch: app.sharedValue
+
+        }
+
+    }
+    cover: Component {
+        CoverPage {
+            //              torch: app.sharedValue
+            prt: app.sharedValue
+        }
+    }
+
+    DataRequest{
+        id: dataRequest
+
+        //        onErrorDownload: console.debug("Error : " + error)
+        Component.onCompleted: dataRequest.getLines();
+        //          onLinesListChanged: console.debug("OKK !! ");
+    }
+
+
+    SecondPage{
+        id: secondPage
+    }
+
 }
-
-

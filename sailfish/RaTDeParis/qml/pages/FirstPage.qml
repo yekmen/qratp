@@ -30,46 +30,57 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
+import harbour.DataRequest 1.0
 
 Page {
-    id: page
+    id: fpage
+    property string prt
+    Component.onCompleted: console.debug("PRT : " + prt)
 
-    // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaFlickable {
+//    Binding{
+//        target: dataRequest
+//        value: test
+
+//    }
+    SilicaListView {
+        id: listView
+        model: dataRequest.linesList
         anchors.fill: parent
-
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
-            MenuItem {
-                text: "Show Page 2"
-                onClicked: {
-                    pageStack.push(Qt.resolvedUrl("SecondPage.qml"))
+        header: PageHeader {
+            title: "Nested Page"
+        }
+        delegate: BackgroundItem {
+            id: delegate
+            Row{
+                Image{
+                    source: urlType
+                    cache: true
                 }
+                Image{
+                    source: urlLine
+                    cache: true
+                }
+                Label {
+                    x: Theme.paddingLarge
+                    text: line
+//                    anchors.verticalCenter: parent.verticalCenter
+                    color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                }
+
             }
+            onClicked: console.log("Clicked " + idJson + "\n" + typeID +"\n" +typeName + "\n"+urlLine);
         }
-
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
-
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
-        Column {
-            id: column
-
-            width: page.width
-            spacing: Theme.paddingLarge
-            PageHeader {
-                title: "UI Template"
-
+        PullDownMenu {
+            id: pullDownMenu
+            MenuItem {
+                text: "Add Itin"
+                onClicked: pageStack.push(secondPage);
             }
-            Label {
-                x: Theme.paddingLarge
-                text: "Hello Sailors"
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
-            }
+//            MenuLabel {
+//                text: "Menu label"
+//            }
         }
+        VerticalScrollDecorator {}
     }
 }
 

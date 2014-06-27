@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo/bus.png</file>
+        <file>logo/metro.png</file>
+        <file>logo/rer.png</file>
+        <file>logo/tramway.png</file>
+    </qresource>
+</RCC>
