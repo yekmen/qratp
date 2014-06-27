@@ -34,7 +34,7 @@ void Schedule2::read(const QJsonObject &jsonObj)
         QString time = array.at(i).toObject()[key].toString();
         QString result = QString("%1 : %2").arg(key).arg(time);
 
-        Schedule* sch = new Schedule(result);
+        Schedule* sch = new Schedule(capitalize(result));
         mSchedules.push_back(sch);
     }
     emit scheduleListChanged();

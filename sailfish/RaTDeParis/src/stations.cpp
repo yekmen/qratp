@@ -35,7 +35,7 @@ void Stations::read(const QJsonObject &jsonObj)
     {
         QJsonObject jObj = array.at(i).toObject();
         Station *s = new Station(jObj.value("id").toVariant().toInt(),
-                                 jObj.value("station").toString());
+                                 capitalize(jObj.value("station").toString()));
         mStations.push_back(s);
     }
     emit stationListChanged();

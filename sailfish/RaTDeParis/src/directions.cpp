@@ -36,7 +36,7 @@ void Directions::read(const QJsonObject &jsonObj)
     {
         QJsonObject jObj = array.at(i).toObject();
         Direction *d = new Direction(jObj.value("id").toVariant().toInt(),
-                                     jObj.value("direction").toString());
+                                     capitalize(jObj.value("direction").toString()));
         mDirections.push_back(d);
     }
     emit directionsListChanged();
