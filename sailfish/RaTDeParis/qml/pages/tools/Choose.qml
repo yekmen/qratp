@@ -24,6 +24,7 @@ Item{
 
     property string typeName
     property alias modelList: list.model
+    property alias busy : switcher.busy
 
     signal sectionClicked;
     signal userClicked(variant _idJson);
@@ -34,7 +35,6 @@ Item{
         modelList.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});
         modelList.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
         modelList.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
-//        stopBusy();
     }
     Rectangle {
         id: rectType
@@ -60,20 +60,19 @@ Item{
             anchors.centerIn: parent
             anchors.horizontalCenterOffset: -50
             smooth: true
-
+//            busy: true
             z:100
             text: typeName
             state: "hiddenSwitch"
             onClicked: {
                 sectionClicked();
-
-                if(item1.state === "hide")
+                if(item1.state === "hide" || selectedItem.state == "show")
                 {
-                    item1.state = "selected"
-                }
-                else if(item1.state === "show")
+                    item1.state = "show"
                     selectedItem.state = "hide"
-
+                }
+//                else if(item1.state === "show")
+//                    selectedItem.state = "hide"
             }
 
             states: [
@@ -86,6 +85,7 @@ Item{
                     }
                 },
                 State {
+                    when: busy
                     name: "displaySwitch"
                     PropertyChanges {
                         target: switcher
@@ -93,6 +93,7 @@ Item{
                         checked: true
                     }
                 }
+
             ]
             transitions: [
                 Transition {
@@ -106,30 +107,6 @@ Item{
                 }
             ]
         }
-/*
-//        Switch {
-//            anchors.fill: parent
-//            smooth: true
-//            text: typeName
-//            onCheckedChanged: { busy = true; textBusyTimer.start() }
-//            Timer {
-//                id: textBusyTimer
-//                interval: 4700
-//                onTriggered: parent.busy = false
-//            }
-//            onClicked: {
-//                sectionClicked();
-//                if(item1.state === "hide" || item1.state === "selected"){
-//                    item1.state = "show"
-//                }
-//                else if(item1.state === "show"){
-//                    selectedItem.state = "hide"
-//                }
-////                else
-////                    item1.state = "hide"
-//            }
-//        }
-*/
         SelectedItem{
             id: selectedItem
             height: 50
@@ -169,39 +146,33 @@ Item{
         model: modelList
         delegate:  BackgroundItem {
             id: delegate
-            height: 80
+            height: 60
             Row{
                 anchors.fill: parent
                 Image{
                     id: image
-                    source: urlLine == "" ? "" : urlLine
+                    source: urlLine == "undefined" ? "" : urlLine
                     cache: true
                     asynchronous: true
                     fillMode: Image.PreserveAspectFit
                     anchors.verticalCenter: parent.verticalCenter
-                    height: urlLine == "" ? 0 : 75
-                    width: urlLine == "" ? 0 : 75
+                    height: urlLine == "undefined" ? 0 : 60
+                    width: urlLine == "undefined" ? 0 : 60
                 }
                 Label {
                     id: label
                     x: Theme.paddingLarge
                     text: line
-
-//                    font.pixelSize: 20
-//                    anchors.top: parent.top
-//                    anchors.bottom: parent.bottom
                     anchors.verticalCenter: parent.verticalCenter
                     color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
-
             }
             onClicked: {
-                sectionClicked()
                 userClicked(idJson);
                 console.log("Clicked " +line + " " + idJson);
                 selectedItem.line = label.text
                 selectedItem.url = image.source
-//                selectedItem.state = "show"
+                item1.state = "selected"
             }
         }
     }
@@ -215,11 +186,11 @@ Item{
             PropertyChanges{
                 target: switcher
                 state: "displaySwitch"
+                busy: false
             }
-
             PropertyChanges {
                 target: item1
-                height: 250
+                height: 400
             }
             PropertyChanges {
                 target: list
@@ -236,6 +207,7 @@ Item{
             PropertyChanges{
                 target: switcher
                 state: "hiddenSwitch"
+                busy: false
             }
 
             PropertyChanges {
@@ -267,6 +239,11 @@ Item{
                 target: selectedItem
                 visible: true
                 state: "show"
+            }
+            PropertyChanges{
+                target: switcher
+                state: "hiddenSwitch"
+                busy: false
             }
         }
     ]

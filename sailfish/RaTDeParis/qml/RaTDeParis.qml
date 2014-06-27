@@ -40,6 +40,7 @@ ApplicationWindow
     initialPage: Component {
 //        FirstPage {
         SecondPage{
+            title: qsTr("Itinéraire");
 //            prt: app.sharedValue
             //              torch: app.sharedValue
 

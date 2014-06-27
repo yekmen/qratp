@@ -25,26 +25,11 @@ Page {
     property variant lineID
     property variant directionID
     property variant stationID
-
-    function _defaultState()
-    {
-        if(typeChoose.state === "show")
-            typeChoose.state = "hide"
-        if(lineChoose.state === "show")
-            lineChoose.state = "hide"
-        if(directionChoose.state === "show")
-            directionChoose.state = "hide"
-        if(stationChoose.state === "show")
-            stationChoose.state = "hide"
-        if(result.state === "show")
-            result.state = "hide"
-    }
+    property alias title: header.title
     Connections{
         target: dataRequest
         ignoreUnknownSignals: true
         onLinesListChanged:{
-            //            lineChoose.modelList.clear();
-            _defaultState();
             lineChoose.state = "show";
         }
         onDirectionsListChanged: {
@@ -60,7 +45,6 @@ Page {
 
     PageHeader {
         id: header
-        title: "Nested Page"
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -79,15 +63,17 @@ Page {
             anchors.right: parent.right
             state:"show"
             onUserClicked: {
-                _defaultState();
+                lineChoose.busy = true;
                 typeID = _idJson;
                 console.debug("Type: " + typeID)
                 dataRequest.getLines(typeID);
             }
             onSectionClicked: {
-                _defaultState();
+                lineChoose.state = "hide"
+                directionChoose.state = "hide"
+                stationChoose.state = "hide"
+                result.state = "hide"
             }
-
         }
         Choose{
             id: lineChoose
@@ -98,12 +84,14 @@ Page {
             modelList: dataRequest.linesList
             state: "hide"
             onUserClicked: {
-                _defaultState();
+                directionChoose.busy = true;
                 lineID = _idJson;
                 dataRequest.getDirections(_idJson)
             }
             onSectionClicked: {
-                _defaultState();
+                directionChoose.state = "hide"
+                stationChoose.state = "hide"
+                result.state = "hide"
             }
         }
         Choose{
@@ -115,13 +103,13 @@ Page {
             state: "hide"
             height: 300
             onUserClicked: {
-                _defaultState();
-                console.debug("user select direction ")
+                stationChoose.busy = true;
                 directionID = _idJson;
                 dataRequest.getStations(lineID, directionID);
             }
             onSectionClicked: {
-                _defaultState();
+                stationChoose.state = "hide"
+                result.state = "hide"
             }
         }
         Choose{
@@ -133,12 +121,12 @@ Page {
             height: 300
             modelList: dataRequest.stationsList
             onUserClicked: {
-                _defaultState();
+                result.busy = true;
                 stationID = _idJson;
                 dataRequest.getSchedule(lineID, directionID, stationID);
             }
             onSectionClicked: {
-                _defaultState()
+                result.state = "hide"
             }
         }
         Choose{
