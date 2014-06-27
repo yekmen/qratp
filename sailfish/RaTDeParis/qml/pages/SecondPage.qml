@@ -1,31 +1,19 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
-  All rights reserved.
+    Le RATdeParis
+    Copyright (C) 2014  EKMEN Yavuz <yekmen@gmail.com>
 
-  You may use this file under the terms of BSD license as follows:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR
-  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.0
@@ -55,7 +43,7 @@ Page {
         target: dataRequest
         ignoreUnknownSignals: true
         onLinesListChanged:{
-//            lineChoose.modelList.clear();
+            //            lineChoose.modelList.clear();
             _defaultState();
             lineChoose.state = "show";
         }
@@ -70,130 +58,101 @@ Page {
         }
     }
 
-//    SilicaFlickable{
-////        anchors.top: header.bottom
-//        anchors.top: parent.top
-//        anchors.left: parent.left
-//        anchors.right: parent.right
-//        anchors.bottom: parent.bottom
-        PageHeader {
-            id: header
-            title: "Nested Page"
-            anchors.top: parent.top
+    PageHeader {
+        id: header
+        title: "Nested Page"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+    Column{
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        Choose{
+            id: typeChoose
+            typeName: qsTr("Selectionner le type de transport :")
+            Component.onCompleted: addType();
+            height: 200
             anchors.left: parent.left
             anchors.right: parent.right
-        }
-        PullDownMenu {
-            id: pullDownMenu
-            MenuItem {
-                text: "Reset"
-                onClicked: {
-                    _defaultState();
-                    typeChoose.state = "show";
-                }
+            state:"show"
+            onUserClicked: {
+                _defaultState();
+                typeID = _idJson;
+                console.debug("Type: " + typeID)
+                dataRequest.getLines(typeID);
             }
-//            MenuItem {
-//                text: "Toggle busy menu"
-//                onClicked: pullDownMenu.busy = !pullDownMenu.busy
-//            }
-            MenuLabel {
-                text: "Menu label"
-            }
-        }
-        Column{
-            anchors.top: header.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            Choose{
-                id: typeChoose
-                typeName: qsTr("Selectionner le type de transport :")
-                Component.onCompleted: addType();
-                height: 200
-                anchors.left: parent.left
-                anchors.right: parent.right
-                state:"show"
-                onUserClicked: {
-                    _defaultState();
-                    typeID = _idJson;
-                    console.debug("Type: " + typeID)
-                    dataRequest.getLines(typeID);
-                }
-                onSectionClicked: {
-                    _defaultState();
-                }
-
-            }
-            Choose{
-                id: lineChoose
-                height: 300
-                anchors.left: parent.left
-                anchors.right: parent.right
-                typeName: qsTr("Selectionner votre ligne :")
-                modelList: dataRequest.linesList
-                state: "hide"
-                onUserClicked: {
-                    _defaultState();
-                    lineID = _idJson;
-                    dataRequest.getDirections(_idJson)
-                }
-                onSectionClicked: {
-                    _defaultState();
-                }
-            }
-            Choose{
-                id: directionChoose
-                typeName: qsTr("Selectionner votre direction :")
-                anchors.left: parent.left
-                anchors.right: parent.right
-                modelList: dataRequest.directionsList
-                state: "hide"
-                height: 300
-                onUserClicked: {
-                    _defaultState();
-                    console.debug("user select direction ")
-                    directionID = _idJson;
-                    dataRequest.getStations(lineID, directionID);
-                }
-                onSectionClicked: {
-                    _defaultState();
-                }
-            }
-            Choose{
-                id: stationChoose
-                typeName: qsTr("Selectionner votre station :")
-                anchors.left: parent.left
-                anchors.right: parent.right
-                state: "hide"
-                height: 300
-                modelList: dataRequest.stationsList
-                onUserClicked: {
-                    _defaultState();
-                    stationID = _idJson;
-                    dataRequest.getSchedule(lineID, directionID, stationID);
-                }
-                onSectionClicked: {
-                    _defaultState()
-                }
-            }
-            Choose{
-                id: result
-                typeName: qsTr("Résultat :")
-                anchors.left: parent.left
-                anchors.right: parent.right
-                state: "hide"
-                height: 300
-                modelList: dataRequest.scheduleList
-                onSectionClicked: {
-//                    _defaultState()
-                }
+            onSectionClicked: {
+                _defaultState();
             }
 
         }
-//    }
+        Choose{
+            id: lineChoose
+            height: 300
+            anchors.left: parent.left
+            anchors.right: parent.right
+            typeName: qsTr("Selectionner votre ligne :")
+            modelList: dataRequest.linesList
+            state: "hide"
+            onUserClicked: {
+                _defaultState();
+                lineID = _idJson;
+                dataRequest.getDirections(_idJson)
+            }
+            onSectionClicked: {
+                _defaultState();
+            }
+        }
+        Choose{
+            id: directionChoose
+            typeName: qsTr("Selectionner votre direction :")
+            anchors.left: parent.left
+            anchors.right: parent.right
+            modelList: dataRequest.directionsList
+            state: "hide"
+            height: 300
+            onUserClicked: {
+                _defaultState();
+                console.debug("user select direction ")
+                directionID = _idJson;
+                dataRequest.getStations(lineID, directionID);
+            }
+            onSectionClicked: {
+                _defaultState();
+            }
+        }
+        Choose{
+            id: stationChoose
+            typeName: qsTr("Selectionner votre station :")
+            anchors.left: parent.left
+            anchors.right: parent.right
+            state: "hide"
+            height: 300
+            modelList: dataRequest.stationsList
+            onUserClicked: {
+                _defaultState();
+                stationID = _idJson;
+                dataRequest.getSchedule(lineID, directionID, stationID);
+            }
+            onSectionClicked: {
+                _defaultState()
+            }
+        }
+        Choose{
+            id: result
+            typeName: qsTr("Résultat :")
+            anchors.left: parent.left
+            anchors.right: parent.right
+            state: "hide"
+            height: 300
+            modelList: dataRequest.scheduleList
+            onSectionClicked: {
+                //                    _defaultState()
+            }
+        }
+
+    }
 }
-
-
-
-
-

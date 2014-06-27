@@ -1,37 +1,33 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
+/*
+    Le RATdeParis
+    Copyright (C) 2014  EKMEN Yavuz <yekmen@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item{
     id: item1
-//    width: 400
-//    height: 400
     state: "hide"
 
     property string typeName
     property alias modelList: list.model
-//    property ListModel modelList
-//    function startBusy(){
-//        busy.running = true;
-//        busy.visible = true;
-//    }
-//    function stopBusy(){
-//        busy.running = false;
-//        busy.visible = false;
-//    }
 
-//    signal typeSelected(variant _idJSON, variant _line, variant _typeID, variant _urlImage)
     signal sectionClicked;
-//    signal userClicked(variant _typeID, variant _typeName, variant _idJson);
     signal userClicked(variant _idJson);
 
-    function addTransportType(array) {
-        modelList.clear();
-        for(var i = 0; i < array.length; i++){
-            modelList.append({"index": i, "type": array[i].type_id, "jsonID": array[i].idJSON, "jsonLINE": array[i].line, "picURL": array[i].picURL});
-        }
-       item1.state = "show"
-    }
 
     function addType(){
         modelList.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
@@ -40,32 +36,6 @@ Item{
         modelList.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
 //        stopBusy();
     }
-    function addDirection(direction){
-        modelList.clear();
-        for(var i = 0; i < direction.count; i++){
-            modelList.append({"index": i, "type": "", "jsonID": direction.get(i).id, "jsonLINE": direction.get(i).direction, "picURL": ""});
-        }
-        item1.state = "show"
-        stopBusy();
-    }
-    function addStation(stations){
-        modelList.clear();
-        for(var i = 0; i < stations.count; i++){
-            modelList.append({"index": i, "type": "", "jsonID": stations.get(i).id, "jsonLINE": stations.get(i).station, "picURL": ""});
-        }
-        item1.state = "show"
-        stopBusy();
-    }
-    function addSchedule(schedule){
-        modelList.clear();
-        for(var i = 0; i < schedule.count; i++){
-            modelList.append({"index": i, "type": "", "jsonID": schedule.get(i).id, "jsonLINE": schedule.get(i).direction + ":"+schedule.get(i).time , "picURL": ""});
-        }
-        item1.state = "show"
-        stopBusy();
-    }
-
-
     Rectangle {
         id: rectType
         height: 62
@@ -82,11 +52,9 @@ Item{
             }
         }
         anchors.top: parent.top
-        anchors.topMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
+
         TextSwitch{
             id: switcher
             anchors.centerIn: parent
@@ -99,8 +67,9 @@ Item{
             onClicked: {
                 sectionClicked();
 
-                if(item1.state === "hide" || item1.state === "selected"){
-                    item1.state = "show"
+                if(item1.state === "hide")
+                {
+                    item1.state = "selected"
                 }
                 else if(item1.state === "show")
                     selectedItem.state = "hide"
@@ -137,7 +106,7 @@ Item{
                 }
             ]
         }
-
+/*
 //        Switch {
 //            anchors.fill: parent
 //            smooth: true
@@ -160,16 +129,13 @@ Item{
 ////                    item1.state = "hide"
 //            }
 //        }
-
+*/
         SelectedItem{
             id: selectedItem
             height: 50
             anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
             anchors.top: parent.top
-            anchors.topMargin: 0
             state: "hide"
             states: [
                 State {
@@ -177,62 +143,65 @@ Item{
                     PropertyChanges {
                         target: selectedItem
                         anchors.topMargin: rectType.height
+                        visible: true;
                     }
                 },
                 State {
                     name: "hide"
                     PropertyChanges {
                         target: selectedItem
+                        visible: false;
                         anchors.topMargin: -rectType.height
 
                     }
                 }
             ]
+            Behavior on anchors.topMargin { NumberAnimation { duration: 300 } }
         }
     }
     SilicaListView{
         id: list
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 0
         anchors.top: rectType.bottom
-//        anchors.topMargin: -rectType.height
         z:-1
         model: modelList
         delegate:  BackgroundItem {
             id: delegate
-            height: 50
+            height: 80
             Row{
-//                Image{
-//                    source: urlType
-//                    cache: true
-//                    fillMode: Image.PreserveAspectFit
-//                    anchors.top: parent.top
-//                    anchors.bottom: parent.bottom
-//                }
+                anchors.fill: parent
                 Image{
-                    source: urlLine/* ? "" : ""*/
+                    id: image
+                    source: urlLine == "" ? "" : urlLine
                     cache: true
+                    asynchronous: true
                     fillMode: Image.PreserveAspectFit
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: urlLine == "" ? 0 : 75
+                    width: urlLine == "" ? 0 : 75
                 }
                 Label {
+                    id: label
                     x: Theme.paddingLarge
                     text: line
-//                    anchors.verticalCenter: parent.verticalCenter
+
+//                    font.pixelSize: 20
+//                    anchors.top: parent.top
+//                    anchors.bottom: parent.bottom
+                    anchors.verticalCenter: parent.verticalCenter
                     color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
 
             }
             onClicked: {
                 sectionClicked()
-//                userClicked(typeID,typeName, idJson);
                 userClicked(idJson);
                 console.log("Clicked " +line + " " + idJson);
+                selectedItem.line = label.text
+                selectedItem.url = image.source
+//                selectedItem.state = "show"
             }
         }
     }
