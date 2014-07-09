@@ -22,7 +22,9 @@ Item {
     id: item1
     width: 400
     height: 50
-
+//    focus: true
+//    clip: true
+    smooth: true
     signal clickedElement(variant _idJSON, int _index, variant _line, int _typeID);
     //idJSON = ID Du transport dans le JSON
     //_index = index dans la Liste
@@ -46,25 +48,6 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 0
         source: url
-        state: "show"
-        states: [
-            State {
-                name: "show"
-                PropertyChanges {
-                    target: image
-                    anchors.leftMargin: 0
-
-                }
-            },
-            State {
-                name: "hide"
-                when: url === ""
-                PropertyChanges {
-                    target: image
-                    anchors.leftMargin: -50
-                }
-            }
-        ]
     }
     Label{
         id: type

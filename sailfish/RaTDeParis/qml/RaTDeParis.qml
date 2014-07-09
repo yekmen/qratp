@@ -23,20 +23,11 @@ import harbour.DataRequest 1.0
 
 import "pages"
 import "cover"
-//ApplicationWindow
-//{
-////    initialPage: Component { FirstPage { } }
-//    cover: Qt.resolvedUrl("cover/CoverPage.qml")
-//    FirstPage{
-//        id: firstPage
-//    }
-
-//}
 
 ApplicationWindow
 {
     id: app
-    property string sharedValue: "whatever you want to share to cover"
+    property string sharedValue: "Le RATdeParis"
     initialPage: Component {
 //        FirstPage {
         SecondPage{
@@ -56,15 +47,10 @@ ApplicationWindow
 
     DataRequest{
         id: dataRequest
-
-        //        onErrorDownload: console.debug("Error : " + error)
         Component.onCompleted: dataRequest.getLines();
-        //          onLinesListChanged: console.debug("OKK !! ");
     }
-
-
-    SecondPage{
-        id: secondPage
-    }
+//    SecondPage{
+//        id: secondPage
+//    }
 
 }

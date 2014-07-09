@@ -26,7 +26,8 @@ OTHER_FILES += qml/RaTDeParis.qml \
     RaTDeParis.desktop \
     qml/pages/tools/Choix.qml \
     qml/pages/tools/SelectedItem.qml \
-    qml/pages/tools/Choose.qml
+    qml/pages/tools/Choose.qml \
+    qml/pages/tools/search.js
 
 HEADERS += \
     src/UrlCreator.h \

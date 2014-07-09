@@ -36,21 +36,12 @@ Item{
         modelList.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
         modelList.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
     }
-    Rectangle {
+
+
+    BackgroundItem  {
         id: rectType
         height: 62
-        opacity: 0.7
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: "#083ec6"
-            }
-
-            GradientStop {
-                position: 1
-                color: "#000000"
-            }
-        }
+        z:1
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -60,7 +51,9 @@ Item{
             anchors.centerIn: parent
             anchors.horizontalCenterOffset: -50
             smooth: true
-//            busy: true
+            highlighted: true
+            down: true
+            //            busy: true
             z:100
             text: typeName
             state: "hiddenSwitch"
@@ -71,8 +64,8 @@ Item{
                     item1.state = "show"
                     selectedItem.state = "hide"
                 }
-//                else if(item1.state === "show")
-//                    selectedItem.state = "hide"
+                //                else if(item1.state === "show")
+                //                    selectedItem.state = "hide"
             }
 
             states: [
@@ -113,13 +106,15 @@ Item{
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.top: parent.top
+            anchors.topMargin: rectType.height
             state: "hide"
             states: [
                 State {
                     name: "show"
                     PropertyChanges {
                         target: selectedItem
-                        anchors.topMargin: rectType.height
+//                        anchors.leftMargin: 0
+                        anchors.leftMargin: 0
                         visible: true;
                     }
                 },
@@ -127,22 +122,38 @@ Item{
                     name: "hide"
                     PropertyChanges {
                         target: selectedItem
-                        visible: false;
-                        anchors.topMargin: -rectType.height
-
+                        visible: true;
+                        anchors.leftMargin: -selectedItem.width
                     }
                 }
             ]
-            Behavior on anchors.topMargin { NumberAnimation { duration: 300 } }
+            Behavior on anchors.topMargin { NumberAnimation { duration: 500 } }
+            Behavior on anchors.leftMargin { NumberAnimation { duration: 500 } }
+        }
+        Separator {
+            opacity: 0.5
+            anchors {
+                bottom: parent.bottom
+            }
+            width: contentItem.width
+            color: Theme.primaryColor
         }
     }
+
+
+
     SilicaListView{
         id: list
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.top: rectType.bottom
+        anchors.topMargin: 5
+        snapMode: ListView.SnapToItem
         z:-1
+        smooth: true
+        clip: true
+        focus: true
         model: modelList
         delegate:  BackgroundItem {
             id: delegate
@@ -263,7 +274,7 @@ Item{
             PropertyAnimation{
                 properties: "height"
                 duration: 300
-                easing.type:Easing.InCirc
+                easing.type:Easing.OutCirc
             }
         },
         Transition {

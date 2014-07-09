@@ -77,6 +77,7 @@ public:
     void read(const QJsonObject &jsonObj);
     void clear();
     QQmlListProperty<Station> stationList();
+    void filter(QString value);
 private:
     QList<Station*> mStations;
 signals:

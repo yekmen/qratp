@@ -22,14 +22,6 @@ import harbour.DataRequest 1.0
 
 Page {
     id: fpage
-    property string prt
-    Component.onCompleted: console.debug("PRT : " + prt)
-
-//    Binding{
-//        target: dataRequest
-//        value: test
-
-//    }
     SilicaListView {
         id: listView
         model: dataRequest.linesList
