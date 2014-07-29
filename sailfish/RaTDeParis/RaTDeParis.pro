@@ -9,7 +9,7 @@
 TARGET = RaTDeParis
 
 CONFIG += sailfishapp
-
+VERSION = 0.2
 SOURCES += src/RaTDeParis.cpp \
     src/stations.cpp \
     src/lines.cpp \
@@ -24,7 +24,6 @@ OTHER_FILES += qml/RaTDeParis.qml \
     rpm/RaTDeParis.spec \
     rpm/RaTDeParis.yaml \
     RaTDeParis.desktop \
-    qml/pages/tools/Choix.qml \
     qml/pages/tools/SelectedItem.qml \
     qml/pages/tools/Choose.qml \
     qml/pages/tools/search.js

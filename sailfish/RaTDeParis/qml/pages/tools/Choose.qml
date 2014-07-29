@@ -24,11 +24,14 @@ Item{
 
     property string typeName
     property alias modelList: list.model
-    property alias busy : switcher.busy
+    property alias busySwitcher : switcher.busy
 
     signal sectionClicked;
     signal userClicked(variant _idJson);
-
+    signal modelHasChanged;
+    function getCurrentImage(){
+        return selectedItem.url;
+    }
 
     function addType(){
         modelList.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
@@ -36,7 +39,6 @@ Item{
         modelList.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
         modelList.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
     }
-
 
     BackgroundItem  {
         id: rectType
@@ -53,19 +55,13 @@ Item{
             smooth: true
             highlighted: true
             down: true
-            //            busy: true
             z:100
             text: typeName
             state: "hiddenSwitch"
             onClicked: {
                 sectionClicked();
-                if(item1.state === "hide" || selectedItem.state == "show")
-                {
-                    item1.state = "show"
-                    selectedItem.state = "hide"
-                }
-                //                else if(item1.state === "show")
-                //                    selectedItem.state = "hide"
+                if(item1.state === "hide")
+                    checked = false;
             }
 
             states: [
@@ -78,12 +74,22 @@ Item{
                     }
                 },
                 State {
-                    when: busy
+                    when: busySwitcher
+                    name: "busySwitch"
+                    PropertyChanges {
+                        target: switcher
+                        anchors.horizontalCenterOffset: 0
+                        checked: true
+                        busy: true
+                    }
+                },
+                State {
                     name: "displaySwitch"
                     PropertyChanges {
                         target: switcher
                         anchors.horizontalCenterOffset: 0
                         checked: true
+                        busy: false
                     }
                 }
 
@@ -139,9 +145,6 @@ Item{
             color: Theme.primaryColor
         }
     }
-
-
-
     SilicaListView{
         id: list
         anchors.bottom: parent.bottom
@@ -155,6 +158,7 @@ Item{
         clip: true
         focus: true
         model: modelList
+        onModelChanged: modelHasChanged()
         delegate:  BackgroundItem {
             id: delegate
             height: 60
@@ -162,13 +166,13 @@ Item{
                 anchors.fill: parent
                 Image{
                     id: image
-                    source: urlLine == "undefined" ? "" : urlLine
+                    source: urlLine === undefined ? "" : urlLine
                     cache: true
                     asynchronous: true
                     fillMode: Image.PreserveAspectFit
                     anchors.verticalCenter: parent.verticalCenter
-                    height: urlLine == "undefined" ? 0 : 60
-                    width: urlLine == "undefined" ? 0 : 60
+                    height: urlLine === undefined ? 0 : 60
+                    width: urlLine === undefined ? 0 : 60
                 }
                 Label {
                     id: label
@@ -197,11 +201,11 @@ Item{
             PropertyChanges{
                 target: switcher
                 state: "displaySwitch"
-                busy: false
             }
             PropertyChanges {
                 target: item1
                 height: 400
+//                busy: false
             }
             PropertyChanges {
                 target: list
@@ -218,13 +222,10 @@ Item{
             PropertyChanges{
                 target: switcher
                 state: "hiddenSwitch"
-                busy: false
             }
-
             PropertyChanges {
                 target: item1
                 height: rectType.height
-
             }
             PropertyChanges {
                 target: list
@@ -254,47 +255,46 @@ Item{
             PropertyChanges{
                 target: switcher
                 state: "hiddenSwitch"
-                busy: false
             }
         }
     ]
     transitions: [
         Transition {
-            from: "show"
-            to: "hide"
+            from: "*"
+            to: "*"
             PropertyAnimation{
                 properties: "height"
                 duration: 300
-                easing.type:Easing.OutCirc
-            }
-        },
-        Transition {
-            from: "hide"
-            to: "show"
-            PropertyAnimation{
-                properties: "height"
-                duration: 300
-                easing.type:Easing.OutCirc
-            }
-        },
-        Transition {
-            from: "show"
-            to: "selected"
-            PropertyAnimation{
-                properties: "height"
-                duration: 300
-                easing.type:Easing.InCirc
-            }
-        },
-        Transition {
-            from: "selected"
-            to: "show"
-            PropertyAnimation{
-                properties: "height"
-                duration: 300
-                easing.type:Easing.InCirc
+                easing.type:Easing.InQuart
             }
         }
+//        Transition {
+//            from: "hide"
+//            to: "*"
+//            PropertyAnimation{
+//                properties: "height"
+//                duration: 300
+//                easing.type:Easing.OutQuart
+//            }
+//        }
+//        Transition {
+//            from: "show"
+//            to: "selected"
+//            PropertyAnimation{
+//                properties: "height"
+//                duration: 300
+//                easing.type:Easing.InCirc
+//            }
+//        },
+//        Transition {
+//            from: "selected"
+//            to: "show"
+//            PropertyAnimation{
+//                properties: "height"
+//                duration: 300
+//                easing.type:Easing.InCirc
+//            }
+//        }
     ]
 
 }

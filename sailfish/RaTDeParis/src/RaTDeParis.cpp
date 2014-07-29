@@ -48,8 +48,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Schedule2>("harbour.DataRequest",1,0,"Schedules");
     qmlRegisterType<Schedule>("harbour.DataRequest",1,0,"Schedule");
-    QString value = "AOUITIO";
-    qDebug() << value.toCaseFolded();
+
     return SailfishApp::main(argc, argv);
 }
 

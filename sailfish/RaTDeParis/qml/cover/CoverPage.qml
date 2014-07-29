@@ -33,23 +33,134 @@ import Sailfish.Silica 1.0
 
 CoverBackground {
     property string prt
-    Label {
-        id: label
-        anchors.centerIn: parent
-        text: prt
+
+    property string urlType
+    property string urlLine
+    property alias modelList: list.model
+
+    onModelListChanged: console.debug("changed model list !!!" + list.model.count > 0)
+    function fitWord(value){
+        var ret;    //Returned value
+
+        var station = fitStation(value)
+        var time = fitTime(value)
+
+        ret = station +" : "+time;
+        return ret;
     }
 
-//    CoverActionList {
-//        id: coverAction
+    function fitStation(value){
+        var ret;
+        var dpPos = value.substring(0, value.indexOf(":", 0));
 
+        console.debug("ap  " + dpPos.length );
+//        if(value.length > 16)
+        if(dpPos.length > 10)
+        {
+            ret = dpPos.substring(0,10) ;
+            ret += "...";
+        }
+        else
+             ret = dpPos
+
+        console.debug("Station : " + ret );
+        return ret;
+    }
+    function fitTime(value){
+        var time = value.substring(value.indexOf(":", 0)+1, value.length);
+        console.debug("Time : " + time);
+        return time;
+    }
+
+    Label{
+        id: labelProTrain
+        text: "Estimation :"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.leftMargin:10
+        anchors.right: parent.right
+        color: Theme.primaryColor
+        font.bold: true
+        font.pixelSize: 30
+        visible: list.model.count === 0
+    }
+
+    ListView{
+        id: list
+        anchors.top : labelProTrain.bottom
+        anchors.topMargin: 30
+
+        anchors.bottom: labelTime.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+//        anchors.verticalCenter: parent.verticalCenter
+//        anchors.verticalCenterOffset: 20
+        height: 400
+        delegate: Label {
+            id: label
+            height: 20
+//            anchors.verticalCenter: parent.verticalCenter
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            text: fitWord(line);
+            font.pixelSize: 28
+//            wrapMode: Text.WordWrap
+            font.bold: true
+//            horizontalAlignment: Text.AlignHCenter
+            onTextChanged: {
+                console.debug("TextCount : " + text.length)
+            }
+
+//            anchors.centerIn: parent
+//            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Label{
+        id: labelTime
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+
+    Image {
+        id: imgType
+        opacity: 0.2
+        source: urlType
+        width: 200
+        height: 200
+        anchors.left: parent.left
+        anchors.top: parent.top
+        fillMode: Image.PreserveAspectFit
+    }
+    Image {
+        id: imgLine
+        opacity: 0.2
+        source: urlLine
+        width: 200
+        height: 200
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        fillMode: Image.PreserveAspectFit
+    }
+    CoverActionList {
+        id: coverAction
+        enabled: list.model.count > 0
 //        CoverAction {
 //            iconSource: "image://theme/icon-cover-next"
 //        }
 
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-pause"
-//        }
-//    }
+        CoverAction {
+            iconSource: "image://theme/icon-cover-refresh"
+
+            onTriggered: {
+                labelTime.text = Qt.formatDateTime("2010-03-17T10:15:16", "dd/MM/yyyy - hh:mm:ss");
+            }
+        }
+    }
 }
 
 

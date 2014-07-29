@@ -26,20 +26,28 @@ Page {
     property variant directionID
     property variant stationID
     property alias title: header.title
+    property bool abort: false
+    function updateSchedule(){
+        dataRequest.getSchedule(lineID, directionID, stationID);
+    }
     Connections{
         target: dataRequest
         ignoreUnknownSignals: true
         onLinesListChanged:{
-            lineChoose.state = "show";
+            if(!abort)
+                lineChoose.state = "show";
         }
         onDirectionsListChanged: {
-            directionChoose.state = "show";
+            if(!abort)
+                directionChoose.state = "show";
         }
         onStationsListChanged: {
-            stationChoose.state = "show";
+            if(!abort)
+                stationChoose.state = "show";
         }
         onSchedulesChanged:{
-            result.state = "show";
+            if(!abort)
+                result.state = "show";
         }
     }
 
@@ -63,16 +71,21 @@ Page {
             anchors.right: parent.right
             state:"show"
             onUserClicked: {
-                lineChoose.busy = true;
+                abort = false;
+                lineChoose.busySwitcher = true;
                 typeID = _idJson;
-                console.debug("Type: " + typeID)
+                console.debug("Type: " + typeID + " " + abort)
                 dataRequest.getLines(typeID);
             }
             onSectionClicked: {
+                abort = true;
                 lineChoose.state = "hide"
                 directionChoose.state = "hide"
                 stationChoose.state = "hide"
                 result.state = "hide"
+
+                if(state === "selected")
+                    state = "show";
             }
         }
         Choose{
@@ -84,14 +97,21 @@ Page {
             modelList: dataRequest.linesList
             state: "hide"
             onUserClicked: {
-                directionChoose.busy = true;
+                abort = false;
+                directionChoose.busySwitcher = true;
                 lineID = _idJson;
                 dataRequest.getDirections(_idJson)
             }
             onSectionClicked: {
-                directionChoose.state = "hide"
-                stationChoose.state = "hide"
-                result.state = "hide"
+                abort = true;
+                if(typeChoose.state !== "selected" || typeChoose.state !== "show")
+                {
+                    directionChoose.state = "hide"
+                    stationChoose.state = "hide"
+                    result.state = "hide"
+                }
+                if(state === "selected")
+                    state = "show";
             }
         }
         Choose{
@@ -103,13 +123,20 @@ Page {
             state: "hide"
             height: 300
             onUserClicked: {
-                stationChoose.busy = true;
+                abort = false;
+                stationChoose.busySwitcher = true;
                 directionID = _idJson;
                 dataRequest.getStations(lineID, directionID);
             }
             onSectionClicked: {
-                stationChoose.state = "hide"
-                result.state = "hide"
+                abort = true;
+                if(lineChoose.state !== "selected" || lineChoose.state !== "show")
+                {
+                    stationChoose.state = "hide"
+                    result.state = "hide"
+                }
+                if(state === "selected")
+                    state = "show";
             }
         }
         Choose{
@@ -121,12 +148,17 @@ Page {
             height: 300
             modelList: dataRequest.stationsList
             onUserClicked: {
-                result.busy = true;
+                abort = false;
+                result.busySwitcher = true;
                 stationID = _idJson;
                 dataRequest.getSchedule(lineID, directionID, stationID);
             }
             onSectionClicked: {
-                result.state = "hide"
+                abort = true;
+                if(stationChoose.state !== "selected" || stationChoose.state !== "show")
+                    result.state = "hide"
+                if(state === "selected")
+                    state = "show";
             }
         }
         Choose{
@@ -137,7 +169,16 @@ Page {
             state: "hide"
             height: 300
             modelList: dataRequest.scheduleList
+            onModelHasChanged: {
+                console.debug("URL !: "  + typeChoose.getCurrentImage())
+                console.debug("URL !: "  + lineChoose.getCurrentImage())
+                _urlLine = lineChoose.getCurrentImage();
+                _urlType = typeChoose.getCurrentImage();
+                _sharedModel = result.modelList
+
+            }
             onSectionClicked: {
+//                abort = true;
                 //                    _defaultState()
             }
         }

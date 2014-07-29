@@ -50,11 +50,3 @@ QQmlListProperty<Station> Stations::stationList()
 {
     return QQmlListProperty<Station>(this, mStations);
 }
-
-void Stations::filter(QString value)
-{
-    if(!mStations.isEmpty())
-    {
-    }
-}
-

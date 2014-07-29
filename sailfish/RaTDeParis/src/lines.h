@@ -28,7 +28,8 @@ enum LineType{
     LineType_Bus = 1,
     LineType_Metro = 2,
     LineType_Tram = 6,
-    LineType_RER = 3 | 4
+    LineType_RER = 3,
+    LineType_SNCF = 4
 };
 
 
@@ -58,8 +59,10 @@ public:
             setLine(_line);
 
         cleanner();
+        if(getLine().isEmpty())
+            return;
 
-//        qDebug() << getLine();
+//        qDebug() << getTypeName();
         switch (_typeID)
         {
         case 1: //BUS
@@ -74,15 +77,29 @@ public:
             setTypeURL(":/logo/metro.png");
             setUrlLine(QString("http://v1.chervoisin2transport.fr/images/lignes/36/metro_%1.png").arg(getLine()));
             break;
-        case 3:
-//            setTypeURL("http://v1.chervoisin2transport.fr/images/lignes/36/rer.png");
-            setLineType(LineType_RER);
-            setTypeURL(":/logo/rer.png");
-            break;
+//        case 3:
+//            if(getTypeName().operator ==("SNCF"))
+//            {
+////            setTypeURL("http://v1.chervoisin2transport.fr/images/lignes/36/rer.png");
+//                setLineType(LineType_RER);
+//                setTypeURL(":/logo/rer.png");
+//                qDebug() << "RER " << getLine();
+//            }
+//            break;
         case 4:
-            setLineType(LineType_RER);
-            setTypeURL("http://v1.chervoisin2transport.fr/images/lignes/36/rer.png");
-            setTypeURL(":/logo/rer.png");
+//            if(getID() == 356 || getID() ==)
+            if(getTypeName().operator ==("RER"))
+            {
+                setLineType(LineType_RER);
+                setTypeURL(":/logo/rer.png");
+
+                if(getLine().operator ==("A"))
+                    setUrlLine("http://v1.chervoisin2transport.fr/images/lignes/36/rer_a.png");
+                if(getLine().operator ==("B"))
+                     setUrlLine("http://v1.chervoisin2transport.fr/images/lignes/36/rer_b.png");
+
+                qDebug() << "SNCF " << getLine();
+            }
             break;
         case 6: //Tram
             setLineType(LineType_Tram);

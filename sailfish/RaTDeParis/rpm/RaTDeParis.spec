@@ -13,11 +13,11 @@ Name:       RaTDeParis
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    RaTDeParis
-Version:    0.1
+Version:    0.2
 Release:    1
 Group:      Qt/Qt
-License:    LICENSE
-URL:        http://example.org/
+License:    GPLv3
+URL:        https://github.com/yekmen/qratp
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  RaTDeParis.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
@@ -29,7 +29,7 @@ BuildRequires:  desktop-file-utils
 
 %description
 Short description of my SailfishOS Application
-
+LeRATdeParis is a RATP client of SailfishOS ( Paris transport )
 
 %prep
 %setup -q -n %{name}-%{version}

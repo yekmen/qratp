@@ -28,20 +28,22 @@ ApplicationWindow
 {
     id: app
     property string sharedValue: "Le RATdeParis"
+    property string _urlType
+    property string _urlLine
+    property var _sharedModel
     initialPage: Component {
-//        FirstPage {
         SecondPage{
             title: qsTr("Itinéraire");
-//            prt: app.sharedValue
-            //              torch: app.sharedValue
-
         }
 
     }
     cover: Component {
         CoverPage {
-            //              torch: app.sharedValue
+            id: myCover
             prt: app.sharedValue
+            modelList: _sharedModel
+            urlLine: _urlLine
+            urlType: _urlType
         }
     }
 

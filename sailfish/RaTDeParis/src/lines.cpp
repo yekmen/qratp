@@ -42,8 +42,8 @@ void Lines::read(const QJsonObject &jsonObj)
         QJsonObject jObj = ar.at(i).toObject();
         Line *line = new Line(jObj.value("id").toVariant().toInt(),
                               jObj.value("type_id").toVariant().toInt(),
-                              capitalize(jObj.value("line").toString()),
-                              capitalize(jObj.value("type_id").toString()));
+                              jObj.value("line").toString(),
+                              jObj.value("type_name").toString());
 
         if(getCurrentGettingLineType() == line->getLineType())
             mLines.push_back(line);
