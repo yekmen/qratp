@@ -63,6 +63,7 @@ public:
     void read(const QJsonObject &jsonObj);
     QQmlListProperty<Schedule> scheduleList();
     void clear();
+    QList<Schedule*> getList() const;
 private:
     QList<Schedule*> mSchedules;
 signals:

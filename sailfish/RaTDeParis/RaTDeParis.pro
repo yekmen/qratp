@@ -15,7 +15,8 @@ SOURCES += src/RaTDeParis.cpp \
     src/lines.cpp \
     src/directions.cpp \
     src/datarequest.cpp \
-    src/schedule2.cpp
+    src/schedule2.cpp \
+    src/offlinedata.cpp
 
 OTHER_FILES += qml/RaTDeParis.qml \
     qml/cover/CoverPage.qml \
@@ -26,7 +27,9 @@ OTHER_FILES += qml/RaTDeParis.qml \
     RaTDeParis.desktop \
     qml/pages/tools/SelectedItem.qml \
     qml/pages/tools/Choose.qml \
-    qml/pages/tools/search.js
+    qml/pages/tools/search.js \
+    qml/pages/tools/PageItem.qml \
+    qml/pages/delegate/MainDelegate.qml
 
 HEADERS += \
     src/UrlCreator.h \
@@ -35,7 +38,8 @@ HEADERS += \
     src/jsonderializer.h \
     src/directions.h \
     src/datarequest.h \
-    src/schedule2.h
+    src/schedule2.h \
+    src/offlinedata.h
 
 RESOURCES += \
     resource.qrc

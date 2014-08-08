@@ -35,6 +35,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QVector>
+#include "offlinedata.h"
 
 class DataRequest : public QObject
 {
@@ -58,7 +59,7 @@ public:
     Q_INVOKABLE void getDirections(const int &line);
     Q_INVOKABLE void getStations(const int &line, const int &direction);
     Q_INVOKABLE void getSchedule(const int &line, const int &direction, const int &station);
-
+    Q_INVOKABLE void addItineraire();
     TypeData getCurrentType() const;
     void setCurrentType(const TypeData &value);
 private:
@@ -68,6 +69,8 @@ private:
     Directions* mDirections;
     Stations* mStations;
     Schedule2* mSchedule;
+
+    OfflineData* mOfflineData;
 public slots:
     void DownloadFinished(QNetworkReply *aReply);
     QQmlListProperty<Line> linesList();

@@ -19,37 +19,66 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.DataRequest 1.0
-
+import "tools"
 Page {
     id: fpage
-    SilicaListView {
-        id: listView
-        model: dataRequest.linesList
+    ListView{
+        id: mainList
         anchors.fill: parent
-        header: PageHeader {
-            title: "Nested Page"
-        }
-        delegate: BackgroundItem {
-            id: delegate
-            Row{
-                Image{
-                    source: urlType
-                    cache: true
-                }
-                Image{
-                    source: urlLine
-                    cache: true
-                }
-                Label {
-                    x: Theme.paddingLarge
-                    text: line
-//                    anchors.verticalCenter: parent.verticalCenter
-                    color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
-                }
+        orientation: ListView.HorizontalFlick
+        snapMode: ListView.SnapOneItem;
+        model: dataModel
+        flickDeceleration: 0
+        HorizontalScrollDecorator{}
+    }
 
+    VisualDataModel {
+        id: dataModel
+        model: ListModel{
+            ListElement{
+                pageTitle: "Aller"
+                whoIAm: false   //Aller
             }
-            onClicked: console.log("Clicked " + idJson + "\n" + typeID +"\n" +typeName + "\n"+urlLine);
+            ListElement{
+                pageTitle : "Retour"
+                whoIAm: true //Retour
+            }
         }
+        delegate: PageItem{
+            width: mainList.width;
+            height: mainList.height;
+        }
+    }
+
+/*
+        SilicaListView {
+            id: listView
+            model: dataRequest.linesList
+            anchors.fill: parent
+            header: PageHeader {
+                title: "Nested Page"
+            }
+            delegate: BackgroundItem {
+                id: delegate
+                Row{
+                    Image{
+                        source: urlType
+                        cache: true
+                    }
+                    Image{
+                        source: urlLine
+                        cache: true
+                    }
+                    Label {
+                        x: Theme.paddingLarge
+                        text: line
+    //                    anchors.verticalCenter: parent.verticalCenter
+                        color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                    }
+
+                }
+                onClicked: console.log("Clicked " + idJson + "\n" + typeID +"\n" +typeName + "\n"+urlLine);
+            }
         PullDownMenu {
             id: pullDownMenu
             MenuItem {
@@ -62,6 +91,7 @@ Page {
         }
         VerticalScrollDecorator {}
     }
+    */
 }
 
 

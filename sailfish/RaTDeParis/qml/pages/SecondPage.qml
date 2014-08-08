@@ -19,7 +19,8 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "tools"
-Page {
+
+Dialog  {
     id: page
     property variant typeID
     property variant lineID
@@ -27,6 +28,20 @@ Page {
     property variant stationID
     property alias title: header.title
     property bool abort: false
+    property bool whereFrom: false //False = Aller | true = retour
+    width: app.width
+    height: app.height
+
+    DialogHeader{
+        id: header
+        acceptText: "Ajouter l'itinéraire"
+        defaultAcceptText: "Ajouter"
+        cancelText: "Retour"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+
     function updateSchedule(){
         dataRequest.getSchedule(lineID, directionID, stationID);
     }
@@ -34,34 +49,33 @@ Page {
         target: dataRequest
         ignoreUnknownSignals: true
         onLinesListChanged:{
+            canAccept = false;
             if(!abort)
                 lineChoose.state = "show";
         }
         onDirectionsListChanged: {
+            canAccept = false;
             if(!abort)
                 directionChoose.state = "show";
         }
         onStationsListChanged: {
+            canAccept = false;
             if(!abort)
                 stationChoose.state = "show";
         }
         onSchedulesChanged:{
+            canAccept = true;
             if(!abort)
                 result.state = "show";
         }
     }
 
-    PageHeader {
-        id: header
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-    }
     Column{
         anchors.top: header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+
         Choose{
             id: typeChoose
             typeName: qsTr("Selectionner le type de transport :")
@@ -175,10 +189,9 @@ Page {
                 _urlLine = lineChoose.getCurrentImage();
                 _urlType = typeChoose.getCurrentImage();
                 _sharedModel = result.modelList
-
             }
             onSectionClicked: {
-//                abort = true;
+                //                abort = true;
                 //                    _defaultState()
             }
         }

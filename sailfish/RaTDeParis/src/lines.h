@@ -44,7 +44,6 @@ class Line : public QObject
     Q_PROPERTY(int idJson READ getID)
     Q_PROPERTY(int typeID READ getTypeID)
 public:
-
     Line(QObject *parent = 0):QObject(parent){}
     Line(int _id, int _typeID, QString _line, QString _typeName, QObject *parent = 0):
         QObject(parent)

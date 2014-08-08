@@ -29,10 +29,11 @@ Item{
     signal sectionClicked;
     signal userClicked(variant _idJson);
     signal modelHasChanged;
+
     function getCurrentImage(){
         return selectedItem.url;
-    }
 
+    }
     function addType(){
         modelList.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
         modelList.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});
@@ -60,6 +61,8 @@ Item{
             state: "hiddenSwitch"
             onClicked: {
                 sectionClicked();
+                if(state === "displaySwitch")
+                    checked = true;
                 if(item1.state === "hide")
                     checked = false;
             }
@@ -190,6 +193,7 @@ Item{
                 item1.state = "selected"
             }
         }
+
     }
     ListModel{
         id: modelList

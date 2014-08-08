@@ -21,6 +21,8 @@
 
 #include <sailfishapp.h>
 #include "datarequest.h"
+#include "offlinedata.h"
+
 //#include <QQmlEngine>
 //#include <QtQml/QQmlEngine>
 
@@ -48,6 +50,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Schedule2>("harbour.DataRequest",1,0,"Schedules");
     qmlRegisterType<Schedule>("harbour.DataRequest",1,0,"Schedule");
+
+    qmlRegisterType<OfflineData>("harbour.DataRequest",1,0,"OfflineData");
 
     return SailfishApp::main(argc, argv);
 }

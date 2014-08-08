@@ -43,10 +43,14 @@ void Schedule2::read(const QJsonObject &jsonObj)
 QQmlListProperty<Schedule> Schedule2::scheduleList()
 {
     return QQmlListProperty<Schedule>(this, mSchedules);
-
 }
 
 void Schedule2::clear()
 {
     mSchedules.clear();
+}
+
+QList<Schedule *> Schedule2::getList() const
+{
+    return mSchedules;
 }

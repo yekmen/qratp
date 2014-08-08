@@ -32,8 +32,8 @@ ApplicationWindow
     property string _urlLine
     property var _sharedModel
     initialPage: Component {
-        SecondPage{
-            title: qsTr("Itinéraire");
+        FirstPage{
+//            title: qsTr("Itinéraire");
         }
 
     }
@@ -46,13 +46,12 @@ ApplicationWindow
             urlType: _urlType
         }
     }
-
     DataRequest{
         id: dataRequest
         Component.onCompleted: dataRequest.getLines();
     }
-//    SecondPage{
-//        id: secondPage
-//    }
+    SecondPage{
+        id: secondPage
+    }
 
 }

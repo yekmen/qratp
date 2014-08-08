@@ -39,6 +39,9 @@ DataRequest::DataRequest(QObject *parent) :
     // -------- INIT SCHEDULE ---------//
     mSchedule = new Schedule2(this);
     connect(mSchedule, SIGNAL(scheduleListChanged()), this, SLOT(scheduleList()));
+    // -------- INIT OFFLINEDATA ---------//
+    mOfflineData = new OfflineData(this);
+
 }
 
 DataRequest::~DataRequest()
@@ -69,6 +72,7 @@ void DataRequest::getLines(int lineTypeToInt)
 
         mLines->read(jObject);
 
+
     }
 }
 
@@ -97,6 +101,11 @@ void DataRequest::getSchedule(const int &line, const int &direction, const int &
     setCurrentType(TypeSchedule);
     QNetworkRequest req(url::getSchedules(line, direction, station));
     mgr->get(req);
+}
+
+void DataRequest::addItineraire()
+{
+    mOfflineData->addItineraire(mSchedule->getList());
 }
 
 DataRequest::TypeData DataRequest::getCurrentType() const

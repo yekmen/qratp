@@ -31,14 +31,14 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+
 CoverBackground {
+
     property string prt
 
     property string urlType
     property string urlLine
     property alias modelList: list.model
-
-    onModelListChanged: console.debug("changed model list !!!" + list.model.count > 0)
     function fitWord(value){
         var ret;    //Returned value
 
@@ -71,6 +71,19 @@ CoverBackground {
         console.debug("Time : " + time);
         return time;
     }
+
+//    function time(){
+//        var currentTime;
+//        lastGettedTime = Qt.formatDateTime(new Date(), "hh:mm:ss");
+//        labelTime.text = "a " + Qt.formatDateTime(lastGettedTime, "hh:mm:ss");
+//    }
+//    Timer{
+//       interval: 60000; //1min
+//       repeat: true
+//       onTriggered: {
+//            time();
+//       }
+//    }
 
     Label{
         id: labelProTrain
@@ -116,6 +129,9 @@ CoverBackground {
 
 //            anchors.centerIn: parent
 //            anchors.verticalCenter: parent.verticalCenter
+        }
+        onModelChanged: {
+            time();
         }
     }
 
