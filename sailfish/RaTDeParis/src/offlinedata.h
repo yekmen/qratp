@@ -8,13 +8,17 @@
 #include <QVariant>
 #include "schedule2.h"
 #include <QQmlListProperty>
+enum Way{
+    Aller = 0,
+    Retour = 1
+};
 
 class Data : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUrl url READ getUrl)
     Q_PROPERTY(QString title READ getTitle)
-//    Q_PROPERTY(QList urlLine READ getUrlLine)
+//    Q_PROPERTY(bool way READ getUrlLine)
 public:
     Data(QObject *parent = 0):QObject(parent){}
 
@@ -36,30 +40,33 @@ public:
         mTitle = value;
     }
 
-//    QList getList() const
-//    {
-//        return list;
-//    }
-//    void setList(const QList &value)
-//    {
-//        list = value;
-//    }
+    Way getSens() const
+    {
+        return sens;
+    }
+    void setSens(const Way &value)
+    {
+        sens = value;
+    }
 
 private:
-//    QList list;
+    //    QList list;
     QUrl mUrl;
     QString mTitle;
+    Way sens;
 };
 
 class OfflineData : public JsonDerializer
 {
     Q_OBJECT
-
 public:
-    explicit OfflineData(QObject *parent = 0);
-    Q_INVOKABLE void addItineraire(const QList<Schedule*> &value);
+    OfflineData(QObject *parent = 0);
+    ~OfflineData();
+
+    Q_INVOKABLE void addItineraire(const QString &value);
     void read(const QJsonObject &jsonObj);
-    void write() const;
+//    void read(const QJsonObject &jsonObj);
+    void write(const QString &itname, const QString &value);
     void clear();
 };
 

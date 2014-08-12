@@ -69,10 +69,7 @@ void DataRequest::getLines(int lineTypeToInt)
         QString strReply = mLines->getOfflineData();
         QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
         QJsonObject jObject = jsonResponse.object();
-
         mLines->read(jObject);
-
-
     }
 }
 
@@ -97,6 +94,9 @@ void DataRequest::getStations(const int &line, const int &direction)
 void DataRequest::getSchedule(const int &line, const int &direction, const int &station)
 {
     qDebug() << "Get Schedule : " << line << url::getSchedules(line, direction, station);
+    //Save schedules
+    finalyURL = url::getSchedules(line, direction, station).toString();
+
     mSchedule->clear();
     setCurrentType(TypeSchedule);
     QNetworkRequest req(url::getSchedules(line, direction, station));
@@ -105,7 +105,7 @@ void DataRequest::getSchedule(const int &line, const int &direction, const int &
 
 void DataRequest::addItineraire()
 {
-    mOfflineData->addItineraire(mSchedule->getList());
+    mOfflineData->addItineraire(finalyURL);
 }
 
 DataRequest::TypeData DataRequest::getCurrentType() const

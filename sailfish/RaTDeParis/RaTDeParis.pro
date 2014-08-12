@@ -9,7 +9,10 @@
 TARGET = RaTDeParis
 
 CONFIG += sailfishapp
+QT += widgets
+
 VERSION = 0.2
+
 SOURCES += src/RaTDeParis.cpp \
     src/stations.cpp \
     src/lines.cpp \
@@ -29,7 +32,10 @@ OTHER_FILES += qml/RaTDeParis.qml \
     qml/pages/tools/Choose.qml \
     qml/pages/tools/search.js \
     qml/pages/tools/PageItem.qml \
-    qml/pages/delegate/MainDelegate.qml
+    qml/pages/delegate/MainDelegate.qml \
+    qml/js/Offline.js \
+    qml/pages/tools/SideBar.qml \
+    qml/js/TabDataBase.js
 
 HEADERS += \
     src/UrlCreator.h \

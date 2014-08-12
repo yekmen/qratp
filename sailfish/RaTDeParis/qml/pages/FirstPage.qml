@@ -16,12 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import QtQuick.LocalStorage 2.0
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.DataRequest 1.0
 import "tools"
+import "../js/Offline.js" as Offline
+import "../js/TabDataBase.js" as TabDB
+
 Page {
     id: fpage
+    property int currentSens: 0
     ListView{
         id: mainList
         anchors.fill: parent
@@ -30,14 +35,50 @@ Page {
         model: dataModel
         flickDeceleration: 0
         HorizontalScrollDecorator{}
+
+        Component.onCompleted: autoLoadTab();
+    }
+    function autoLoadTab() {
+        modelAller.clear();
+        modelRetour.clear();
+        var array = TabDB.getAllItems();
+        console.debug("Size : " + array.length);
+        for(var i = 0; i < array.length; i++)
+        {
+            console.debug(array[i].columnName + " " + array[i].sens)
+            if(array[i].sens === 0)
+                modelAller.append({"line": array[i].columnName})
+            else
+                modelRetour.append({"line": array[i].columnName})
+        }
+    }
+    function addItinerary(){
+        var tabName = "o yeah";
+//        if(currentSens === 0)    //Aller
+//        {
+//            tabName = currentTabNameAller;
+//        }
+//        else    //retour
+//        {
+//            tabName = currentTabNameRetour;
+//        }
+        TabDB.addItinerary(tabName,currentSens);
+        autoLoadTab();
     }
 
+    ListModel{
+        id: modelAller
+    }
+    ListModel{
+        id: modelRetour
+    }
     VisualDataModel {
         id: dataModel
         model: ListModel{
             ListElement{
                 pageTitle: "Aller"
                 whoIAm: false   //Aller
+//                toto : test
             }
             ListElement{
                 pageTitle : "Retour"
@@ -47,6 +88,12 @@ Page {
         delegate: PageItem{
             width: mainList.width;
             height: mainList.height;
+//            listModel: modelAller
+//            listModelSideBar:
+            onAddNewItinerary: {
+                console.debug("New it : " + sens)
+                addItinerary();
+            }
         }
     }
 

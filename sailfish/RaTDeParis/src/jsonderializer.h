@@ -16,9 +16,6 @@ public:
 
     virtual void read(const QJsonObject &jsonObj) = 0;
     virtual void clear() = 0;
-    virtual void write() const
-    {
-    }
 
     QString capitalize(const QString &str)
     {

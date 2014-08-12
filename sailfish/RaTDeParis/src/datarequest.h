@@ -71,6 +71,7 @@ private:
     Schedule2* mSchedule;
 
     OfflineData* mOfflineData;
+    QString finalyURL;
 public slots:
     void DownloadFinished(QNetworkReply *aReply);
     QQmlListProperty<Line> linesList();
