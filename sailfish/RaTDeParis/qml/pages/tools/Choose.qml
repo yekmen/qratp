@@ -32,8 +32,11 @@ Item{
 
     function getCurrentImage(){
         return selectedItem.url;
-
     }
+    function getSelectedName(){
+        return selectedItem.line;
+    }
+
     function addType(){
         modelList.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
         modelList.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});

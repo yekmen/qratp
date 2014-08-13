@@ -59,7 +59,10 @@ public:
     Q_INVOKABLE void getDirections(const int &line);
     Q_INVOKABLE void getStations(const int &line, const int &direction);
     Q_INVOKABLE void getSchedule(const int &line, const int &direction, const int &station);
+    Q_INVOKABLE void getSchedule(const QString &aUrl);
     Q_INVOKABLE void addItineraire();
+    Q_INVOKABLE QString getScheduleURL();
+
     TypeData getCurrentType() const;
     void setCurrentType(const TypeData &value);
 private:

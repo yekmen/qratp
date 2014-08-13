@@ -46,7 +46,6 @@ DataRequest::DataRequest(QObject *parent) :
 
 DataRequest::~DataRequest()
 {
-
 }
 
 void DataRequest::getLines(int lineTypeToInt)
@@ -103,9 +102,24 @@ void DataRequest::getSchedule(const int &line, const int &direction, const int &
     mgr->get(req);
 }
 
+void DataRequest::getSchedule(const QString &aUrl)
+{
+    qDebug() << "Get Schedule by URL: " << aUrl;
+    mSchedule->clear();
+    setCurrentType(TypeSchedule);
+    QUrl url(aUrl);
+    QNetworkRequest req(url);
+    mgr->get(req);
+}
+
 void DataRequest::addItineraire()
 {
     mOfflineData->addItineraire(finalyURL);
+}
+
+QString DataRequest::getScheduleURL()
+{
+    return finalyURL;
 }
 
 DataRequest::TypeData DataRequest::getCurrentType() const

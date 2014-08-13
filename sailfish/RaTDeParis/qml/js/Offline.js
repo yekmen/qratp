@@ -1,6 +1,24 @@
+/*
+    Le RATdeParis
+    Copyright (C) 2014  EKMEN Yavuz <yekmen@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+.import QtQuick.LocalStorage 2.0 as Sql
 var _db;
 function openDB() {
-    _db = openDatabaseSync("QRATP_offline","1.0","Offline_QRATP",1000000)
+    _db = Sql.LocalStorage.openDatabaseSync("QRATP_offline","1.0","Offline_QRATP",1000000)
     createTable();
 }
 
@@ -14,20 +32,18 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT, parent INTEGER)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT)');
            }
     )
 }
-function addItinaire(colName, ligneName, direction, sens, url, urlImage, station, parent){     //Aller = 0 | Retour = 1
+//-------------- SENS -------- ALLER = 0 ----------- Retour = 1 -----------//
+function addItinerary(colName, ligneName, direction, sens, url, urlImage, station){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station, parent]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station]);
         }
     )
 }
-
-//-------------- SENS -------- ALLER = 0 ----------- Retour = 1 -----------//
-
 function getItemByTabName(tabName){
     openDB();
     var r_sens = [];
@@ -56,6 +72,7 @@ function getAllItems(){
 }
 
 function getItemsByName(columnName, sens){
+
     openDB();
     var r = []
     _db.transaction( function(tx) {
@@ -65,6 +82,7 @@ function getItemsByName(columnName, sens){
                         }
         }
     )
+    console.debug("Get it : " + columnName +" sens : " + sens + " size : " + r.length)
     return r;
 }
 

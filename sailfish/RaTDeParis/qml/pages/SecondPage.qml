@@ -26,9 +26,18 @@ Dialog  {
     property variant lineID
     property variant directionID
     property variant stationID
+
+//    property int type: -1   //RER, METRO ...
+
+    property string ligne  //115,metro 3 ...
+    property string direction
+    property string station
+    property string urlType
+    property string urlLigne
+
     property alias title: header.title
     property bool abort: false
-    property bool whereFrom: false //False = Aller | true = retour
+    property int whereFrom: -1 //False = Aller | true = retour
     width: app.width
     height: app.height
 
@@ -115,6 +124,7 @@ Dialog  {
                 directionChoose.busySwitcher = true;
                 lineID = _idJson;
                 dataRequest.getDirections(_idJson)
+
             }
             onSectionClicked: {
                 abort = true;
@@ -189,6 +199,12 @@ Dialog  {
                 _urlLine = lineChoose.getCurrentImage();
                 _urlType = typeChoose.getCurrentImage();
                 _sharedModel = result.modelList
+
+                urlType = typeChoose.getCurrentImage();
+                urlLigne = lineChoose.getCurrentImage()
+                ligne = lineChoose.getSelectedName();
+                direction = directionChoose.getSelectedName();
+                station = stationChoose.getSelectedName();
             }
             onSectionClicked: {
                 //                abort = true;
