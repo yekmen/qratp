@@ -135,7 +135,7 @@ Item{
                     PropertyChanges {
                         target: selectedItem
                         visible: true;
-                        anchors.leftMargin: -selectedItem.width
+                        anchors.leftMargin: -target.width
                     }
                 }
             ]

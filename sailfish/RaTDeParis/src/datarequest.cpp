@@ -23,7 +23,8 @@
 DataRequest::DataRequest(QObject *parent) :
     QObject(parent),
     mgr(NULL),
-    mLines(NULL)
+    mLines(NULL),
+    currentRequestID(-1)
 {
     mgr = new QNetworkAccessManager(this);
     QObject::connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(DownloadFinished(QNetworkReply*)));
@@ -93,6 +94,7 @@ void DataRequest::getStations(const int &line, const int &direction)
 void DataRequest::getSchedule(const int &line, const int &direction, const int &station)
 {
     qDebug() << "Get Schedule : " << line << url::getSchedules(line, direction, station);
+
     //Save schedules
     finalyURL = url::getSchedules(line, direction, station).toString();
 
@@ -105,6 +107,7 @@ void DataRequest::getSchedule(const int &line, const int &direction, const int &
 void DataRequest::getSchedule(const QString &aUrl)
 {
     qDebug() << "Get Schedule by URL: " << aUrl;
+
     mSchedule->clear();
     setCurrentType(TypeSchedule);
     QUrl url(aUrl);
@@ -120,6 +123,19 @@ void DataRequest::addItineraire()
 QString DataRequest::getScheduleURL()
 {
     return finalyURL;
+}
+
+int DataRequest::getCurrentRequestID()
+{
+    return currentRequestID;
+}
+
+int DataRequest::makeMeARequestID()
+{
+    int ret = getCurrentRequestID();
+    ret += 1;
+    currentRequestID = ret;
+    return ret;
 }
 
 DataRequest::TypeData DataRequest::getCurrentType() const
@@ -152,7 +168,7 @@ QQmlListProperty<Station> DataRequest::stationsList()
 
 QQmlListProperty<Schedule> DataRequest::scheduleList()
 {
-    emit schedulesChanged();
+    emit schedulesChanged(currentRequestID);
     return mSchedule->scheduleList();
 }
 
@@ -163,7 +179,6 @@ void DataRequest::DownloadFinished(QNetworkReply *aReply)
         QVariant strReply = aReply->readAll();
         QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toString().toUtf8());
         QJsonObject jObject = jsonResponse.object();
-        qDebug() << "JObject size : " << jObject.size();
 
         if(getCurrentType() == TypeLines)
         {

@@ -96,8 +96,6 @@ public:
                     setUrlLine("http://v1.chervoisin2transport.fr/images/lignes/36/rer_a.png");
                 if(getLine().operator ==("B"))
                      setUrlLine("http://v1.chervoisin2transport.fr/images/lignes/36/rer_b.png");
-
-                qDebug() << "SNCF " << getLine();
             }
             break;
         case 6: //Tram

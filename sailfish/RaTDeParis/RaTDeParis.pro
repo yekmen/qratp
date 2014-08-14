@@ -36,7 +36,8 @@ OTHER_FILES += qml/RaTDeParis.qml \
     qml/js/Offline.js \
     qml/pages/tools/SideBar.qml \
     qml/js/TabDataBase.js \
-    qml/pages/tools/ItNameInputDialog.qml
+    qml/pages/tools/ItNameInputDialog.qml \
+    qml/js/RequestID.js
 
 HEADERS += \
     src/UrlCreator.h \

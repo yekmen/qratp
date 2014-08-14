@@ -32,15 +32,15 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT, parentID NUMERIC)');
            }
     )
 }
 //-------------- SENS -------- ALLER = 0 ----------- Retour = 1 -----------//
-function addItinerary(colName, ligneName, direction, sens, url, urlImage, station){     //Aller = 0 | Retour = 1
+function addItinerary(colName, ligneName, direction, sens, url, urlImage, station, parentID){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station, parentID]);
         }
     )
 }
@@ -71,27 +71,26 @@ function getAllItems(){
     return r_sens;
 }
 
-function getItemsByName(columnName, sens){
-
+function getItemsByName(sens, id){
     openDB();
     var r = []
     _db.transaction( function(tx) {
-            var rs = tx.executeSql('SELECT * FROM QRatp WHERE columnName = "' +columnName+'" AND sens = "'+sens + '"');
+            var rs = tx.executeSql('SELECT * FROM QRatp WHERE parentID = "' +id+'" AND sens = "'+sens + '"');
                     for(var i = 0; i < rs.rows.length; i++) {
                             r.push(rs.rows.item(i));
                         }
         }
     )
-    console.debug("Get it : " + columnName +" sens : " + sens + " size : " + r.length)
+    console.debug("Get it : " +" sens : " + sens + " size : " + r.length)
     return r;
 }
 
-function removeItems(tabName, sens){
-    console.debug("Delete : " + tabName + " sens : "+ sens)
+function removeItems(parentID, sens){
+    console.debug("Delete : " + parentID + " sens : "+ sens)
     openDB();
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-                        tx.executeSql('DELETE FROM QRatp WHERE "columnName" = "'+ tabName+'" AND "sens" = "' + sens + '"');
+                        tx.executeSql('DELETE FROM QRatp WHERE "parentID" = "'+ parentID+'" AND "sens" = "' + sens + '"');
 //                        DELETE FROM QRatp WHERE "columnName" = "toto" AND "sens" = "0"
            }
     )

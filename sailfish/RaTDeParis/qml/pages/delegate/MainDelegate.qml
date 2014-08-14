@@ -17,26 +17,32 @@
 */
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../../js/RequestID.js" as RequestID
+import harbour.DataRequest 1.0
 
 BackgroundItem {
     id: delegate
-    height: 200
-    Component.onCompleted: dataRequest.getSchedule(jsonURL);
+    height: 220
 
+    Component.onCompleted: {
+        dataRequestDelegate.getSchedule(jsonURL);
+    }
+    DataRequest{
+        id: dataRequestDelegate
+    }
     Connections{
-        target: dataRequest
+        target: dataRequestDelegate
         ignoreUnknownSignals: true
         onSchedulesChanged:{
-            console.debug("Loading ok");
-            scheduleList.update();
+
         }
     }
     Column{
         anchors.fill: parent
-        spacing: 2
+        spacing: 1
         Row{
             id: row
-            height: 60
+            height: 50
             anchors.left: parent.left
             anchors.right: parent.right
             Image{
@@ -57,13 +63,29 @@ BackgroundItem {
                 color: Theme.highlightColor
             }
         }
+        Separator {
+            opacity: 0.8
+//            anchors.top: row.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            width: 5
+            color: Theme.primaryColor
+        }
         ListView{
             id: scheduleList
             anchors.left: parent.left
             anchors.right: parent.right
-
             height: delegate.height - row.height
-            model: dataRequest.scheduleList
+            model: dataRequestDelegate.scheduleList
+            clip: true
+            focus: true
+            smooth: true
+            interactive: false
+            onCountChanged: {
+                if(count > 4)
+                    interactive = true;
+            }
+
             delegate: BackgroundItem {
                 id: delegateSchedule
                 height: 40
@@ -74,7 +96,8 @@ BackgroundItem {
                         text: line
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: Theme.fontSizeSmall
-                        color: Theme.highlightColor
+                        color: Theme.secondaryColor
+                        opacity: 0.8
                     }
                 }
             }

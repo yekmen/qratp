@@ -38,6 +38,7 @@ Dialog  {
     property alias title: header.title
     property bool abort: false
     property int whereFrom: -1 //False = Aller | true = retour
+
     width: app.width
     height: app.height
 
@@ -194,8 +195,6 @@ Dialog  {
             height: 300
             modelList: dataRequest.scheduleList
             onModelHasChanged: {
-                console.debug("URL !: "  + typeChoose.getCurrentImage())
-                console.debug("URL !: "  + lineChoose.getCurrentImage())
                 _urlLine = lineChoose.getCurrentImage();
                 _urlType = typeChoose.getCurrentImage();
                 _sharedModel = result.modelList

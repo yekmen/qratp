@@ -62,6 +62,8 @@ public:
     Q_INVOKABLE void getSchedule(const QString &aUrl);
     Q_INVOKABLE void addItineraire();
     Q_INVOKABLE QString getScheduleURL();
+    Q_INVOKABLE int makeMeARequestID();
+    Q_INVOKABLE int getCurrentRequestID();
 
     TypeData getCurrentType() const;
     void setCurrentType(const TypeData &value);
@@ -75,6 +77,7 @@ private:
 
     OfflineData* mOfflineData;
     QString finalyURL;
+    int currentRequestID;
 public slots:
     void DownloadFinished(QNetworkReply *aReply);
     QQmlListProperty<Line> linesList();
@@ -87,7 +90,7 @@ signals:
     void linesListChanged();
     void directionsListChanged();
     void stationsListChanged();
-    void schedulesChanged();
+    void schedulesChanged(int _id);
 };
 
 #endif // DATAREQUEST_H

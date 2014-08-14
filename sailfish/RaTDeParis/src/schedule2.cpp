@@ -26,7 +26,6 @@ Schedule2::Schedule2(QObject *parent):
 }
 void Schedule2::read(const QJsonObject &jsonObj)
 {
-    qDebug() << jsonObj.value("schedule").toArray();
     QJsonArray array = jsonObj["schedule"].toArray();
     for(int i = 0; i < array.size(); i++)
     {

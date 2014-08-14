@@ -41,7 +41,7 @@ ApplicationWindow
         CoverPage {
             id: myCover
             prt: app.sharedValue
-            modelList: _sharedModel
+//            modelList: _sharedModel
             urlLine: _urlLine
             urlType: _urlType
         }

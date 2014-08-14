@@ -56,11 +56,11 @@ function getAllItems(){
     )
     return r_sens;
 }
-function removeItems(tabName, sens){
-    console.debug("Delete : " + tabName + " sens : "+ sens)
+function removeItems(id, sens){
+    console.debug("Delete id : " + id + " sens : "+ sens)
     openDB();
     _db.transaction( function(tx) {
-            tx.executeSql('DELETE FROM QRATP_tab WHERE "columnName" = "'+ tabName+'" AND "sens" = "' + sens + '"');
+            tx.executeSql('DELETE FROM QRATP_tab WHERE "id" = "'+ id+'" AND "sens" = "' + sens + '"');
            }
     )
 }

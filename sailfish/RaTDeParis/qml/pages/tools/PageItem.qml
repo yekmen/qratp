@@ -28,29 +28,29 @@ Item{
     property string switchTitle
     property bool switchChecked: false
     property string currentItName
+    property int currentTabID
 
     signal headerSwitcherChecked;
     signal sideBarChanged(bool value);
     signal addNewItinerary(bool sens);
 
-    function loadData(){
+    function updateTab(){
         listModelSideBar.clear();
         var array = TabDB.getAllItems();
-        console.debug("Size : " + array.length);
         for(var i = 0; i < array.length; i++)
         {
-            console.debug(array[i].columnName + " " + array[i].sens + " " + whoIAm)
+            console.debug("Index : " + array[i].id)
             if(array[i].sens === whoIAm)
                 listModelSideBar.append({"line": array[i].columnName, "indexDB": array[i].id})
         }
+        updateHolder();
     }
-    function loadItin(value){
+    function loadTab(value, id){
         currentItName = value;
+        currentTabID = id;
         listModel.clear();
-
-        console.debug("Items LOADING " + value)
         listView.headerItem.description = value;
-        var array = Offline.getItemsByName(value, whoIAm);
+        var array = Offline.getItemsByName(whoIAm, id);
         for(var i = 0; i < array.length; i++)
         {
             listModel.append({"indexDB": array[i].id,
@@ -61,36 +61,60 @@ Item{
                                 "urlImage": array[i].urlImage})
         }
 
+        updateHolder();
         listView.update();
         closeSideBar()
     }
-    function removeItin(name, sens){
-
+    function removeTab(id, sens){
+        TabDB.removeItems(id, sens);
+        Offline.removeItems(id, sens)
+        listModel.clear();
+        listView.headerItem.description = "";
+        updateTab();
     }
-    function addItin(){
+    function addNewTab(){
         var dialog = pageStack.push("ItNameInputDialog.qml")
                    dialog.accepted.connect(function()
                    {
                        var nameOfItin;
                        nameOfItin = dialog.name;
                        TabDB.addItinerary(nameOfItin, whoIAm);
-                       loadData();  //update
+                       updateTab();  //update
                    })
     }
     function closeSideBar(){
         sideBar.state = "hide"
+        opactiyEffect.state = "disable"
         listView.headerItem.textswitch.checked = false;
-        listMouse.enabled = false;
+//        listMouse.enabled = false;
     }
     function openSideBar(){
+        opactiyEffect.state = "enable"
         sideBar.state = "show"
         listView.headerItem.textswitch.checked = true;
-        listMouse.enabled = true;
+//        listMouse.enabled = true;
+    }
+    function updateHolder(){
+        if(listModelSideBar.count == 0){
+            holder.enabled = true;
+            holder.text = qsTr("Veuillez créer un onglet")
+        }
+        else if(currentItName == "" && listModelSideBar.count > 0){
+            holder.enabled = true;
+            holder.text = qsTr("Veuillez sélectionner un onglet")
+        }
+        else if (currentItName != "" && listModelSideBar.count > 0 && listModel.count == 0){
+            holder.enabled = true;
+            holder.text = qsTr("Vous n'avez aucun itinéraire de sauvegarde dans cet onglet")
+        }
+        if(listModel.count > 0)
+            holder.enabled = false;
     }
 
     Component.onCompleted: {
-        loadData();
+        updateTab();
     }
+
     ListModel{
         id:listModel
     }
@@ -112,6 +136,10 @@ Item{
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+            Label{
+                id: lastUpdateLabel
+            }
+
             TextSwitch{
                 id: switcher
                 checked: switchChecked
@@ -130,17 +158,20 @@ Item{
         delegate:MainDelegate{
 
         }
-
+        ViewPlaceholder {
+                id: holder
+                enabled: false
+        }
         PullDownMenu {
             id: pullDownMenu
             MenuItem {
-                text: "Add Itin"
+                text: qsTr("Ajouter un itinéraire")
                 onClicked: {
                     var ret = pageStack.push(Qt.resolvedUrl("../SecondPage.qml"), {whereFrom : whoIAm});
                     ret.accepted.connect(function(){
                         console.debug("User accepted : " + dataRequest.scheduleList.length)
-//                        dataRequest.addItineraire(dataRequest.scheduleList);
-                        Offline.addItinerary(currentItName,ret.ligne, ret.direction, whoIAm, dataRequest.getScheduleURL(), ret.urlLigne, ret.station);
+                        Offline.addItinerary(currentItName,ret.ligne, ret.direction, whoIAm, dataRequest.getScheduleURL(), ret.urlLigne, ret.station, currentTabID);
+                        loadTab(currentItName, currentTabID);    //Update
                     })
                     ret.rejected.connect(function(){
                         console.debug("User refected : " + dataRequest.scheduleList.length)
@@ -149,15 +180,15 @@ Item{
             }
         }
         VerticalScrollDecorator {}
-        MouseArea{
-            id: listMouse
-            anchors.fill: parent
-            enabled: false
-            z:2
-            onClicked: {
-                closeSideBar();
-            }
-        }
+        //        MouseArea{
+//            id: listMouse
+//            anchors.fill: parent
+//            enabled: false
+//            z:2
+//            onClicked: {
+//                closeSideBar();
+//            }
+//        }
     }
     SideBar{
         id: sideBar
@@ -169,9 +200,9 @@ Item{
         x: -parent.width/2
         z:100
         //-------------- SLOTS ------------//
-        onItemsClicked: loadItin(itemName)
-        onAddClicked: addItin()
-        onRemoveItem: removeItin(itemName, whoIAm);
+        onItemsClicked: loadTab(itemName, id)
+        onAddClicked: addNewTab()
+        onRemoveItem: removeTab(itemID, whoIAm);
 
         state: "hide"   //default state
         states: [
@@ -211,7 +242,57 @@ Item{
             }
         ]
     }
-
+    OpacityRampEffect {
+        id: opactiyEffect
+        sourceItem: listView
+        direction: OpacityRamp.LeftToRight
+        MouseArea{
+            id: opactiyMouseArea
+            anchors.fill: parent
+            onClicked: {
+                closeSideBar();
+            }
+        }
+        z:50
+        state: "disable"
+        states: [
+            State {
+                name: "enable"
+                PropertyChanges {
+                    target: opactiyEffect
+                    slope: 2.0
+//                    offset: 1.0
+                }
+                PropertyChanges {
+                    target: opactiyMouseArea
+                    enabled: true
+                }
+            },
+            State {
+                name: "disable"
+                PropertyChanges {
+                    target: opactiyEffect
+                    slope: 0.0
+//                    offset: 0.0
+                }
+                PropertyChanges {
+                    target: opactiyMouseArea
+                    enabled: false
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "*"
+                to: "*"
+                PropertyAnimation{
+                    properties: "slope, offset"
+                    easing.type: Easing.InOutQuad
+                    duration: 500
+                }
+            }
+        ]
+    }
 }
 
 

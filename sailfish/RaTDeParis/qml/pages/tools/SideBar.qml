@@ -20,10 +20,12 @@ import Sailfish.Silica 1.0
 
 Rectangle {
     property ListModel sideBarModel
+
     color: Theme.rgba(Theme.highlightDimmerColor, 1)
     signal addClicked;
-    signal itemsClicked(string itemName);
-    signal removeItem(string itemName, int itemID);
+    signal itemsClicked(string itemName, int id);
+    signal removeItem(int itemID);
+
     PageHeader {
         id: header
         anchors.top: parent.top
@@ -40,6 +42,7 @@ Rectangle {
     }
 
     ListView{
+        id: listSideBar
         anchors.top: header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -50,15 +53,16 @@ Rectangle {
         smooth: true
         delegate: ListItem {
             id: listItem
+            property int dbID: indexDB
             menu: contextMenuComponent
             function remove() {
-                remorseAction("Deleting", function() {
-                    listModel.remove(index)
-                    removeItem(line, indexDB)
+                remorseAction("Suppression", function() {
+                    sideBarModel.remove(index)
+                    removeItem(dbID)
                 })
             }
             ListView.onRemove: animateRemoval()
-            onClicked: itemsClicked(line);
+            onClicked: itemsClicked(line, dbID);
             Label {
                 x: Theme.paddingLarge
                 text: (model.index+1) + ". " + line
@@ -75,6 +79,15 @@ Rectangle {
                     }
                 }
             }
+        }
+        onCountChanged: {
+            if(count === 0)
+                interactive = false;
+        }
+
+        ViewPlaceholder {
+            enabled: listSideBar.count == 0
+            text: qsTr("Aucun onglet")
         }
     }
 

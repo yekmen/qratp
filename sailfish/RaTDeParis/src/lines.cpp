@@ -35,7 +35,6 @@ Lines::~Lines()
 void Lines::read(const QJsonObject &jsonObj)
 {
     QJsonArray ar = jsonObj["lines"].toArray();
-//    qDebug() << "Lets goo !! " << ar.size();
 
     for(int i = 0; i < ar.size(); i++)
     {
