@@ -27,6 +27,7 @@ class Schedule : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString line READ getResult NOTIFY resultChanged)  //line = generic name
+    Q_PROPERTY(QString urlLine READ getUrlLine NOTIFY urlChanged)
 
 public:
     Schedule(QObject *parent = 0) : QObject(parent)
@@ -48,10 +49,15 @@ public:
         result = value;
         emit resultChanged();
     }
+    QString getUrlLine() const
+    {
+        return "";
+    }
 private:
     QString result;
 signals:
     void resultChanged();
+    void urlChanged();
 };
 
 class Schedule2 : public JsonDerializer

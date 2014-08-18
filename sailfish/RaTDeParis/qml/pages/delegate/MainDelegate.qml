@@ -34,7 +34,8 @@ BackgroundItem {
         target: dataRequestDelegate
         ignoreUnknownSignals: true
         onSchedulesChanged:{
-
+            busyIndicator.running = false;
+            busyIndicator.visible = false;
         }
     }
     Column{
@@ -54,6 +55,11 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 height: urlLine === undefined ? 0 : 60
                 width: urlLine === undefined ? 0 : 60
+                opacity: 0
+                onStatusChanged: if (image.status == Image.Ready) opacity = 1
+                Behavior on opacity { NumberAnimation{
+                        duration: 300
+                    }}
             }
             Label {
                 id: label
@@ -101,7 +107,13 @@ BackgroundItem {
                     }
                 }
             }
+            BusyIndicator{
+                id: busyIndicator
+                anchors.centerIn: parent
+                running: true
+            }
         }
+
     }
 
 

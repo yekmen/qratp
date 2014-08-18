@@ -28,7 +28,11 @@ class Direction : public QObject
 
     Q_PROPERTY(QString line READ getDirection NOTIFY directionChanged)
     Q_PROPERTY(int idJson READ getId NOTIFY idJsonChanged)
-
+    Q_PROPERTY(QString urlLine READ getUrlLine NOTIFY urlChanged)
+    QString getUrlLine() const
+    {
+        return "";
+    }
 public:
     Direction(QObject *parent = 0):QObject(parent){}
     Direction(int _id, const QString &_direction, QObject *parent = 0) : QObject(parent)
@@ -57,13 +61,14 @@ public:
         emit directionChanged();
     }
 
+
 private:
     int id;
     QString direction;
 signals:
     void directionChanged();
     void idJsonChanged();
-
+    void urlChanged();
 };
 
 class Directions : public JsonDerializer

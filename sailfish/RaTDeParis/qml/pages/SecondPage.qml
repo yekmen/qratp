@@ -38,7 +38,7 @@ Dialog  {
     property alias title: header.title
     property bool abort: false
     property int whereFrom: -1 //False = Aller | true = retour
-
+    canAccept: false;
     width: app.width
     height: app.height
 
@@ -88,7 +88,7 @@ Dialog  {
 
         Choose{
             id: typeChoose
-            typeName: qsTr("Selectionner le type de transport :")
+            typeName: qsTr("Sélectionner le type de transport :")
             Component.onCompleted: addType();
             height: 200
             anchors.left: parent.left
@@ -111,13 +111,23 @@ Dialog  {
                 if(state === "selected")
                     state = "show";
             }
+            ListModel{
+                id: modelType
+            }
+            function addType(){
+                modelType.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
+                modelType.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});
+                modelType.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
+                modelType.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
+                typeChoose.modelList = modelType;
+            }
         }
         Choose{
             id: lineChoose
             height: 300
             anchors.left: parent.left
             anchors.right: parent.right
-            typeName: qsTr("Selectionner votre ligne :")
+            typeName: qsTr("Sélectionner votre ligne :")
             modelList: dataRequest.linesList
             state: "hide"
             onUserClicked: {
@@ -141,7 +151,7 @@ Dialog  {
         }
         Choose{
             id: directionChoose
-            typeName: qsTr("Selectionner votre direction :")
+            typeName: qsTr("Sélectionner votre direction :")
             anchors.left: parent.left
             anchors.right: parent.right
             modelList: dataRequest.directionsList
@@ -166,7 +176,7 @@ Dialog  {
         }
         Choose{
             id: stationChoose
-            typeName: qsTr("Selectionner votre station :")
+            typeName: qsTr("Sélectionner votre station :")
             anchors.left: parent.left
             anchors.right: parent.right
             state: "hide"
@@ -188,7 +198,7 @@ Dialog  {
         }
         Choose{
             id: result
-            typeName: qsTr("Résultat :")
+            typeName: qsTr("Résultats :")
             anchors.left: parent.left
             anchors.right: parent.right
             state: "hide"

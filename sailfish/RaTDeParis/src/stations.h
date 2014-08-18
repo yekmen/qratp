@@ -27,6 +27,8 @@ class Station : public QObject
     Q_OBJECT
     Q_PROPERTY(int idJson READ getId NOTIFY idJsonChanged)
     Q_PROPERTY(QString line READ getStation NOTIFY stationChanged)  //line = generic name
+    Q_PROPERTY(QString urlLine READ getUrlLine NOTIFY urlChanged)
+
 public:
     Station(QObject * parent = 0): QObject(parent)
     {
@@ -57,13 +59,17 @@ public:
         id = value;
         emit idJsonChanged();
     }
-
+    QString getUrlLine() const
+    {
+        return "";
+    }
 private:
     int id;
     QString station;
 signals:
     void stationChanged();
     void idJsonChanged();
+    void urlChanged();
 };
 
 class Stations : public JsonDerializer

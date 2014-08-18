@@ -35,7 +35,7 @@ Page {
         clip: true
         focus: true
         smooth: true
-
+        boundsBehavior: Flickable.StopAtBounds
         HorizontalScrollDecorator{}
     }
     VisualDataModel {

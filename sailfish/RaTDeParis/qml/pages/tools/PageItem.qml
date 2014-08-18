@@ -98,17 +98,27 @@ Item{
         if(listModelSideBar.count == 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez créer un onglet")
+            listView.headerItem.textswitch.busy = true;
+            pullDownMenu.visible = false;
         }
         else if(currentItName == "" && listModelSideBar.count > 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez sélectionner un onglet")
+            listView.headerItem.textswitch.busy = true;
+            pullDownMenu.visible = false;
         }
         else if (currentItName != "" && listModelSideBar.count > 0 && listModel.count == 0){
             holder.enabled = true;
-            holder.text = qsTr("Vous n'avez aucun itinéraire de sauvegarde dans cet onglet")
+            holder.text = qsTr("Vous n'avez aucun itinéraire de sauvegardé dans cet onglet")
+            pullDownMenu.busy = true;
+            pullDownMenu.visible = true;
         }
-        if(listModel.count > 0)
+        if(listModel.count > 0){
             holder.enabled = false;
+            pullDownMenu.visible = true;
+        }
+        else
+            timer.start();
     }
 
     Component.onCompleted: {
@@ -120,6 +130,19 @@ Item{
     }
     ListModel{
         id:listModelSideBar
+    }
+
+    Timer{
+        id: timer
+        repeat: false
+        running: false
+        interval: 5000
+        onTriggered: {
+            if(pullDownMenu.busy)
+                pullDownMenu.busy = false;
+            if(listView.headerItem.textswitch.busy)
+                listView.headerItem.textswitch.busy = false;
+        }
     }
 
     SilicaListView {
@@ -180,15 +203,6 @@ Item{
             }
         }
         VerticalScrollDecorator {}
-        //        MouseArea{
-//            id: listMouse
-//            anchors.fill: parent
-//            enabled: false
-//            z:2
-//            onClicked: {
-//                closeSideBar();
-//            }
-//        }
     }
     SideBar{
         id: sideBar

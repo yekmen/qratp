@@ -21,9 +21,10 @@ import Sailfish.Silica 1.0
 Item{
     id: item1
     state: "hide"
-
     property string typeName
     property alias modelList: list.model
+//    property ListModel modelList : ListModel { id: myModel }
+
     property alias busySwitcher : switcher.busy
 
     signal sectionClicked;
@@ -35,13 +36,6 @@ Item{
     }
     function getSelectedName(){
         return selectedItem.line;
-    }
-
-    function addType(){
-        modelList.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
-        modelList.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});
-        modelList.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
-        modelList.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
     }
 
     BackgroundItem  {
@@ -135,7 +129,7 @@ Item{
                     PropertyChanges {
                         target: selectedItem
                         visible: true;
-                        anchors.leftMargin: -target.width
+                        anchors.leftMargin: -parent.width
                     }
                 }
             ]
@@ -163,7 +157,7 @@ Item{
         smooth: true
         clip: true
         focus: true
-        model: modelList
+
         onModelChanged: modelHasChanged()
         delegate:  BackgroundItem {
             id: delegate
@@ -179,6 +173,11 @@ Item{
                     anchors.verticalCenter: parent.verticalCenter
                     height: urlLine === undefined ? 0 : 60
                     width: urlLine === undefined ? 0 : 60
+                    opacity: 0
+                    onStatusChanged: if (image.status == Image.Ready) opacity = 1
+                    Behavior on opacity { NumberAnimation{
+                            duration: 300
+                        }}
                 }
                 Label {
                     id: label
@@ -196,10 +195,6 @@ Item{
                 item1.state = "selected"
             }
         }
-
-    }
-    ListModel{
-        id: modelList
     }
 
     states: [
@@ -212,7 +207,6 @@ Item{
             PropertyChanges {
                 target: item1
                 height: 400
-//                busy: false
             }
             PropertyChanges {
                 target: list
@@ -275,33 +269,6 @@ Item{
                 easing.type:Easing.InQuart
             }
         }
-//        Transition {
-//            from: "hide"
-//            to: "*"
-//            PropertyAnimation{
-//                properties: "height"
-//                duration: 300
-//                easing.type:Easing.OutQuart
-//            }
-//        }
-//        Transition {
-//            from: "show"
-//            to: "selected"
-//            PropertyAnimation{
-//                properties: "height"
-//                duration: 300
-//                easing.type:Easing.InCirc
-//            }
-//        },
-//        Transition {
-//            from: "selected"
-//            to: "show"
-//            PropertyAnimation{
-//                properties: "height"
-//                duration: 300
-//                easing.type:Easing.InCirc
-//            }
-//        }
     ]
 
 }
