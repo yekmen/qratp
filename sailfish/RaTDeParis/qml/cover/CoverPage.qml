@@ -38,7 +38,7 @@ CoverBackground {
 
     property string urlType
     property string urlLine
-    property alias modelList: list.model
+//    property alias modelList: list.model
     function fitWord(value){
         var ret;    //Returned value
 
@@ -84,7 +84,7 @@ CoverBackground {
 //            time();
 //       }
 //    }
-
+/*
     Label{
         id: labelProTrain
         text: "Estimation :"
@@ -162,9 +162,17 @@ CoverBackground {
         anchors.bottom: parent.bottom
         fillMode: Image.PreserveAspectFit
     }
+    */
+    Label{
+        id: coverLabel
+        anchors.centerIn: parent
+        text: "Le RAT de Paris"
+    }
+
     CoverActionList {
         id: coverAction
-        enabled: list.model.count > 0
+//        enabled: list.model.count > 0
+        enabled: false
 //        CoverAction {
 //            iconSource: "image://theme/icon-cover-next"
 //        }

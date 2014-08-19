@@ -24,7 +24,6 @@ Page {
     id: fpage
     property int currentSens: 0
 
-
     ListView{
         id: mainList
         anchors.fill: parent
@@ -57,48 +56,6 @@ Page {
         }
     }
 
-/*
-        SilicaListView {
-            id: listView
-            model: dataRequest.linesList
-            anchors.fill: parent
-            header: PageHeader {
-                title: "Nested Page"
-            }
-            delegate: BackgroundItem {
-                id: delegate
-                Row{
-                    Image{
-                        source: urlType
-                        cache: true
-                    }
-                    Image{
-                        source: urlLine
-                        cache: true
-                    }
-                    Label {
-                        x: Theme.paddingLarge
-                        text: line
-    //                    anchors.verticalCenter: parent.verticalCenter
-                        color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
-                    }
-
-                }
-                onClicked: console.log("Clicked " + idJson + "\n" + typeID +"\n" +typeName + "\n"+urlLine);
-            }
-        PullDownMenu {
-            id: pullDownMenu
-            MenuItem {
-                text: "Add Itin"
-                onClicked: pageStack.push(secondPage);
-            }
-//            MenuLabel {
-//                text: "Menu label"
-//            }
-        }
-        VerticalScrollDecorator {}
-    }
-    */
 }
 
 
