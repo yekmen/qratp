@@ -51,7 +51,7 @@ DataRequest::~DataRequest()
 
 void DataRequest::getLines(int lineTypeToInt)
 {
-    qDebug() << "Get lines " << lineTypeToInt;
+//    qDebug() << "Get lines " << lineTypeToInt;
     setCurrentType(TypeLines);
 
     LineType castedLineType = static_cast<LineType>(lineTypeToInt);

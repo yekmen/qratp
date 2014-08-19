@@ -38,9 +38,11 @@ Dialog  {
     property alias title: header.title
     property bool abort: false
     property int whereFrom: -1 //False = Aller | true = retour
+
     canAccept: false;
     width: app.width
     height: app.height
+    Component.onDestruction: console.debug("Destruction")
 
     DialogHeader{
         id: header
@@ -97,6 +99,7 @@ Dialog  {
 
             Choose{
                 id: typeChoose
+                objectName: "typeChoose"
                 typeName: qsTr("Sélectionner le type de transport :")
                 Component.onCompleted: addType();
                 height: 200
@@ -108,7 +111,7 @@ Dialog  {
                     abort = false;
                     lineChoose.busySwitcher = true;
                     typeID = _idJson;
-                    console.debug("Type: " + typeID + " " + abort)
+//                    console.debug("Type: " + typeID + " " + abort)
                     dataRequest.getLines(typeID);
                 }
                 onSectionClicked: {
@@ -134,6 +137,7 @@ Dialog  {
             }
             Choose{
                 id: lineChoose
+                objectName : "lineChoose"
                 height: 300
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -166,6 +170,7 @@ Dialog  {
             }
             Choose{
                 id: directionChoose
+                objectName: "directionChoose"
                 typeName: qsTr("Sélectionner votre direction :")
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -192,6 +197,7 @@ Dialog  {
             }
             Choose{
                 id: stationChoose
+                objectName: "stationChoose"
                 typeName: qsTr("Sélectionner votre station :")
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -206,10 +212,10 @@ Dialog  {
                     direction = directionChoose.getSelectedName();
                     station = getSelectedName();
 
-                    console.debug("Ligne : " + ligne)
-                    console.debug("direction : " + direction)
-                    console.debug("station : " + station)
-                    console.debug("urlLigne : " + urlLigne)
+//                    console.debug("Ligne : " + ligne)
+//                    console.debug("direction : " + direction)
+//                    console.debug("station : " + station)
+//                    console.debug("urlLigne : " + urlLigne)
                 }
 
                 onUserClicked: {
@@ -228,6 +234,7 @@ Dialog  {
             }
             Choose{
                 id: result
+                objectName: "result"
                 typeName: qsTr("Résultats :")
                 anchors.left: parent.left
                 anchors.right: parent.right

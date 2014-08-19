@@ -37,6 +37,13 @@ Item {
     property string url
     property string line
     property int typeID
+    Component.onCompleted: {
+//        myIndex = 0;
+//        idJSON = 0;
+//        typeID = 0
+//        url = ""
+//        line = ""
+    }
 
     Image {
         id: image

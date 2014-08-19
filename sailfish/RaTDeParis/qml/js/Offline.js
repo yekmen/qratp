@@ -94,3 +94,13 @@ function removeItems(parentID, sens){
            }
     )
 }
+function removeItem(id, sens){
+    console.debug("Delete : " + id + " sens : "+ sens)
+    openDB();
+    _db.transaction( function(tx) {
+    // Create the database if it doesn't already exist
+                        tx.executeSql('DELETE FROM QRatp WHERE "id" = "'+ id+ '"');
+//                        DELETE FROM QRatp WHERE "columnName" = "toto" AND "sens" = "0"
+           }
+    )
+}

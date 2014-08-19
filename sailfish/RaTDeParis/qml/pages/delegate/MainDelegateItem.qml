@@ -20,13 +20,15 @@ import Sailfish.Silica 1.0
 import "../../js/RequestID.js" as RequestID
 import harbour.DataRequest 1.0
 
-BackgroundItem {
+ListItem {
     id: delegate
 //    height: 220
-
+    contentHeight: 220
+    property int dbID: indexDB
     Component.onCompleted: {
         dataRequestDelegate.getSchedule(jsonURL);
     }
+
     DataRequest{
         id: dataRequestDelegate
     }
@@ -53,8 +55,8 @@ BackgroundItem {
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
                 anchors.verticalCenter: parent.verticalCenter
-                height: urlLine === undefined ? 0 : 60
-                width: urlLine === undefined ? 0 : 60
+                height: 60
+                width: 60
                 opacity: 0
                 onStatusChanged: if (image.status == Image.Ready) opacity = 1
                 Behavior on opacity { NumberAnimation{
@@ -96,6 +98,7 @@ BackgroundItem {
             delegate: BackgroundItem {
                 id: delegateSchedule
                 height: 40
+                enabled: false
                 z:-1
                 Row{
                     anchors.fill: parent
@@ -117,6 +120,5 @@ BackgroundItem {
         }
 
     }
-
 
 }

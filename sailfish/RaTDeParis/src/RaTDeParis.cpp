@@ -25,9 +25,12 @@
 #include <QtWidgets/QGraphicsBlurEffect>
 
 //#include <QQmlEngine>
-//#include <QtQml/QQmlEngine>
 
 #include <qqml.h>   //qmlRegisterType !
+#include <QQuickView>
+#include <QGuiApplication>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -64,6 +67,8 @@ int main(int argc, char *argv[])
 
     qDebug() << "offlineStoragPath orig: " << view->engine()->offlineStoragePath();
     view->setSource(SailfishApp::pathTo("qml/RaTDeParis.qml"));
+    view->rootContext()->setContextProperty("appVersion", APPLICATION_VERSION);
+//    viewer
     view->show();
 //    view->showFullScreen();
     return app->exec();

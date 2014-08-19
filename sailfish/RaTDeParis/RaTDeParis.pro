@@ -11,7 +11,8 @@ TARGET = RaTDeParis
 CONFIG += sailfishapp
 QT += widgets
 
-VERSION = 0.2
+VERSION = 0.3
+DEFINES += APPLICATION_VERSION=\"\\\"$$VERSION\\\"\"
 
 SOURCES += src/RaTDeParis.cpp \
     src/stations.cpp \
@@ -32,12 +33,13 @@ OTHER_FILES += qml/RaTDeParis.qml \
     qml/pages/tools/Choose.qml \
     qml/pages/tools/search.js \
     qml/pages/tools/PageItem.qml \
-    qml/pages/delegate/MainDelegate.qml \
     qml/js/Offline.js \
     qml/pages/tools/SideBar.qml \
     qml/js/TabDataBase.js \
     qml/pages/tools/ItNameInputDialog.qml \
-    qml/js/RequestID.js
+    qml/js/RequestID.js \
+    qml/pages/delegate/MainDelegateItem.qml \
+    qml/pages/AboutPage.qml
 
 HEADERS += \
     src/UrlCreator.h \

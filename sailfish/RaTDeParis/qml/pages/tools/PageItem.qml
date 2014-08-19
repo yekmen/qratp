@@ -151,17 +151,15 @@ Item{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+//        onAnchorsChanged: console.debug("Top : " + )
         model: listModel
         clip: true
-        focus: true
+//        focus: true
         smooth: true
         header:PageHeader {
             property alias textswitch: switcher
             id: pageHeader
             title: pageTitle
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
             Label{
                 id: lastUpdateLabel
             }
@@ -181,15 +179,43 @@ Item{
                 }
             }
         }
-//        delegate:MainDelegate{
-
-//        }
+        delegate:MainDelegateItem{
+            ListView.onRemove: animateRemoval()
+            menu: contextMenuComponent
+            function remove() {
+                remorseAction("Suppression", function() {
+                    listView.model.remove(index)
+                    Offline.removeItem(dbID, whoIAm)
+                    updateHolder();
+//                    console.debug("Size H: " + listView.height)
+//                    console.debug("Size W: " + listView.width)
+//                    console.debug("main H: " + main.height)
+//                    console.debug("main W: " + main.width)
+//                    console.debug("X : " + listView.x +" Y: " + listView.y)
+                })
+            }
+            Component {
+                id: contextMenuComponent
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Supprimer")
+                        onClicked: remove()
+                    }
+                }
+            }
+        }
         ViewPlaceholder {
                 id: holder
                 enabled: false
         }
         PullDownMenu {
             id: pullDownMenu
+            MenuItem {
+                text: qsTr("A Propos")
+                onClicked: {
+                    var ret = pageStack.push(Qt.resolvedUrl("../AboutPage.qml"));
+                }
+            }
             MenuItem {
                 text: qsTr("Ajouter un itinéraire")
                 onClicked: {
@@ -202,35 +228,9 @@ Item{
 //                    })
                 }
             }
+
         }
         VerticalScrollDecorator {}
-
-        delegate: ListItem {
-            id: listItem
-            property int dbID: indexDB
-            contentHeight: 220
-            menu: contextMenuComponent
-            function remove() {
-                remorseAction("Suppression", function() {
-//                    sideBarModel.remove(index)
-//                    removeItem(dbID)
-                })
-            }
-            ListView.onRemove: animateRemoval()
-            Component {
-                id: contextMenuComponent
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Supprimer")
-                        onClicked: remove()
-                    }
-                }
-            }
-            MainDelegate{
-                anchors.fill: parent
-                height: 220
-            }
-        }
 
     }
     SideBar{

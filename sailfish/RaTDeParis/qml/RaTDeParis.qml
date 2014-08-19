@@ -50,8 +50,4 @@ ApplicationWindow
         id: dataRequest
         Component.onCompleted: dataRequest.getLines();
     }
-    SecondPage{
-        id: secondPage
-    }
-
 }

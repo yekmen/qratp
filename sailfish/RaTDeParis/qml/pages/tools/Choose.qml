@@ -54,6 +54,8 @@ Item{
     }
 
     function reBaseModel(){
+        lineList = [];
+        searchModel.clear();
         for(var i = 0; i < modelList.length; i++)
         {
             searchModel.append(modelList[i]);
@@ -62,6 +64,7 @@ Item{
     }
 
     Component.onCompleted: {
+        searchModel.clear();
         if(enableSearch)
             list.header = cmpHeader;
     }
@@ -247,7 +250,7 @@ Item{
             }
             onClicked: {
                 userClicked(idJson);
-                console.log("Clicked " +line + " " + idJson);
+//                console.log("Clicked " +line + " " + idJson);
                 selectedItem.line = label.text
                 selectedItem.url = image.source
                 item1.state = "selected"
@@ -289,6 +292,7 @@ Item{
             PropertyChanges {
                 target: list
                 visible: false
+                onVisibleChanged: scrollToTop();
             }
             PropertyChanges {
                 target: selectedItem
