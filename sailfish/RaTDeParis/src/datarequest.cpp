@@ -59,13 +59,13 @@ void DataRequest::getLines(int lineTypeToInt)
     mLines->clear();
     if(!mLines->offlineDataIsExist())
     {
-        qDebug() << "Offline not file exist, download progress ! ";
+//        qDebug() << "Offline not file exist, download progress ! ";
         QNetworkRequest req(url::getLines());
         mgr->get(req);
     }
     else
     {
-        qDebug() << "Offline file existed ! ";
+//        qDebug() << "Offline file existed ! ";
         QString strReply = mLines->getOfflineData();
         QJsonDocument jsonResponse = QJsonDocument::fromJson(strReply.toUtf8());
         QJsonObject jObject = jsonResponse.object();
@@ -75,7 +75,7 @@ void DataRequest::getLines(int lineTypeToInt)
 
 void DataRequest::getDirections(const int &line)
 {
-    qDebug() << "Get direciton : " << line << url::getDirections(line);
+//    qDebug() << "Get direciton : " << line << url::getDirections(line);
     mDirections->clear();
     setCurrentType(TypeDirections);
     QNetworkRequest req(url::getDirections(line));
@@ -84,7 +84,7 @@ void DataRequest::getDirections(const int &line)
 
 void DataRequest::getStations(const int &line, const int &direction)
 {
-    qDebug() << "Get Stations : " << line << url::getStations(line, direction);
+//    qDebug() << "Get Stations : " << line << url::getStations(line, direction);
     mStations->clear();
     setCurrentType(TypeStations);
     QNetworkRequest req(url::getStations(line, direction));
@@ -93,7 +93,7 @@ void DataRequest::getStations(const int &line, const int &direction)
 
 void DataRequest::getSchedule(const int &line, const int &direction, const int &station)
 {
-    qDebug() << "Get Schedule : " << line << url::getSchedules(line, direction, station);
+//    qDebug() << "Get Schedule : " << line << url::getSchedules(line, direction, station);
 
     //Save schedules
     finalyURL = url::getSchedules(line, direction, station).toString();
@@ -106,7 +106,7 @@ void DataRequest::getSchedule(const int &line, const int &direction, const int &
 
 void DataRequest::getSchedule(const QString &aUrl)
 {
-    qDebug() << "Get Schedule by URL: " << aUrl;
+//    qDebug() << "Get Schedule by URL: " << aUrl;
 
     mSchedule->clear();
     setCurrentType(TypeSchedule);
@@ -128,6 +128,16 @@ QString DataRequest::getScheduleURL()
 int DataRequest::getCurrentRequestID()
 {
     return currentRequestID;
+}
+
+void DataRequest::refineLine()
+{
+    emit linesList();
+}
+
+void DataRequest::refineStation()
+{
+    emit stationsListChanged();
 }
 
 int DataRequest::makeMeARequestID()

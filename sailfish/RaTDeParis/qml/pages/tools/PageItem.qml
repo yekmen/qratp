@@ -34,12 +34,12 @@ Item{
     signal sideBarChanged(bool value);
     signal addNewItinerary(bool sens);
 
+
     function updateTab(){
         listModelSideBar.clear();
         var array = TabDB.getAllItems();
         for(var i = 0; i < array.length; i++)
         {
-            console.debug("Index : " + array[i].id)
             if(array[i].sens === whoIAm)
                 listModelSideBar.append({"line": array[i].columnName, "indexDB": array[i].id})
         }
@@ -152,6 +152,9 @@ Item{
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         model: listModel
+        clip: true
+        focus: true
+        smooth: true
         header:PageHeader {
             property alias textswitch: switcher
             id: pageHeader
@@ -178,9 +181,9 @@ Item{
                 }
             }
         }
-        delegate:MainDelegate{
+//        delegate:MainDelegate{
 
-        }
+//        }
         ViewPlaceholder {
                 id: holder
                 enabled: false
@@ -192,17 +195,43 @@ Item{
                 onClicked: {
                     var ret = pageStack.push(Qt.resolvedUrl("../SecondPage.qml"), {whereFrom : whoIAm});
                     ret.accepted.connect(function(){
-                        console.debug("User accepted : " + dataRequest.scheduleList.length)
                         Offline.addItinerary(currentItName,ret.ligne, ret.direction, whoIAm, dataRequest.getScheduleURL(), ret.urlLigne, ret.station, currentTabID);
                         loadTab(currentItName, currentTabID);    //Update
                     })
-                    ret.rejected.connect(function(){
-                        console.debug("User refected : " + dataRequest.scheduleList.length)
-                    })
+//                    ret.rejected.connect(function(){
+//                    })
                 }
             }
         }
         VerticalScrollDecorator {}
+
+        delegate: ListItem {
+            id: listItem
+            property int dbID: indexDB
+            contentHeight: 220
+            menu: contextMenuComponent
+            function remove() {
+                remorseAction("Suppression", function() {
+//                    sideBarModel.remove(index)
+//                    removeItem(dbID)
+                })
+            }
+            ListView.onRemove: animateRemoval()
+            Component {
+                id: contextMenuComponent
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Supprimer")
+                        onClicked: remove()
+                    }
+                }
+            }
+            MainDelegate{
+                anchors.fill: parent
+                height: 220
+            }
+        }
+
     }
     SideBar{
         id: sideBar

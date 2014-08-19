@@ -81,7 +81,6 @@ function getItemsByName(sens, id){
                         }
         }
     )
-    console.debug("Get it : " +" sens : " + sens + " size : " + r.length)
     return r;
 }
 

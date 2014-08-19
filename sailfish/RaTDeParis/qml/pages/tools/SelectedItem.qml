@@ -30,6 +30,7 @@ Item {
     //_index = index dans la Liste
     //_line = Nom de la ligne
     //_typeID = ID donnée par le JSON 1 = bus 2 = metro etc ...
+    signal lineTxtChanged;
 
     property int myIndex
     property int idJSON

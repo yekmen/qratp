@@ -109,7 +109,6 @@ void Lines::setCurrentGettingLineType(const LineType &value)
     currentGettingLineType = value;
 }
 
-
 LineType Line::getLineType() const
 {
     return lineType;
@@ -119,3 +118,4 @@ void Line::setLineType(const LineType &value)
 {
     lineType = value;
 }
+

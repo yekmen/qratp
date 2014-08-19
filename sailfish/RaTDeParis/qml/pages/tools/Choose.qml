@@ -22,20 +22,60 @@ Item{
     id: item1
     state: "hide"
     property string typeName
-    property alias modelList: list.model
-//    property ListModel modelList : ListModel { id: myModel }
+//    property alias modelList: list.model
+
+    property bool enableSearch: false
+
+    property var modelList : []
+    property var lineList: []
+    onModelListChanged: reBaseModel()
 
     property alias busySwitcher : switcher.busy
 
     signal sectionClicked;
     signal userClicked(variant _idJson);
     signal modelHasChanged;
+    signal search(string txt);
+    signal selectedItemIsReady;
+
+    function addType(){
+        searchModel.append({"idJson": 1,"line": "Bus", "urlLine": "qrc:/logo/bus.png"});
+        searchModel.append({"idJson": 2,"line": "Métro", "urlLine": "qrc:/logo/metro.png"});
+        searchModel.append({"idJson": 3,"line": "RER", "urlLine": "qrc:/logo/rer.png"});
+        searchModel.append({"idJson": 6,"line": "Tram", "urlLine": "qrc:/logo/tramway.png"});
+
+    }
 
     function getCurrentImage(){
         return selectedItem.url;
     }
     function getSelectedName(){
         return selectedItem.line;
+    }
+
+    function reBaseModel(){
+        for(var i = 0; i < modelList.length; i++)
+        {
+            searchModel.append(modelList[i]);
+            lineList.push(modelList[i].line);
+        }
+    }
+
+    Component.onCompleted: {
+        if(enableSearch)
+            list.header = cmpHeader;
+    }
+
+    ListModel{
+        id: searchModel
+        function update() {
+            clear()
+            for (var i=0; i<modelList.length; i++) {
+                if (list.headerItem.text == "" || lineList[i].indexOf(list.headerItem.text) >= 0) {
+                    append(modelList[i])
+                }
+            }
+        }
     }
 
     BackgroundItem  {
@@ -106,6 +146,7 @@ Item{
                 }
             ]
         }
+
         SelectedItem{
             id: selectedItem
             height: 50
@@ -133,6 +174,7 @@ Item{
                     }
                 }
             ]
+            onLineChanged: selectedItemIsReady()
             Behavior on anchors.topMargin { NumberAnimation { duration: 500 } }
             Behavior on anchors.leftMargin { NumberAnimation { duration: 500 } }
         }
@@ -145,6 +187,20 @@ Item{
             color: Theme.primaryColor
         }
     }
+    Component{
+        id: cmpHeader
+
+        SearchField{
+            id: searchField
+            width: parent.width
+            placeholderText: qsTr("Rechercher")
+            onTextChanged: {
+                searchModel.update();
+            }
+
+        }
+    }
+
     SilicaListView{
         id: list
         anchors.bottom: parent.bottom
@@ -157,6 +213,8 @@ Item{
         smooth: true
         clip: true
         focus: true
+        model: searchModel
+//        header:cmpHeader
 
         onModelChanged: modelHasChanged()
         delegate:  BackgroundItem {

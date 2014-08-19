@@ -65,6 +65,9 @@ public:
     Q_INVOKABLE int makeMeARequestID();
     Q_INVOKABLE int getCurrentRequestID();
 
+    Q_INVOKABLE void refineLine();
+    Q_INVOKABLE void refineStation();
+
     TypeData getCurrentType() const;
     void setCurrentType(const TypeData &value);
 private:

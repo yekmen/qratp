@@ -22,7 +22,7 @@ import harbour.DataRequest 1.0
 
 BackgroundItem {
     id: delegate
-    height: 220
+//    height: 220
 
     Component.onCompleted: {
         dataRequestDelegate.getSchedule(jsonURL);
@@ -87,6 +87,7 @@ BackgroundItem {
             focus: true
             smooth: true
             interactive: false
+
             onCountChanged: {
                 if(count > 4)
                     interactive = true;
@@ -95,6 +96,7 @@ BackgroundItem {
             delegate: BackgroundItem {
                 id: delegateSchedule
                 height: 40
+                z:-1
                 Row{
                     anchors.fill: parent
                     Label {
