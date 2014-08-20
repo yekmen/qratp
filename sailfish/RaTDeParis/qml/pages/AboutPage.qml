@@ -70,12 +70,18 @@ Dialog {
             }
             Label{
                 id: labelthanks
+
                 text: qsTr("Icon designer & Testeur : L. Cyril")
-//                font.family: Theme.fontFamilyHeading
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
                 verticalAlignment: Image.AlignHCenter
-//                anchors.centerIn: parent
+            }
+            Label{
+                id: labelLink
+                text: "https://github.com/yekmen/qratp"
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                verticalAlignment: Image.AlignHCenter
             }
             Label{
                 id: labelLicense

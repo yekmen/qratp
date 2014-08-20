@@ -20,9 +20,11 @@ import Sailfish.Silica 1.0
 
 Dialog {
     property string name
-    PageHeader{
+    DialogHeader{
         id: header
-        title: qsTr("Nouveau itinéraire")
+        acceptText: qsTr("Nouveau itinéraire")
+        defaultAcceptText: qsTr("Ajouter")
+        cancelText: qsTr("Retour")
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right

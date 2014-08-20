@@ -18,7 +18,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../../js/RequestID.js" as RequestID
-import harbour.DataRequest 1.0
+import harbour.RaTDeParis.DataRequest 1.0
 
 ListItem {
     id: delegate
@@ -69,8 +69,8 @@ ListItem {
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
                 anchors.verticalCenter: parent.verticalCenter
-                height: 60
-                width: 60
+                height: 50
+                width: 50
                 opacity: 0
                 onStatusChanged: if (image.status == Image.Ready) opacity = 1
                 Behavior on opacity { NumberAnimation{

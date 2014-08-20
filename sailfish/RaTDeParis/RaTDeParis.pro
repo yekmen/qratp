@@ -9,7 +9,7 @@
 TARGET = RaTDeParis
 
 CONFIG += sailfishapp
-QT += widgets
+#QT += widgets
 
 VERSION = 0.3
 DEFINES += APPLICATION_VERSION=\"\\\"$$VERSION\\\"\"

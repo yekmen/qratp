@@ -85,7 +85,6 @@ function getItemsByName(sens, id){
 }
 
 function removeItems(parentID, sens){
-    console.debug("Delete : " + parentID + " sens : "+ sens)
     openDB();
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist

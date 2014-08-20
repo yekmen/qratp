@@ -33,19 +33,19 @@ int main(int argc, char *argv[])
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
-    qmlRegisterType<DataRequest>("harbour.DataRequest",1,0,"DataRequest");
+    qmlRegisterType<DataRequest>("harbour.RaTDeParis.DataRequest",1,0,"DataRequest");
 
-    qmlRegisterType<Line>("harbour.DataRequest",1,0,"Line");
-    qmlRegisterType<Lines>("harbour.DataRequest",1,0,"Lines");
+    qmlRegisterType<Line>("harbour.RaTDeParis.DataRequest",1,0,"Line");
+    qmlRegisterType<Lines>("harbour.RaTDeParis.DataRequest",1,0,"Lines");
 
-    qmlRegisterType<Directions>("harbour.DataRequest",1,0,"Directions");
-    qmlRegisterType<Direction>("harbour.DataRequest",1,0,"Direction");
+    qmlRegisterType<Directions>("harbour.RaTDeParis.DataRequest",1,0,"Directions");
+    qmlRegisterType<Direction>("harbour.RaTDeParis.DataRequest",1,0,"Direction");
 
-    qmlRegisterType<Stations>("harbour.DataRequest",1,0,"Stations");
-    qmlRegisterType<Station>("harbour.DataRequest",1,0,"Station");
+    qmlRegisterType<Stations>("harbour.RaTDeParis.DataRequest",1,0,"Stations");
+    qmlRegisterType<Station>("harbour.RaTDeParis.DataRequest",1,0,"Station");
 
-    qmlRegisterType<Schedule2>("harbour.DataRequest",1,0,"Schedules");
-    qmlRegisterType<Schedule>("harbour.DataRequest",1,0,"Schedule");
+    qmlRegisterType<Schedule2>("harbour.RaTDeParis.DataRequest",1,0,"Schedules");
+    qmlRegisterType<Schedule>("harbour.RaTDeParis.DataRequest",1,0,"Schedule");
 
     qDebug() << "offlineStoragPath orig: " << view->engine()->offlineStoragePath();
     view->setSource(SailfishApp::pathTo("qml/RaTDeParis.qml"));

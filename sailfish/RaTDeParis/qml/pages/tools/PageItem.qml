@@ -64,7 +64,7 @@ Item{
 
         updateHolder();
         listView.update();
-        timerLastUpdate.running = true;
+        timerLastUpdate.start();
         firstRequest = new Date();
         closeSideBar()
     }
@@ -73,6 +73,8 @@ Item{
         Offline.removeItems(id, sens)
         listModel.clear();
         listView.headerItem.description = "";
+        listView.headerItem.lastUpdateTxt = "";
+        timerLastUpdate.stop();
         updateTab();
     }
     function addNewTab(){
@@ -213,6 +215,7 @@ Item{
                 opacity: 0.6
                 horizontalAlignment: Text.AlignLeft
                 truncationMode: TruncationMode.Fade
+                visible: listModel.count > 0
             }
         }
         delegate:MainDelegateItem{
@@ -223,11 +226,6 @@ Item{
                     listView.model.remove(index)
                     Offline.removeItem(dbID, whoIAm)
                     updateHolder();
-//                    console.debug("Size H: " + listView.height)
-//                    console.debug("Size W: " + listView.width)
-//                    console.debug("main H: " + main.height)
-//                    console.debug("main W: " + main.width)
-//                    console.debug("X : " + listView.x +" Y: " + listView.y)
                 })
             }
             Component {
@@ -255,8 +253,10 @@ Item{
             MenuItem {
                 text: qsTr("Auto update : 1 mn")
                 onClicked: {
-                    if(autoUpdate)
+                    if(autoUpdate){
                         autoUpdate = false;
+                        listView.headerItem.lastUpdateTxt = "";
+                    }
                     else
                     {
                         autoUpdate = true;
@@ -271,12 +271,12 @@ Item{
                     ret.accepted.connect(function(){
                         Offline.addItinerary(currentItName,ret.ligne, ret.direction, whoIAm, dataRequest.getScheduleURL(), ret.urlLigne, ret.station, currentTabID);
                         loadTab(currentItName, currentTabID);    //Update
+                        listView.headerItem.lastUpdateTxt = "";
                     })
 //                    ret.rejected.connect(function(){
 //                    })
                 }
             }
-
         }
         VerticalScrollDecorator {}
 
