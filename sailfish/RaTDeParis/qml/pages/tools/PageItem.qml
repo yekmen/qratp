@@ -18,7 +18,6 @@
 import QtQuick 2.1
 import Sailfish.Silica 1.0
 import "../delegate"
-import Effects 1.0
 import "../../js/TabDataBase.js" as TabDB
 import "../../js/Offline.js" as Offline
 
@@ -29,6 +28,8 @@ Item{
     property bool switchChecked: false
     property string currentItName
     property int currentTabID
+    property date firstRequest
+    property bool autoUpdate: false
 
     signal headerSwitcherChecked;
     signal sideBarChanged(bool value);
@@ -63,6 +64,8 @@ Item{
 
         updateHolder();
         listView.update();
+        timerLastUpdate.running = true;
+        firstRequest = new Date();
         closeSideBar()
     }
     function removeTab(id, sens){
@@ -120,6 +123,24 @@ Item{
         else
             timer.start();
     }
+    function updateTime(){
+        var text;
+        if(autoUpdate)
+        {
+            text = qsTr("Auto update 1 mn : ON")
+            for(var i = 0; i < listView.count; i++){
+                listView.currentIndex = i;
+                listView.currentItem.update();
+            }
+        }
+        else
+        {
+            var lastGettedTime = new Date();
+            var ret = lastGettedTime.getMinutes() - firstRequest.getMinutes();
+            text = "Dernière MAJ il y a " + ret + " mn";
+        }
+        listView.headerItem.lastUpdateTxt = text;
+    }
 
     Component.onCompleted: {
         updateTab();
@@ -145,24 +166,28 @@ Item{
         }
     }
 
+    Timer{
+        id: timerLastUpdate
+        repeat: true
+        interval: 60000 //1min
+        onTriggered: updateTime()
+    }
+
     SilicaListView {
         id: listView
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-//        onAnchorsChanged: console.debug("Top : " + )
         model: listModel
         clip: true
 //        focus: true
         smooth: true
         header:PageHeader {
             property alias textswitch: switcher
+            property alias lastUpdateTxt : lastUpdateLabel.text
             id: pageHeader
             title: pageTitle
-            Label{
-                id: lastUpdateLabel
-            }
 
             TextSwitch{
                 id: switcher
@@ -177,6 +202,17 @@ Item{
 
                     sideBarChanged(checked)
                 }
+
+            }
+            Label{
+                id: lastUpdateLabel
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.highlightColor
+                opacity: 0.6
+                horizontalAlignment: Text.AlignLeft
+                truncationMode: TruncationMode.Fade
             }
         }
         delegate:MainDelegateItem{
@@ -211,9 +247,21 @@ Item{
         PullDownMenu {
             id: pullDownMenu
             MenuItem {
-                text: qsTr("A Propos")
+                text: qsTr("À Propos")
                 onClicked: {
                     var ret = pageStack.push(Qt.resolvedUrl("../AboutPage.qml"));
+                }
+            }
+            MenuItem {
+                text: qsTr("Auto update : 1 mn")
+                onClicked: {
+                    if(autoUpdate)
+                        autoUpdate = false;
+                    else
+                    {
+                        autoUpdate = true;
+                        listView.headerItem.lastUpdateTxt = qsTr("Auto update 1 mn : ON");
+                    }
                 }
             }
             MenuItem {

@@ -25,8 +25,21 @@ ListItem {
 //    height: 220
     contentHeight: 220
     property int dbID: indexDB
+
     Component.onCompleted: {
         dataRequestDelegate.getSchedule(jsonURL);
+    }
+    function update(){
+        dataRequestDelegate.getSchedule(jsonURL);
+        busyIndicator.running = true;
+        busyIndicator.visible = true;
+    }
+    function fillModel(modelList){
+        delegateModel.clear();
+        for(var i = 0; i < modelList.length; i++)
+        {
+            delegateModel.append(modelList[i]);
+        }
     }
 
     DataRequest{
@@ -38,6 +51,7 @@ ListItem {
         onSchedulesChanged:{
             busyIndicator.running = false;
             busyIndicator.visible = false;
+            fillModel(dataRequestDelegate.scheduleList);
         }
     }
     Column{
@@ -84,7 +98,11 @@ ListItem {
             anchors.left: parent.left
             anchors.right: parent.right
             height: delegate.height - row.height
-            model: dataRequestDelegate.scheduleList
+//            model: dataRequestDelegate.scheduleList()
+            model: ListModel{
+                id: delegateModel
+            }
+
             clip: true
             focus: true
             smooth: true

@@ -62,8 +62,9 @@ Dialog  {
         ignoreUnknownSignals: true
         onLinesListChanged:{
             canAccept = false;
-            if(!abort)
+            if(!abort){
                 lineChoose.state = "show";
+            }
         }
         onDirectionsListChanged: {
             canAccept = false;
@@ -92,11 +93,7 @@ Dialog  {
         z:-1
         Column{
             id: column
-            anchors.top: header.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
+            anchors.fill: parent
             Choose{
                 id: typeChoose
                 objectName: "typeChoose"
@@ -144,8 +141,11 @@ Dialog  {
                 typeName: qsTr("Sélectionner votre ligne :")
                 modelList: dataRequest.linesList
                 enableSearch: true
-
                 state: "hide"
+                function fillLine(array){
+                    modelList = array;
+                }
+
                 onUserClicked: {
                     abort = false;
                     directionChoose.busySwitcher = true;

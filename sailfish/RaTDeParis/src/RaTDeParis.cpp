@@ -21,10 +21,6 @@
 
 #include <sailfishapp.h>
 #include "datarequest.h"
-#include "offlinedata.h"
-#include <QtWidgets/QGraphicsBlurEffect>
-
-//#include <QQmlEngine>
 
 #include <qqml.h>   //qmlRegisterType !
 #include <QQuickView>
@@ -34,18 +30,11 @@
 
 int main(int argc, char *argv[])
 {
-    // SailfishApp::main() will display "qml/template.qml", if you need more
-    // control over initialization, you can use:
-    //
-    //   - SailfishApp::application(int, char *[]) to get the QGuiApplication *
-    //   - SailfishApp::createView() to get a new QQuickView * instance
-    //   - SailfishApp::pathTo(QString) to get a QUrl to a resource file
-    //
-    // To display the view, call "show()" (will show fullscreen on device).
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
     qmlRegisterType<DataRequest>("harbour.DataRequest",1,0,"DataRequest");
+
     qmlRegisterType<Line>("harbour.DataRequest",1,0,"Line");
     qmlRegisterType<Lines>("harbour.DataRequest",1,0,"Lines");
 
@@ -58,17 +47,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<Schedule2>("harbour.DataRequest",1,0,"Schedules");
     qmlRegisterType<Schedule>("harbour.DataRequest",1,0,"Schedule");
 
-//    qmlRegisterType<OfflineData>("harbour.DataRequest",1,0,"OfflineData");
-    qmlRegisterType<QGraphicsBlurEffect>("Effects",1,0,"Blur");
-
-
-//    return SailfishApp::main(argc, argv);
-
-
     qDebug() << "offlineStoragPath orig: " << view->engine()->offlineStoragePath();
     view->setSource(SailfishApp::pathTo("qml/RaTDeParis.qml"));
     view->rootContext()->setContextProperty("appVersion", APPLICATION_VERSION);
-//    viewer
     view->show();
 //    view->showFullScreen();
     return app->exec();

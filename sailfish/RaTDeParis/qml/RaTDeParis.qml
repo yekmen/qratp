@@ -33,7 +33,6 @@ ApplicationWindow
     property var _sharedModel
     initialPage: Component {
         FirstPage{
-//            title: qsTr("Itinéraire");
         }
 
     }
@@ -48,6 +47,6 @@ ApplicationWindow
     }
     DataRequest{
         id: dataRequest
-        Component.onCompleted: dataRequest.getLines();
+//        Component.onCompleted: dataRequest.getLines();
     }
 }

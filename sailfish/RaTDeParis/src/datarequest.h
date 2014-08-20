@@ -35,7 +35,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QVector>
-#include "offlinedata.h"
 
 class DataRequest : public QObject
 {
@@ -60,7 +59,6 @@ public:
     Q_INVOKABLE void getStations(const int &line, const int &direction);
     Q_INVOKABLE void getSchedule(const int &line, const int &direction, const int &station);
     Q_INVOKABLE void getSchedule(const QString &aUrl);
-    Q_INVOKABLE void addItineraire();
     Q_INVOKABLE QString getScheduleURL();
     Q_INVOKABLE int makeMeARequestID();
     Q_INVOKABLE int getCurrentRequestID();
@@ -78,7 +76,6 @@ private:
     Stations* mStations;
     Schedule2* mSchedule;
 
-    OfflineData* mOfflineData;
     QString finalyURL;
     int currentRequestID;
 public slots:
@@ -93,7 +90,7 @@ signals:
     void linesListChanged();
     void directionsListChanged();
     void stationsListChanged();
-    void schedulesChanged(int _id);
+    void schedulesChanged();
 };
 
 #endif // DATAREQUEST_H

@@ -30,19 +30,20 @@ DataRequest::DataRequest(QObject *parent) :
     QObject::connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(DownloadFinished(QNetworkReply*)));
     // ------- INIT LINES ----//
     mLines = new Lines(this);
-    connect(mLines, SIGNAL(linesListChanged()), this, SLOT(linesList()));
+//    connect(mLines, SIGNAL(linesListChanged()), this, SLOT(linesList()));
+    connect(mLines, SIGNAL(linesListChanged()), this, SIGNAL(linesListChanged()));
     // ------- INIT DIRECTION ----//
     mDirections = new Directions(this);
-    connect(mDirections, SIGNAL(directionsListChanged()), this, SLOT(directionsList()));
+//    connect(mDirections, SIGNAL(directionsListChanged()), this, SLOT(directionsList()));
+    connect(mDirections, SIGNAL(directionsListChanged()), this, SIGNAL(directionsListChanged()));
     // ------- INIT STATION -----//
     mStations = new Stations(this);
-    connect(mStations, SIGNAL(stationListChanged()), this, SLOT(stationsList()));
+//    connect(mStations, SIGNAL(stationListChanged()), this, SLOT(stationsList()));
+    connect(mStations, SIGNAL(stationListChanged()), this, SIGNAL(stationsListChanged()));
     // -------- INIT SCHEDULE ---------//
     mSchedule = new Schedule2(this);
-    connect(mSchedule, SIGNAL(scheduleListChanged()), this, SLOT(scheduleList()));
-    // -------- INIT OFFLINEDATA ---------//
-    mOfflineData = new OfflineData(this);
-
+//    connect(mSchedule, SIGNAL(scheduleListChanged()), this, SLOT(scheduleList()));
+    connect(mSchedule, SIGNAL(scheduleListChanged()), this, SIGNAL(schedulesChanged()));
 }
 
 DataRequest::~DataRequest()
@@ -115,11 +116,6 @@ void DataRequest::getSchedule(const QString &aUrl)
     mgr->get(req);
 }
 
-void DataRequest::addItineraire()
-{
-    mOfflineData->addItineraire(finalyURL);
-}
-
 QString DataRequest::getScheduleURL()
 {
     return finalyURL;
@@ -178,7 +174,6 @@ QQmlListProperty<Station> DataRequest::stationsList()
 
 QQmlListProperty<Schedule> DataRequest::scheduleList()
 {
-    emit schedulesChanged(currentRequestID);
     return mSchedule->scheduleList();
 }
 
