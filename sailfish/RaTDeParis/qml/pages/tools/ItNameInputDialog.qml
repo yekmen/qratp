@@ -22,7 +22,7 @@ Dialog {
     property string name
     DialogHeader{
         id: header
-        acceptText: qsTr("Nouveau itinéraire")
+        acceptText: qsTr("Nouveau onglet")
         defaultAcceptText: qsTr("Ajouter")
         cancelText: qsTr("Retour")
         anchors.top: parent.top
