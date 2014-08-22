@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.1
-import Sailfish.Silica 1.0
+    import Sailfish.Silica 1.0
 import "../delegate"
 import "../../js/TabDataBase.js" as TabDB
 import "../../js/Offline.js" as Offline
@@ -32,7 +32,7 @@ Item{
     property bool autoUpdate: false
 
     signal headerSwitcherChecked;
-    signal sideBarChanged(bool value);
+//    signal sideBarChanged(bool value);
     signal addNewItinerary(bool sens);
 
 
@@ -90,26 +90,26 @@ Item{
     function closeSideBar(){
         sideBar.state = "hide"
         opactiyEffect.state = "disable"
-        listView.headerItem.textswitch.checked = false;
+//        listView.headerItem.textswitch.checked = false;
 //        listMouse.enabled = false;
     }
     function openSideBar(){
         opactiyEffect.state = "enable"
         sideBar.state = "show"
-        listView.headerItem.textswitch.checked = true;
+//        listView.headerItem.textswitch.checked = true;
 //        listMouse.enabled = true;
     }
     function updateHolder(){
         if(listModelSideBar.count == 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez créer un onglet")
-            listView.headerItem.textswitch.busy = true;
+//            listView.headerItem.textswitch.busy = true;
             pullDownMenu.visible = false;
         }
         else if(currentItName == "" && listModelSideBar.count > 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez sélectionner un onglet")
-            listView.headerItem.textswitch.busy = true;
+//            listView.headerItem.textswitch.busy = true;
             pullDownMenu.visible = false;
         }
         else if (currentItName != "" && listModelSideBar.count > 0 && listModel.count == 0){
@@ -191,21 +191,36 @@ Item{
             id: pageHeader
             title: pageTitle
 
-            TextSwitch{
+            SideBarButton{
                 id: switcher
-                checked: switchChecked
-                text: switchTitle
                 anchors.left: parent.left
-                onCheckedChanged: {
-                    if(checked)
-                        openSideBar();
-                    else
-                        closeSideBar();
+                anchors.leftMargin: 20
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: 10
+                onItemClicked: {
+                    openSideBar();
+//                    if(checked)
+//                    else
+//                        closeSideBar();
 
-                    sideBarChanged(checked)
+//                    sideBarChanged(checked)
                 }
-
             }
+//            TextSwitch{
+//                id: switcher
+//                checked: switchChecked
+//                text: switchTitle
+//                anchors.left: parent.left
+//                onCheckedChanged: {
+//                    if(checked)
+//                        openSideBar();
+//                    else
+//                        closeSideBar();
+
+//                    sideBarChanged(checked)
+//                }
+
+//            }
             Label{
                 id: lastUpdateLabel
                 anchors.bottom: parent.bottom
@@ -284,11 +299,12 @@ Item{
     SideBar{
         id: sideBar
         sideBarModel: listModelSideBar
-        width: parent.width/2
+        width: parent.width/2 +20
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: -parent.width/2
+//        x: -parent.width/2 + 20
+        x: -width
         z:100
         //-------------- SLOTS ------------//
         onItemsClicked: loadTab(itemName, id)

@@ -192,7 +192,7 @@ Item{
     }
     Component{
         id: cmpHeader
-
+//        property alias search: searchField
         SearchField{
             id: searchField
             width: parent.width
@@ -217,8 +217,6 @@ Item{
         clip: true
         focus: true
         model: searchModel
-//        header:cmpHeader
-
         onModelChanged: modelHasChanged()
         delegate:  BackgroundItem {
             id: delegate
@@ -254,6 +252,7 @@ Item{
                 selectedItem.line = label.text
                 selectedItem.url = image.source
                 item1.state = "selected"
+//                search.text = "";
             }
         }
     }

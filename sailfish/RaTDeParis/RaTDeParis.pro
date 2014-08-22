@@ -37,7 +37,8 @@ OTHER_FILES += qml/RaTDeParis.qml \
     qml/pages/tools/ItNameInputDialog.qml \
     qml/js/RequestID.js \
     qml/pages/delegate/MainDelegateItem.qml \
-    qml/pages/AboutPage.qml
+    qml/pages/AboutPage.qml \
+    qml/pages/tools/SideBarButton.qml
 
 HEADERS += \
     src/UrlCreator.h \

@@ -68,7 +68,7 @@ QQmlListProperty<Line> Lines::linesList()
 
 QString Lines::getOfflineData() const
 {
-    QFile file("/home/nemo/.RaTDeParis/lines.json");
+    QFile file("/home/nemo/.local/share/RaTDeParis/RaTDeParis/QML/OfflineStorage/lines.json");
     QString ret;
     if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -82,7 +82,7 @@ QString Lines::getOfflineData() const
 
 void Lines::saveFile(QString jsonData)
 {
-    QFile file("/home/nemo/.RaTDeParis/lines.json");
+    QFile file("/home/nemo/.local/share/RaTDeParis/RaTDeParis/QML/OfflineStorage/lines.json");
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
@@ -96,7 +96,7 @@ void Lines::saveFile(QString jsonData)
 
 bool Lines::offlineDataIsExist() const
 {
-    QFile file("/home/nemo/.RaTDeParis/lines.json");
+    QFile file("/home/nemo/.local/share/RaTDeParis/RaTDeParis/QML/OfflineStorage/lines.json");
     return file.exists();
 }
 LineType Lines::getCurrentGettingLineType() const

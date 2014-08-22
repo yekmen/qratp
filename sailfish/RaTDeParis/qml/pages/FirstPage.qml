@@ -23,7 +23,6 @@ import "tools"
 Page {
     id: fpage
     property int currentSens: 0
-
     ListView{
         id: mainList
         anchors.fill: parent
