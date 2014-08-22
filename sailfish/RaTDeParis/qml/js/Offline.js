@@ -32,15 +32,15 @@ function clearTable(){
 function createTable(){
     _db.transaction( function(tx) {
     // Create the database if it doesn't already exist
-        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT, parentID NUMERIC)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS QRatp(id INTEGER PRIMARY KEY, columnName TEXT,ligneName TEXT, direction TEXT, sens NUMERIC, url TEXT, urlImage TEXT, station TEXT, parentID NUMERIC, urlType TEXT)');
            }
     )
 }
 //-------------- SENS -------- ALLER = 0 ----------- Retour = 1 -----------//
-function addItinerary(colName, ligneName, direction, sens, url, urlImage, station, parentID){     //Aller = 0 | Retour = 1
+function addItinerary(colName, ligneName, direction, sens, url, urlImage, station, parentID, urlType){     //Aller = 0 | Retour = 1
     openDB();
     _db.transaction( function(tx) {
-        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station, parentID]);
+        tx.executeSql('INSERT INTO QRatp VALUES ((SELECT max(id) FROM QRatp)+ 1,?,?,?,?,?,?,?,?,?)', [colName, ligneName, direction,sens, url, urlImage, station, parentID, urlType]);
         }
     )
 }

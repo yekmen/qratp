@@ -30,9 +30,15 @@ ApplicationWindow
     property string sharedValue: "Le RATdeParis"
     property string _urlType
     property string _urlLine
-    property var _sharedModel
+    property var sharedModel: []
+    property ListModel sharedListModel
+    onSharedListModelChanged: {
+        console.debug("SharedModel changed : " + sharedListModel.count)
+    }
+
     initialPage: Component {
         FirstPage{
+
         }
 
     }
@@ -40,7 +46,7 @@ ApplicationWindow
         CoverPage {
             id: myCover
             prt: app.sharedValue
-//            modelList: _sharedModel
+            listModel: sharedListModel;
             urlLine: _urlLine
             urlType: _urlType
         }

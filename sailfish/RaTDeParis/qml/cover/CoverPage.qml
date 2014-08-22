@@ -30,15 +30,39 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
+import harbour.RaTDeParis.DataRequest 1.0
 
 CoverBackground {
-
+    id: cover
     property string prt
 
     property string urlType
     property string urlLine
-//    property alias modelList: list.model
+    property string stationName
+    property ListModel listModel
+    property int _modelIndex: -1
+
+//    onListModelChanged: fitCover()
+    function fitCover(){
+        console.debug("Index : " + _modelIndex)
+        if(listModel.count > 0 && listModel.count > _modelIndex){
+            var url = listModel.get(_modelIndex).jsonURL;
+            urlType = listModel.get(_modelIndex).urlType;
+            urlLine = listModel.get(_modelIndex).urlImage;
+            stationName = listModel.get(_modelIndex).stationName;
+
+            console.debug("URL ! " + url + " " + urlLine +" " + urlType + " " + stationName)
+            dataRequestCover.getSchedule(url);
+        }
+    }
+    function fillModel(modelList){
+        coverList.clear();
+        for(var i = 0; i < modelList.length; i++)
+        {
+            coverList.append(modelList[i]);
+        }
+    }
+
     function fitWord(value){
         var ret;    //Returned value
 
@@ -48,7 +72,6 @@ CoverBackground {
         ret = station +" : "+time;
         return ret;
     }
-
     function fitStation(value){
         var ret;
         var dpPos = value.substring(0, value.indexOf(":", 0));
@@ -71,23 +94,22 @@ CoverBackground {
         console.debug("Time : " + time);
         return time;
     }
-
-//    function time(){
-//        var currentTime;
-//        lastGettedTime = Qt.formatDateTime(new Date(), "hh:mm:ss");
-//        labelTime.text = "a " + Qt.formatDateTime(lastGettedTime, "hh:mm:ss");
-//    }
-//    Timer{
-//       interval: 60000; //1min
-//       repeat: true
-//       onTriggered: {
-//            time();
-//       }
-//    }
-/*
+    DataRequest{
+        id: dataRequestCover
+    }
+    Connections{
+        target: dataRequestCover
+        ignoreUnknownSignals: true
+        onSchedulesChanged:{
+//            busyIndicator.running = false;
+//            busyIndicator.visible = false;
+            fillModel(dataRequestCover.scheduleList);
+        }
+    }
     Label{
         id: labelProTrain
-        text: "Estimation :"
+//        text: "Estimation :"
+        text: stationName
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin:10
@@ -95,51 +117,39 @@ CoverBackground {
         color: Theme.primaryColor
         font.bold: true
         font.pixelSize: 30
-        visible: list.model.count === 0
+//        visible: list.model.count === 0
+    }
+    ListModel{
+        id: coverList
     }
 
     ListView{
         id: list
         anchors.top : labelProTrain.bottom
         anchors.topMargin: 30
-
+        model: coverList
         anchors.bottom: labelTime.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.leftMargin: 10
         anchors.rightMargin: 10
-//        anchors.verticalCenter: parent.verticalCenter
-//        anchors.verticalCenterOffset: 20
         height: 400
         delegate: Label {
             id: label
             height: 20
-//            anchors.verticalCenter: parent.verticalCenter
-
             anchors.left: parent.left
             anchors.right: parent.right
             text: fitWord(line);
             font.pixelSize: 28
-//            wrapMode: Text.WordWrap
             font.bold: true
-//            horizontalAlignment: Text.AlignHCenter
             onTextChanged: {
                 console.debug("TextCount : " + text.length)
             }
-
-//            anchors.centerIn: parent
-//            anchors.verticalCenter: parent.verticalCenter
         }
+
         onModelChanged: {
             time();
         }
-    }
-
-    Label{
-        id: labelTime
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
     }
 
     Image {
@@ -162,20 +172,29 @@ CoverBackground {
         anchors.bottom: parent.bottom
         fillMode: Image.PreserveAspectFit
     }
-    */
     Label{
-        id: coverLabel
-        anchors.centerIn: parent
-        text: "Le RAT de Paris"
+        id: labelTime
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
+
+
 
     CoverActionList {
         id: coverAction
-//        enabled: list.model.count > 0
-        enabled: false
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-next"
-//        }
+        enabled: listModel.count > 0
+        CoverAction {
+            iconSource: "image://theme/icon-cover-next"
+            onTriggered: {
+                if(listModel.count-1 > _modelIndex)
+                    _modelIndex++
+                else
+                    _modelIndex = 0;
+
+                fitCover();
+            }
+        }
 
         CoverAction {
             iconSource: "image://theme/icon-cover-refresh"

@@ -245,7 +245,7 @@ Dialog  {
                 onModelHasChanged: {
                     _urlLine = lineChoose.getCurrentImage();
                     _urlType = typeChoose.getCurrentImage();
-                    _sharedModel = result.modelList
+//                    sharedModel = result.modelList
 
                 }
                 onSectionClicked: {

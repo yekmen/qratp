@@ -49,6 +49,7 @@ Item{
     function loadTab(value, id){
         currentItName = value;
         currentTabID = id;
+
         listModel.clear();
         listView.headerItem.description = value;
         var array = Offline.getItemsByName(whoIAm, id);
@@ -59,8 +60,11 @@ Item{
                                 "direction": array[i].direction,
                                 "stationName":array[i].station,
                                 "jsonURL": array[i].url,
-                                "urlImage": array[i].urlImage})
+                                "urlImage": array[i].urlImage,
+                                "urlType":array[i].urlType})
+
         }
+        sharedListModel = listModel
 
         updateHolder();
         listView.update();
@@ -287,7 +291,15 @@ Item{
                 onClicked: {
                     var ret = pageStack.push(Qt.resolvedUrl("../SecondPage.qml"), {whereFrom : whoIAm});
                     ret.accepted.connect(function(){
-                        Offline.addItinerary(currentItName,ret.ligne, ret.direction, whoIAm, dataRequest.getScheduleURL(), ret.urlLigne, ret.station, currentTabID);
+                        Offline.addItinerary(currentItName,
+                                             ret.ligne,
+                                             ret.direction,
+                                             whoIAm,
+                                             dataRequest.getScheduleURL(),
+                                             ret.urlLigne,
+                                             ret.station,
+                                             currentTabID,
+                                             ret.urlType);
                         loadTab(currentItName, currentTabID);    //Update
                         listView.headerItem.lastUpdateTxt = "";
                     })
@@ -306,7 +318,6 @@ Item{
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-//        x: -parent.width/2 + 20
         x: -width
         z:100
         //-------------- SLOTS ------------//
