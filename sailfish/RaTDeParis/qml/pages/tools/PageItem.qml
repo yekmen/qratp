@@ -103,18 +103,21 @@ Item{
         if(listModelSideBar.count == 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez créer un onglet")
+            listView.headerItem.textswitch.lighter();
 //            listView.headerItem.textswitch.busy = true;
             pullDownMenu.visible = false;
         }
         else if(currentItName == "" && listModelSideBar.count > 0){
             holder.enabled = true;
             holder.text = qsTr("Veuillez sélectionner un onglet")
+            listView.headerItem.textswitch.lighter();
 //            listView.headerItem.textswitch.busy = true;
             pullDownMenu.visible = false;
         }
         else if (currentItName != "" && listModelSideBar.count > 0 && listModel.count == 0){
             holder.enabled = true;
             holder.text = qsTr("Vous n'avez aucun itinéraire de sauvegardé dans cet onglet")
+            listView.headerItem.textswitch.stopLigther();
             pullDownMenu.busy = true;
             pullDownMenu.visible = true;
         }
